@@ -1,0 +1,126 @@
+﻿/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    width: 99%;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 100% !important;
+}
+
+/* Set widths on the form inputs since otherwise they're 100% wide */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    .jumbotron {
+        margin-top: 20px;
+    }
+
+    .body-content {
+        padding: 0;
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: 1920px;
+    margin-left: 10px;
+    margin-right: 0px;
+}
+
+.jumbotron {
+    background-color: aliceblue;
+}
+
+#custom-bootstrap-menu.navbar-default .navbar-brand {
+    top: -50px;
+    color: rgb(0, 124, 158);
+    height: 20px;
+}
+
+#custom-bootstrap-menu.navbar-default {
+    font-size: 14px;
+    background-color: rgb(150, 189, 200);
+    background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+    background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+    border-width: 0px;
+    border-radius: 6px;
+}
+
+    #custom-bootstrap-menu.navbar-default .navbar-nav > li > a {
+        color: rgb(95, 160, 178);
+        background-color: rgb(150, 189, 200);
+        background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+        background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+    }
+
+        #custom-bootstrap-menu.navbar-default .navbar-nav > li > a:hover,
+        #custom-bootstrap-menu.navbar-default .navbar-nav > li > a:focus {
+            color: rgb(77, 130, 144);
+            background-color: rgba(0, 124, 158, 1);
+            background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+            background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+        }
+
+    #custom-bootstrap-menu.navbar-default .navbar-nav > .active > a,
+    #custom-bootstrap-menu.navbar-default .navbar-nav > .active > a:hover,
+    #custom-bootstrap-menu.navbar-default .navbar-nav > .active > a:focus {
+        color: rgb(69, 117, 130);
+        background-color: rgba(255, 255, 255, 1);
+    }
+
+    #custom-bootstrap-menu.navbar-default .navbar-toggle {
+        border-color: #ffffff;
+    }
+
+        #custom-bootstrap-menu.navbar-default .navbar-toggle:hover,
+        #custom-bootstrap-menu.navbar-default .navbar-toggle:focus {
+            background-color: #ffffff;
+        }
+
+        #custom-bootstrap-menu.navbar-default .navbar-toggle .icon-bar {
+            background-color: #ffffff;
+        }
+
+        #custom-bootstrap-menu.navbar-default .navbar-toggle:hover .icon-bar,
+        #custom-bootstrap-menu.navbar-default .navbar-toggle:focus .icon-bar {
+            background-color: rgb(129, 156, 163);
+        }
+
+    #custom-bootstrap-menu.navbar-default .navbar-text {
+        color: rgb(49, 149, 177);
+    }
+
+.btn-xs2 {
+    position: relative;
+    top: -5px;
+    margin-left: 5px;
+    margin-top: 0px;
+    margin-bottom: 2px;
+}
+
+.btn-pnl {
+    position: relative;
+    top: -2px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.33;
+    border-radius: 6px;
+    height: 27px;
+}
+
+.btn-info {
+    position: relative;
+    top: 5px;
+    border-radius: 6px;
+}
