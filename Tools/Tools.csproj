@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Web.Optimization.resources">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.de.1.1.3\lib\net40\de\System.Web.Optimization.resources.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
