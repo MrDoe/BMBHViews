@@ -1,10 +1,9 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="BMBH_View.SiteMaster" %>
 
 <!DOCTYPE html>
-
 <html lang="de">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BMBH-Views</title>
@@ -43,7 +42,7 @@
             <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top "role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/">
+                <a class="navbar-brand" href="/views">
                     <img style="position: relative; top:-9px; left: 0px; margin-bottom: 0px;" src="Images/BMBH-Logo-med_trans_220.png" alt="BMBH-Logo" width="110" height="42"/>
                 </a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-menubuilder">

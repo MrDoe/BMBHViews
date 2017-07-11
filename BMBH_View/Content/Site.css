@@ -121,6 +121,14 @@ textarea {
 
 .btn-info {
     position: relative;
-    top: 5px;
+    top: 1px;
     border-radius: 6px;
+    left: 1px;
+    display: inline-block;
+}
+
+.inlineBlock {
+    position: relative;
+    display: inline-block;
+    left: 20px;
 }

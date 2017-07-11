@@ -149,12 +149,10 @@
     <Content Include="Images\NavigateBackwards_6270.png" />
     <Content Include="Images\NavigateForward_6271.png" />
     <Content Include="Images\paste_16x16.gif" />
-    <Content Include="NCT-TBB-Search.aspx" />
-    <Content Include="NCT-TBB.aspx" />
+    <Content Include="Search.aspx" />
+    <Content Include="Results.aspx" />
     <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="PancoBank_Liquid.aspx" />
-    <Content Include="PancoBank_Liquid_Search.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -217,33 +215,19 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="NCT-TBB-Search.aspx.cs">
-      <DependentUpon>NCT-TBB-Search.aspx</DependentUpon>
+    <Compile Include="Search.aspx.cs">
+      <DependentUpon>Search.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="NCT-TBB-Search.aspx.designer.cs">
-      <DependentUpon>NCT-TBB-Search.aspx</DependentUpon>
+    <Compile Include="Search.aspx.designer.cs">
+      <DependentUpon>Search.aspx</DependentUpon>
     </Compile>
-    <Compile Include="NCT-TBB.aspx.cs">
-      <DependentUpon>NCT-TBB.aspx</DependentUpon>
+    <Compile Include="Results.aspx.cs">
+      <DependentUpon>Results.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="NCT-TBB.aspx.designer.cs">
-      <DependentUpon>NCT-TBB.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="PancoBank_Liquid.aspx.cs">
-      <DependentUpon>PancoBank_Liquid.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="PancoBank_Liquid.aspx.designer.cs">
-      <DependentUpon>PancoBank_Liquid.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="PancoBank_Liquid_Search.aspx.cs">
-      <DependentUpon>PancoBank_Liquid_Search.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="PancoBank_Liquid_Search.aspx.designer.cs">
-      <DependentUpon>PancoBank_Liquid_Search.aspx</DependentUpon>
+    <Compile Include="Results.aspx.designer.cs">
+      <DependentUpon>Results.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">

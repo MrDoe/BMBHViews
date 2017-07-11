@@ -10,7 +10,7 @@
 namespace BMBH_View {
     
     
-    public partial class PancoBank_Liquid {
+    public partial class NCT_TBB {
         
         /// <summary>
         /// Panel1-Steuerelement
@@ -119,23 +119,5 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView dgdNCT;
-        
-        /// <summary>
-        /// PancoBank_Liquid_View_Sort-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource PancoBank_Liquid_View_Sort;
-        
-        /// <summary>
-        /// PancoBank_Liquid_View-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource PancoBank_Liquid_View;
     }
 }

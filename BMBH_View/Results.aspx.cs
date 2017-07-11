@@ -26,7 +26,7 @@ namespace BMBH_View
             
             txtMaxPage.Text = dgdNCT.PageCount.ToString();
         }
-
+         
         private void ShowMsg(string message)
         {
             Response.Write("<script>alert('" + message + "');</script>");
@@ -37,7 +37,7 @@ namespace BMBH_View
             string sSQL;
 
             if (Session["LastQuery"] == null)
-                sSQL = "SELECT * FROM V_NCT_TBB_Gesamt order by InventarID";
+                sSQL = "SELECT * FROM [" + Session["View"] + "] order by ID";
             else
                 sSQL = Session["LastQuery"].ToString();
 
@@ -56,7 +56,7 @@ namespace BMBH_View
         {
             var datatable = GetData();
             ExcelPackage excel = new ExcelPackage();
-            var workSheet = excel.Workbook.Worksheets.Add("NCT-TBB");
+            var workSheet = excel.Workbook.Worksheets.Add("Exportierte Daten");
             var totalCols = datatable.Columns.Count;
             var totalRows = datatable.Rows.Count;
 
@@ -112,8 +112,6 @@ namespace BMBH_View
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-//            if (Session["LastQuery"] != null)
-//                ShowMsg(Session["LastQuery"].ToString());
         }
     }
 }
