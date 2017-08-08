@@ -13,13 +13,31 @@ namespace BMBH_View {
     public partial class _Default {
         
         /// <summary>
-        /// Panel1-Steuerelement
+        /// width-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel1;
+        protected global::System.Web.UI.WebControls.HiddenField width;
+        
+        /// <summary>
+        /// height-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField height;
+        
+        /// <summary>
+        /// pnlTBB-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlTBB;
         
         /// <summary>
         /// btnNCT_TBB_Gesamt-Steuerelement
@@ -40,6 +58,78 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Button btnNCT_TBB_ColoCare;
         
         /// <summary>
+        /// btnTBBNexus-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnTBBNexus;
+        
+        /// <summary>
+        /// btnDLJahr-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDLJahr;
+        
+        /// <summary>
+        /// btnSchnitteJahr-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSchnitteJahr;
+        
+        /// <summary>
+        /// btnSchnitteMonat-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSchnitteMonat;
+        
+        /// <summary>
+        /// btnSchnitteProjekt-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSchnitteProjekt;
+        
+        /// <summary>
+        /// btnSFB1118-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSFB1118;
+        
+        /// <summary>
+        /// btnSFB1118_AK-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSFB1118_AK;
+        
+        /// <summary>
+        /// pnlPatho-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPatho;
+        
+        /// <summary>
         /// btnNexusEingaenge-Steuerelement
         /// </summary>
         /// <remarks>
@@ -49,15 +139,6 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Button btnNexusEingaenge;
         
         /// <summary>
-        /// btnNexusPatienten-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnNexusPatienten;
-        
-        /// <summary>
         /// btnNexusPatientenGesamt-Steuerelement
         /// </summary>
         /// <remarks>
@@ -65,6 +146,15 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnNexusPatientenGesamt;
+        
+        /// <summary>
+        /// btnNexusPatienten-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnNexusPatienten;
         
         /// <summary>
         /// btnNexusPatientenThorax-Steuerelement
@@ -85,6 +175,15 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Button btnWiderrufKomplett;
         
         /// <summary>
+        /// pnlLiquid-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlLiquid;
+        
+        /// <summary>
         /// btnDKTKliquid-Steuerelement
         /// </summary>
         /// <remarks>
@@ -101,6 +200,15 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnNCTLBBsupport;
+        
+        /// <summary>
+        /// pnlDZIF-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDZIF;
         
         /// <summary>
         /// btnDZIFprimary-Steuerelement
@@ -130,6 +238,24 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Button btnDZIFreleases;
         
         /// <summary>
+        /// btnDZIFupload-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDZIFupload;
+        
+        /// <summary>
+        /// pnlPraevonk-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPraevonk;
+        
+        /// <summary>
         /// btnGEKKO-Steuerelement
         /// </summary>
         /// <remarks>
@@ -155,6 +281,15 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnColoCare;
+        
+        /// <summary>
+        /// pnlPanco-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPanco;
         
         /// <summary>
         /// btnPancoBank_Liquid-Steuerelement
@@ -193,6 +328,15 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Button btnPancoBank_Kryo;
         
         /// <summary>
+        /// pnlThorax-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlThorax;
+        
+        /// <summary>
         /// btnThoraxCases-Steuerelement
         /// </summary>
         /// <remarks>
@@ -200,5 +344,14 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnThoraxCases;
+        
+        /// <summary>
+        /// btnThoraxSamples-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnThoraxSamples;
     }
 }

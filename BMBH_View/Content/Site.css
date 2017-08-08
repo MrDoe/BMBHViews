@@ -132,3 +132,50 @@ textarea {
     display: inline-block;
     left: 20px;
 }
+.btn-default {
+    background-color: rgb(253, 254, 255);
+    padding: 5px 5px;
+    border-width: 1px;
+    border-style: outset;
+}
+
+.btn-default:hover,
+.btn-default:focus {
+    background-color: rgb(236, 244, 247);
+    box-shadow: 0px 0px 5px rgb(172, 223, 245);
+}
+
+.btn-small {
+    background-color: rgb(245, 250, 255);
+    padding: 2px 5px;
+    margin: 0px;
+    font-size: 9pt;
+    font-family: Arial;
+}
+
+.btn-small:hover,
+.btn.small:focus {
+    background-color: rgb(216, 236, 245);
+    box-shadow: 0px 0px 5px rgb(116, 201, 239);
+}
+
+.chkChoice input {
+    margin-left: -20px;
+}
+
+.chkChoice td {
+    padding-left: 20px;
+}
+
+.chkChoice label {
+    padding-left: 5px;
+}
+
+.btn-default {
+    margin-bottom: 3px;
+}
+
+.navbar-right {
+    position: relative;
+    right: 9px;
+}

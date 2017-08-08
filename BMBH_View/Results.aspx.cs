@@ -23,7 +23,7 @@ namespace BMBH_View
                 dgdNCT.DataSource = GetData();
                 dgdNCT.DataBind();
             }
-            
+            //pnlGrid.Height = Convert.ToInt32(height.Value) - 100;
             txtMaxPage.Text = dgdNCT.PageCount.ToString();
         }
          
@@ -48,6 +48,7 @@ namespace BMBH_View
                 var dt = new DataTable();
                 adapter.Fill(dt);
                 txtTotalRows.Text = dt.Rows.Count.ToString();
+                Session["DataCount"] = txtTotalRows.Text;
                 return dt;
             }
         }
@@ -78,11 +79,6 @@ namespace BMBH_View
             }
         }
 
-        public override void VerifyRenderingInServerForm(Control control)
-        {
-            /* Verifies that the control is rendered */
-        }
-
         protected void btnRefresh_Click(object sender, EventArgs e)
         {
             dgdNCT.PageIndex = Int32.Parse(txtPage.Text) - 1;
@@ -95,10 +91,13 @@ namespace BMBH_View
         protected void btnPrevPage_Click(object sender, ImageClickEventArgs e)
         {
             int nPageNo = Int32.Parse(txtPage.Text) - 1;
-            txtPage.Text = nPageNo.ToString();
-            dgdNCT.PageIndex = nPageNo - 1;
-            dgdNCT.DataSource = GetData();
-            dgdNCT.DataBind();
+            if (nPageNo > 0)
+            {
+                txtPage.Text = nPageNo.ToString();
+                dgdNCT.PageIndex = nPageNo - 1;
+                dgdNCT.DataSource = GetData();
+                dgdNCT.DataBind();
+            }
         }
 
         protected void btnNextPage_Click(object sender, ImageClickEventArgs e)
@@ -112,6 +111,12 @@ namespace BMBH_View
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            Response.Redirect("~/Search.aspx");
+        }
+
+        protected void dgdNCT_Sorting(object sender, GridViewSortEventArgs e)
+        {
+
         }
     }
 }

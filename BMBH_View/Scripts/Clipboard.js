@@ -16,7 +16,6 @@
             sClipboardData = sClipboardData.substring(0, sClipboardData.length - 2);
             sClipboardData = "('" + sClipboardData + ")";
         }
-
         document.getElementById(sFieldId).value = sClipboardData;
         return true;
     }
@@ -25,4 +24,10 @@
         alert('Not IE');
         return false;
     }
+}
+
+function InputBox(params) {
+    var result = prompt("Name der Werteliste:", "");
+    document.getElementById("MainContent_HiddenInputBox").value = result;
+    __doPostBack('<%= btnSaveSearch.UniqueID%>', params);
 }

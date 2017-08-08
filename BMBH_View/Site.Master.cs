@@ -12,6 +12,12 @@ namespace BMBH_View
         protected void Page_Load(object sender, EventArgs e)
         {
             Session["UserName"] = Page.User.Identity.Name;
+
+            if (((String)Session["UserName"]).ToUpper() == "KHD\\DOELLINGERCHRISTOPH" ||
+                ((String)Session["UserName"]).ToUpper() == "KHD\\WIELANDMATHIAS")
+                lnkUserMan.Visible = true;
+            else
+                lnkUserMan.Visible = false;
         }
     }
 }

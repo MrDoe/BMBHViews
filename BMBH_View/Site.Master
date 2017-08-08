@@ -4,7 +4,6 @@
 <html lang="de">
 <head runat="server">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8"/>
-    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BMBH-Views</title>
 
@@ -13,11 +12,10 @@
     </asp:PlaceHolder>
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-
 </head>
 <body>
     <form runat="server">
-        <asp:ScriptManager runat="server">
+        <asp:ScriptManager runat="server" EnableScriptGlobalization="true">
             <Scripts>
                 <%--Informationen zur Bündelung von Skripts in ScriptManager finden Sie unter https://go.microsoft.com/fwlink/?LinkID=301884 --%>
                 <%--Framework-Skripts--%>
@@ -35,11 +33,10 @@
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
                 <%--Websiteskripts--%>
-                <asp:ScriptReference Path="./Scripts/Clipboard.js" />
+                <asp:ScriptReference Path="~/Scripts/Clipboard.js" />
             </Scripts>
         </asp:ScriptManager>
-
-            <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top "role="navigation">
+        <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/views">
@@ -51,17 +48,16 @@
             </div>
             <div class="collapse navbar-collapse navbar-menubuilder">
                 <ul class="nav navbar-nav navbar-left">
-                    <li>
-                        <a href="/contact">Kontakt</a>
-                    </li>
-                    <li>
-                        <a href="/help">Hilfe</a>
-                    </li>
+                    <li> <a href="/views/contact">Kontakt</a> </li>
+                    <li> <a href="/views/help">Hilfe</a> </li>
                 </ul>
-                    <p class="nav navbar-text navbar-right">Hallo <asp:LoginName runat="server" />!</p>
+                <ul class="nav navbar-nav navbar-right">
+                    <li> <asp:HyperLink ID="lnkUserMan" Text="Benutzerverwaltung" NavigateURL="/views/UserMan" runat="server">Benutzerverwaltung</asp:HyperLink> </li>
+                    <li> <p class="nav navbar-text navbar-right">Login: <asp:LoginName runat="server" /></p> </li>
+                </ul>
             </div>
+          </div>                  
         </div>
-    </div>
 
 <%--        <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
@@ -85,12 +81,7 @@
         </div>--%>
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
-                <asp:Button ID="Button1" runat="server" Text="Button" />
             </asp:ContentPlaceHolder>
-            <hr />
-            <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - Christoph Döllinger, BioMaterialBank Heidelberg.</p>
-            </footer>
         </div>
 
     </form>

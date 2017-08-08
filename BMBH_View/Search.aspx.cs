@@ -10,10 +10,11 @@ using System.Drawing;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
+using AjaxControlToolkit;
 
 namespace BMBH_View
 {
-    public partial class NCT_TBB_Search : System.Web.UI.Page
+    public partial class Search : System.Web.UI.Page
     {
         const string sCurrentPage = "Search.aspx";
         const string sParentPage = "Results.aspx";
@@ -31,12 +32,59 @@ namespace BMBH_View
             if (!Page.IsPostBack)
             {
                 Session["UserName"] = Page.User.Identity.Name;
+                Session["JumpedBack"] = false;
+
+                //if (Session["LastQuery"] == null)
+                ClearTempTable();
+
                 Session["LastQuery"] = null;
 
-                CreateTempTable();
+                if (Session["Recursive"] != null)
+                {
+                    if(Session["Recursive"].ToString() == "False")
+                        chkRecursive.Checked = false;
+
+                    if (Session["Recursive"].ToString() == "True")
+                    {
+                        chkRecursive.Checked = true;
+                        pnlSQLhistory.Visible = true;
+
+                        if (Session["DataCount"] != null)
+                            lblRecursive.Text = "Rekursive Suche (" + Session["DataCount"] + " Datensätze)";
+                    }
+                }
+
+                if (Session["Additive"] != null)
+                {
+                    if (Session["Additive"].ToString() == "False")
+                        chkAdditive.Checked = false;
+
+                    if (Session["Additive"].ToString() == "True")
+                    {
+                        chkAdditive.Checked = true;
+                        pnlSQLhistory.Visible = true;
+
+                        if (Session["DataCount"] != null)
+                            lblAdditive.Text = "Additive Suche (" + Session["DataCount"] + " Datensätze)";
+                    }
+                }
+
+                // german date format
+                System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("de-DE");
             }
 
             SetDataSource();
+
+            string parameter = Request["__EVENTARGUMENT"];
+            if (parameter == "PostfromSave")
+            {
+                if (HiddenInputBox.Value != "")
+                {
+                    SaveSearch(HiddenInputBox.Value);
+                    cboSaveSearch.DataBind();
+                    cboSaveSearch.SelectedValue = HiddenInputBox.Value;
+                }
+            }
         }
 
         private void ShowMsg(string message)
@@ -44,7 +92,7 @@ namespace BMBH_View
             Response.Write("<script>alert(\"" + message + "\");</script>");
         }
 
-        private void CreateTempTable()
+        private void ClearTempTable()
         {
             String sConnString = ConfigurationManager.ConnectionStrings["CLIN106_DataConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(sConnString);
@@ -52,14 +100,8 @@ namespace BMBH_View
             cmd.CommandType = CommandType.Text;
             string sUser = (string)Session["UserName"];
             cmd.Parameters.Add("@UserId", SqlDbType.NVarChar).Value = sUser;
-            cmd.CommandText = "IF NOT EXISTS(select 1 from " + Session["FormTable"] + " where UserId='" + sUser + "')" +
-                              " BEGIN" +
-                              " insert into " + Session["FormTable"] +
-                              " select Attribut, Operator, '', Datentyp, '" + sUser + "', Controltype from " + Session["FormView"] +
-                              " END ELSE BEGIN" +
-                              " update " + Session["FormTable"] +
-                              " set Wert = null, Operator = '=' where UserId = '" + sUser + "'" +
-                              " END";
+            cmd.CommandText = " update " + Session["FormTable"] +
+                              " set Wert = null, Operator = '=' where UserId = '" + sUser + "'";
             cmd.Connection = con;
             try
             {
@@ -78,16 +120,81 @@ namespace BMBH_View
             }
         }
 
+        private void SQLexecute(string sSQL)
+        {
+            String sConnString = ConfigurationManager.ConnectionStrings["CLIN106_DataConnectionString"].ConnectionString;
+            SqlConnection con = new SqlConnection(sConnString);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = sSQL;
+            cmd.Connection = con;
+            try
+            {
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
         protected void btnNew_Click(object sender, EventArgs e)
         {
-            CreateTempTable();
+            if (Session["GUID"] != null)
+            {
+                SQLexecute("delete from V_Recursive_Temp where GUID='" + Session["GUID"] + "'");
+                SQLexecute("delete from V_Recursive_Log where GUID='" + Session["GUID"] + "'");
+                lblRecursive.Text = "Rekursive Suche";
+                Session["GUID"] = Guid.NewGuid().ToString();
+                Session["Iteration"] = 1;
+            }
+
+            ClearTempTable();
             dgdSearch.DataBind();
+        }
+
+        protected string EscapeSQL(string SQL)
+        {
+            SQL = SQL.Replace("'", "''")
+                      .Replace("[", "")
+                      .Replace("]", "")
+                      .Replace("=", " = ")
+                      .Replace("WHERE v.", "")
+                      .Replace("AND", "UND")
+                      .Replace("LIKE", "ENTHÄLT")
+                      .Replace("%", "*")
+                      .Replace("<", " < ")
+                      .Replace(">", " > ")
+                      .Replace("BETWEEN", "ZWISCHEN");
+            int nLastIndex = SQL.IndexOf("union") > 0 ? SQL.IndexOf("union")-1 : SQL.Length;
+            SQL = SQL.Substring(0, nLastIndex);
+            return SQL;
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            string sSelect = "select * ";
-            string sFrom = " from " + Session["View"];
+            string sSelect = "select v.* ";
+            string sFrom = " from [" + Session["View"] + "] v ";
+            bool bRecursive = false;
+            bool bAdditive = false;
+            int nLastIteration = Session["Iteration"] == null? 0 : (int)(Session["Iteration"]) - 1;
+
+            if (Session["Recursive"] != null)
+                bRecursive = (Session["Recursive"].ToString() == "True");
+
+            if (Session["Additive"] != null)
+                bAdditive = (Session["Additive"].ToString() == "True");
+
+            if (bRecursive) // recursive search
+                if (nLastIteration > 0)
+                    sFrom += " inner join V_Recursive_Temp t on v.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
+
             string sWhere = "";
             bool bIsFirst = true;
 
@@ -116,25 +223,59 @@ namespace BMBH_View
                     switch (sOperator)
                     {
                         case "IN":
-                            sWhere += "[" + sAttribute + "] IN " + sValue;
+                            sWhere += "v.[" + sAttribute + "] IN " + sValue;
                             break;
 
                         case "LIKE":
-                            sWhere += "[" + sAttribute + "] LIKE '%" + sValue + "%'";
+                            sWhere += "v.[" + sAttribute + "] LIKE '%" + sValue + "%'";
                             break;
 
                         default:
                             switch (sDatatype)
                             {
                                 case "int":
-                                case "decimal":
+                                case "bigint":
+                                case "float":
+                                    if (sOperator == "BETWEEN")
+                                    {
+                                        int nSeperator = sValue.IndexOf(',');
+                                        string sValue1 = sValue.Substring(0, nSeperator);
+                                        string sValue2 = sValue.Substring(nSeperator + 1, sValue.Length - nSeperator - 1);
+                                        sValue = sValue1 + " AND " + sValue2;
+                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                    }
+                                    else
+                                        sWhere += "v.[" + sAttribute + "]" + sOperator + sValue;
+                                    break;
+                                
                                 case "date":
-                                case "datetime":
-                                    sWhere += "[" + sAttribute + "]" + sOperator + sValue;
+                                    if (sOperator == "BETWEEN")
+                                    {
+                                        int nSeperator = sValue.IndexOf(',');
+                                        string sDate1 = sValue.Substring(0, nSeperator - 2);
+                                        string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 1);
+                                        sValue = sDate1 + " AND " + sDate2;
+                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                    }
+                                    else
+                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(date, " + sValue + ")";
                                     break;
 
+                                case "datetime":
+                                    if (sOperator == "BETWEEN")
+                                    {
+                                        int nSeperator = sValue.IndexOf(',');
+                                        string sDate1 = sValue.Substring(0, nSeperator - 2) + ":00.00'";
+                                        string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 3) + ":00.00'";
+                                        sValue = sDate1 + " AND " + sDate2;
+                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                    }
+                                    else
+                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(datetime, " + sValue + ")";
+                                    break;
+                                
                                 default:
-                                    sWhere += "[" + sAttribute + "]" + sOperator + "'" + sValue + "'";
+                                    sWhere += "v.[" + sAttribute + "]" + sOperator + "'" + sValue + "'";
                                     break;
                             }
                             break;
@@ -142,11 +283,45 @@ namespace BMBH_View
                 }
             }
 
-            sWhere += " order by ID";
+            if (bAdditive && nLastIteration > 0) // additive search
+            {
+                sWhere += " union select v2.*" +
+                          " from [" + Session["View"] + "] v2" +
+                          " inner join V_Recursive_Temp t on v2.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
+            }
 
-            string sSQL = sSelect + sFrom + sWhere;
+            string sSQL = Server.HtmlDecode(sSelect + sFrom + sWhere);
 
-            Session["LastQuery"] = Server.HtmlDecode(sSQL);
+            if ((bRecursive || bAdditive) && (bool)Session["JumpedBack"] == false) // save result to temporary table
+            {
+                string sInsert = "insert into V_Recursive_Temp (ID, GUID, ITERATION, SEARCHMODE) ";
+                string sSQL2 = "";
+                string sMode = "";
+
+                if (bRecursive)
+                {
+                    sSelect = "select v.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
+                    sSQL2 = Server.HtmlDecode(sInsert + sSelect + sFrom + sWhere);
+                    sMode = "Rekursiv";
+                }
+                else if (bAdditive)
+                {
+                    sSelect = "select u.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
+                    sSQL2 = Server.HtmlDecode(sInsert + sSelect + " from (" + sSQL + ") u");
+                    sMode = "Additiv";
+                }
+
+                SQLexecute(sSQL2);
+                SQLexecute("insert into V_Recursive_Log (GUID, Iteration, SQL) values ('" + Session["GUID"] + "'," + Session["Iteration"] + ",'" + EscapeSQL(sWhere) + "'),'" + sMode + "'");
+                //txtHistory.Text = sSQL2;
+                //ShowMsg(sSQL);
+                Session["Iteration"] = (int)Session["Iteration"] + 1;
+            }
+
+            sSQL += " order by v.ID";
+            //ShowMsg(sSQL);
+
+            Session["LastQuery"] = sSQL;
             Response.Redirect(sParentPage, true);
         }
 
@@ -179,12 +354,57 @@ namespace BMBH_View
         {
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
-            TextBox txtValue = ((TextBox)(row.Cells[3].FindControl("txtValue")));
-            DropDownList cboValue = (DropDownList)(row.Cells[3].FindControl("cboValue"));
+            TextBox txtValue = (TextBox)row.Cells[3].FindControl("txtValue");
+            DropDownList cboValue = (DropDownList)row.Cells[3].FindControl("cboValue");
+            CheckBoxList chkValue = (CheckBoxList)row.Cells[3].FindControl("chkValue");
+            DropDownList cboOperator = (DropDownList)row.Cells[2].FindControl("cboOperator");
+            TextBox txtCalFrom = (TextBox)row.Cells[3].FindControl("txtCalFrom");
+            TextBox txtCalTo = (TextBox)row.Cells[3].FindControl("txtCalTo");
+            string sOperator = cboOperator.SelectedValue;
+            string sDatatype = row.Cells[4].Text;
 
             if (cboValue.Visible)
                 txtValue.Text = cboValue.SelectedValue;
 
+            if (chkValue.Visible)
+            {
+                String sSelected = String.Join("','", chkValue.Items.OfType<ListItem>().Where(r => r.Selected).Select(r => r.Text));
+                txtValue.Text = "('" + sSelected + "')";
+            }
+
+            switch (sDatatype)
+            {
+                case "datetime":
+                case "date":
+                if (sOperator == "BETWEEN")
+                {
+                    if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
+                        txtValue.Text = "'" + txtCalFrom.Text + "', '" + txtCalTo.Text + "'";
+                    else
+                        txtValue.Text = "";
+                }
+                else // Operator >, <, =
+                {
+                    if (txtCalFrom.Text.Length > 0)
+                        txtValue.Text = "'" + txtCalFrom.Text + "'";
+                    else
+                        txtValue.Text = "";
+                }
+                break;
+
+                case "int":
+                case "bigint":
+                case "float":
+                if (sOperator == "BETWEEN")
+                {
+                    if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
+                        txtValue.Text = txtCalFrom.Text + "," + txtCalTo.Text;
+                    else
+                        txtValue.Text = "";
+                }
+                break;
+            }
+            
             btnNew.Enabled = true;
             btnSubmit.Enabled = true;
         }
@@ -198,11 +418,11 @@ namespace BMBH_View
 
         public void GetFromClipboard(string sFieldId, string sDatatype)
         { // call javascript function
-            ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "pasteContent('" + sFieldId + "','" + sDatatype + "')", true);
+            ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "pasteContent('" + sFieldId + "','" + sDatatype + "'); ", true);
             //Page.ClientScript.RegisterStartupScript(Page.GetType(), "pasteContent", "pasteContent()", true);
         }
 
-        protected void btnInSelect_Click(object sender, EventArgs e)
+        protected void btnInSelect_Click(object sender, ImageClickEventArgs e)
         {
             ImageButton btn = (ImageButton)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
@@ -215,37 +435,6 @@ namespace BMBH_View
         {
             btnNew.Enabled = false;
             btnSubmit.Enabled = false;
-        }
-
-        protected void calFrom_SelectionChanged(object sender, EventArgs e)
-        {
-            Calendar calFrom = (Calendar)sender;
-            GridViewRow row = (GridViewRow)calFrom.NamingContainer;
-            TextBox txtValue = ((TextBox)(row.Cells[3].FindControl("txtValue")));
-            txtValue.Text = calFrom.SelectedDate.ToString("yyyy-MM-dd HH:mm:ss");
-            string sOperator = ((DropDownList)row.Cells[2].FindControl("cboOperator")).SelectedValue;
-            if (sOperator == "BETWEEN")
-            {
-                Calendar calTo = (Calendar)(row.FindControl("calTo"));
-                txtValue.Text = "('" + calFrom.SelectedDate.ToString("yyyy-MM-dd HH:mm:ss") + "', '" + calTo.SelectedDate.ToString("yyyy-MM-dd HH:mm:ss") + "')";
-            }
-            else
-            {
-                txtValue.Text = calFrom.SelectedDate.ToString("yyyy-MM-dd HH:mm:ss");
-            }
-        }
-
-        protected void calTo_SelectionChanged(object sender, EventArgs e)
-        {
-            Calendar calTo = (Calendar)sender;
-            GridViewRow row = (GridViewRow)calTo.NamingContainer;
-            TextBox txtValue = ((TextBox)(row.Cells[3].FindControl("txtValue")));
-            string sOperator = ((DropDownList)row.Cells[2].FindControl("cboOperator")).SelectedValue;
-            if (sOperator == "BETWEEN")
-            {
-                Calendar calFrom = (Calendar)(row.FindControl("calFrom"));
-                txtValue.Text = "('" + calFrom.SelectedDate.ToString("yyyy-MM-dd HH:mm:ss") + "', '" + calTo.SelectedDate.ToString("yyyy-MM-dd HH:mm:ss") + "')";
-            }
         }
 
         public DataTable GetCboData(string sCurrentField)
@@ -267,18 +456,29 @@ namespace BMBH_View
         {
             // controls
             DropDownList cboValue = (DropDownList)row.FindControl("cboValue");
+            CheckBoxList chkValue = (CheckBoxList)row.FindControl("chkValue");
             TextBox txtValue = (TextBox)(row.FindControl("txtValue"));
             ImageButton btnInSelect = (ImageButton)(row.FindControl("btnInSelect"));
-            Calendar calFrom = (Calendar)(row.FindControl("calFrom"));
-            Calendar calTo = (Calendar)(row.FindControl("calTo"));
+            ImageButton btnCalFrom = (ImageButton)(row.FindControl("btnCalFrom"));
+            ImageButton btnCalTo = (ImageButton)(row.FindControl("btnCalTo"));
+            Label lblFrom = (Label)(row.FindControl("lblFrom"));
+            Label lblTo = (Label)(row.FindControl("lblTo"));
+            TextBox txtCalFrom = (TextBox)(row.FindControl("txtCalFrom"));
+            TextBox txtCalTo = (TextBox)(row.FindControl("txtCalTo"));
 
             // hide all controls
             cboValue.Visible = false;
             cboValue.DataSource = null;
+            chkValue.Visible = false;
+            chkValue.DataSource = null;
             txtValue.Visible = false;
             btnInSelect.Visible = false;
-            calFrom.Visible = false;
-            calTo.Visible = false;
+            btnCalFrom.Visible = false;
+            btnCalTo.Visible = false;
+            lblFrom.Visible = false;
+            lblTo.Visible = false;
+            txtCalFrom.Visible = false;
+            txtCalTo.Visible = false;
 
             // get cell values
             string sCurrentField = (string)row.Cells[1].Text;
@@ -287,7 +487,8 @@ namespace BMBH_View
             string sValue = (string)row.Cells[3].Text;
             string sDatatype = (string)row.Cells[4].Text;
             string sControltype = ((DropDownList)row.Cells[3].FindControl("cboControltype")).SelectedValue;
-            //ShowMsg(sCurrentField + sOperator + sValue + sDatatype + sControltype);
+            CalendarExtender calFrom = (CalendarExtender)row.Cells[2].FindControl("calFrom");
+            CalendarExtender calTo = (CalendarExtender)row.Cells[2].FindControl("calTo");
 
             switch (sControltype)
             {
@@ -295,8 +496,13 @@ namespace BMBH_View
                     switch (sOperator)
                     {
                         case "IN":
-                            txtValue.Visible = true;
-                            btnInSelect.Visible = true;
+                            //txtValue.Visible = true;
+                            //btnInSelect.Visible = true;
+                            chkValue.Visible = true;
+                            chkValue.DataSource = GetCboData(sCurrentField);
+                            chkValue.DataTextField = "TEXT";
+                            chkValue.DataValueField = "TEXT";
+                            chkValue.DataBind();
                             break;
 
                         case "LIKE":
@@ -315,22 +521,61 @@ namespace BMBH_View
                     break;
 
                 case "TextBox":
-                    txtValue.Visible = true;
-
                     if (sOperator == "IN")
+                    {
+                        txtValue.Visible = true;
                         btnInSelect.Visible = true;
+                    }
+                    else if (sOperator == "BETWEEN")
+                    {
+                        calFrom.Enabled = false;
+                        calTo.Enabled = false;
+                        txtCalFrom.Visible = true;
+                        txtCalTo.Visible = true;
+                        lblFrom.Visible = true;
+                        lblFrom.Text = "Von:";
+                        lblTo.Visible = true;
+                        txtCalTo.Visible = true;
+                    }
+                    else
+                        txtValue.Visible = true;
                     break;
 
                 case "Calendar":
-                    calFrom.Visible = true;
+                    btnCalFrom.Visible = true;
+                    txtCalFrom.Visible = true;
+                    lblFrom.Visible = true;
+                    calFrom.Enabled = true;
+
+                    if (sDatatype == "date")
+                    {
+                        calFrom.Format = "dd.MM.yyyy";
+                        calTo.Format = "dd.MM.yyyy";
+                    }
+                    else
+                    {
+                        calFrom.Format = "dd.MM.yyyy HH:mm";
+                        calTo.Format = "dd.MM.yyyy HH:mm";
+                    }
+
+                    if (txtValue.Text.Length > 0)
+                        txtCalFrom.Text = txtValue.Text.Substring(1, 16);
 
                     if (sOperator == "BETWEEN")
-                        calTo.Visible = true;
+                    {
+                        if (txtValue.Text.Length == 38)
+                            txtCalTo.Text = txtValue.Text.Substring(21, 16);
 
-                    txtValue.Visible = true;
+                        calTo.Enabled = true;
+                        lblFrom.Text = "Von:";
+                        lblTo.Visible = true;
+                        btnCalTo.Visible = true;
+                        txtCalTo.Visible = true;
+                    }
+                    else
+                        lblFrom.Text = "Datum:";
                     break;
             }
-
             //DataRowView dr = e.Row.DataItem as DataRowView;
             //cboValue.SelectedValue = dr["YourCOLName"].ToString();
         }
@@ -349,10 +594,101 @@ namespace BMBH_View
             GridViewRow row = (GridViewRow)cboOperator.NamingContainer;
             EnableControls(row);
         }
-
-        protected void chkList_SelectedIndexChanged(object sender, EventArgs e)
+        
+        protected void chkAdditive_CheckedChanged(object sender, EventArgs e)
         {
+            bool bChecked = ((CheckBox)sender).Checked;
+            Session["Additive"] = bChecked;
 
+            if (bChecked)
+            {
+                chkRecursive.Checked = false;
+                Session["Recursive"] = false;
+
+                if (Session["GUID"] == null)
+                {
+                    Session["GUID"] = Guid.NewGuid().ToString();
+                    Session["Iteration"] = 1;
+                }
+            }
+
+            btnSubmit.Focus();
+        }
+
+        protected void chkRecursive_CheckedChanged(object sender, EventArgs e)
+        {
+            bool bChecked = ((CheckBox)sender).Checked;
+            Session["Recursive"] = bChecked;
+
+            if (bChecked)
+            {
+                chkAdditive.Checked = false;
+                Session["Additive"] = false;
+
+                if (Session["GUID"] == null)
+                {
+                    Session["GUID"] = Guid.NewGuid().ToString();
+                    Session["Iteration"] = 1;
+                }
+            }
+
+            btnSubmit.Focus();
+        }
+
+        private void SaveSearch(string sSearchName)
+        {
+            // clear previous search
+            string sSQL = "delete from V_Save_Search where SearchName = '" + sSearchName + "'";
+            SQLexecute(sSQL);
+
+            // save new search
+            sSQL = "insert into V_Save_Search " +
+                   "(ID, Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, ViewName, SearchName)" +
+                   " select ID, Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, '" + Session["View"] + "', '" + sSearchName + "'" +
+                   " from " + Session["FormTable"] + " where UserId='" + (String)Session["UserName"] + "'";
+            //ShowMsg(Server.HtmlDecode(sSQL));
+            SQLexecute(Server.HtmlDecode(sSQL));
+        }
+
+        private void LoadSearch(string sSearchName)
+        {
+            // clear previous search
+            string sSQL = "delete from [" + Session["FormTable"] + "] where UserId = '" + (String)Session["UserName"] + "'";
+            SQLexecute(sSQL);
+
+            // save new search
+            sSQL = "insert into [" + Session["FormTable"] + "] " +
+                   "(Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt)" +
+                   " select Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt" +
+                   " from V_Save_Search where UserId='" + (String)Session["UserName"] + "' and ViewName = '" + Session["View"] + "' and SearchName = '" + sSearchName + "'";
+            //ShowMsg(Server.HtmlDecode(sSQL));
+            SQLexecute(Server.HtmlDecode(sSQL));
+            dgdSearch.DataBind();
+        }
+
+        protected void btnLoadSearch_Click(object sender, EventArgs e)
+        {
+            LoadSearch(cboSaveSearch.SelectedValue);
+            btnSubmit.Focus();
+        }
+
+        protected void btnJumpBack_Click(object sender, EventArgs e)
+        {
+            Button btnJumpBack = (Button)sender;
+            GridViewRow row = (GridViewRow)btnJumpBack.NamingContainer;
+
+            int nIteration = Convert.ToInt16(Session["Iteration"]);
+            string sIterationSelected = row.Cells[0].Text;
+            int nIterationSelected = Convert.ToInt16(sIterationSelected);
+
+            if (nIterationSelected < nIteration-1)
+            {
+                Session["Iteration"] = nIterationSelected + 1;
+                Session["JumpedBack"] = true;
+                lblRecursive.Text = "Rekursive Suche";
+                SQLexecute("delete from V_Recursive_Log where GUID = '" + Session["GUID"] + "' and Iteration > " + sIterationSelected);
+                dgdHistory.DataBind();
+            }
         }
     }
 }
