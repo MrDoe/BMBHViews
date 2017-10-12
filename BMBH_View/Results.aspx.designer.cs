@@ -10,7 +10,7 @@
 namespace BMBH_View {
     
     
-    public partial class NCT_TBB {
+    public partial class Results {
         
         /// <summary>
         /// width-Steuerelement

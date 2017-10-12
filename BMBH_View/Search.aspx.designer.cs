@@ -148,6 +148,15 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Button btnSaveSearch;
         
         /// <summary>
+        /// btnDeleteSearch-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDeleteSearch;
+        
+        /// <summary>
         /// Table1-Steuerelement
         /// </summary>
         /// <remarks>

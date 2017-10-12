@@ -62,6 +62,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.DataVisualization" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
@@ -136,7 +137,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
-    <Content Include="Contact.aspx" />
+    <Content Include="DiagramView.aspx" />
+    <Content Include="Help.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
@@ -151,6 +155,20 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\BMBH-Logo-med_trans_220.png" />
+    <Content Include="Images\bmbh_views.png" />
+    <Content Include="Images\bmbh_views2.png" />
+    <Content Include="Images\bmbh_views2_550.png" />
+    <Content Include="Images\bmbh_views2_600.png" />
+    <Content Include="Images\bmbh_views_550.png" />
+    <Content Include="Images\bmbh_views_logo.ico" />
+    <Content Include="Images\bmbh_views_logo.png" />
+    <Content Include="Images\bmbh_views_logo2.ico" />
+    <Content Include="Images\bmbh_views_logo2.png" />
+    <Content Include="Images\bmbh_views_logo3.ico" />
+    <Content Include="Images\bmbh_views_logo3.png" />
+    <Content Include="Images\bmbh_views__short_323.png" />
+    <Content Include="Images\bmbh_views__short_42.png" />
+    <Content Include="Images\delete_field.gif" />
     <Content Include="Images\Excel-icon.png" />
     <Content Include="Images\NavigateBackwards_6270.png" />
     <Content Include="Images\NavigateForward_6271.png" />
@@ -196,7 +214,9 @@
     <Content Include="Site.Master" />
     <Content Include="UserMan.aspx" />
     <Content Include="ViewSwitcher.ascx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Bundle.config" />
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
@@ -210,12 +230,21 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Contact.aspx.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
+    <Compile Include="DiagramView.aspx.cs">
+      <DependentUpon>DiagramView.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Contact.aspx.designer.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
+    <Compile Include="DiagramView.aspx.designer.cs">
+      <DependentUpon>DiagramView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Help.aspx.cs">
+      <DependentUpon>Help.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Help.aspx.designer.cs">
+      <DependentUpon>Help.aspx</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

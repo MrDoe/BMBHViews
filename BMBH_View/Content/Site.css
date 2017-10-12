@@ -171,6 +171,18 @@ textarea {
     padding-left: 5px;
 }
 
+.chkSingle {
+    position: relative;
+    top: -16px;
+    left: 130px;
+}
+.chkSingle label{
+    position: relative;
+    left: -110px;
+    top: -2px;
+    font-family: Arial;
+    font-style: normal;
+}
 .btn-default {
     margin-bottom: 3px;
 }
@@ -178,4 +190,12 @@ textarea {
 .navbar-right {
     position: relative;
     right: 9px;
+}
+
+.inlineBlock {
+    position: relative;
+    height: 370px !important;
+    width: 460px;
+    float: left;
+    padding: 10px;
 }

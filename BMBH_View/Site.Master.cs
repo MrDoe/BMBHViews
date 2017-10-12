@@ -11,10 +11,20 @@ namespace BMBH_View
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session["UserName"] = Page.User.Identity.Name;
+            string sRealUserName = Page.User.Identity.Name;
 
-            if (((String)Session["UserName"]).ToUpper() == "KHD\\DOELLINGERCHRISTOPH" ||
-                ((String)Session["UserName"]).ToUpper() == "KHD\\WIELANDMATHIAS")
+            if (Session["UserName"] == null)
+                Session["UserName"] = sRealUserName;
+            
+            lblUserName.Text = (String)Session["UserName"];
+            
+            if (sRealUserName.ToUpper() == "KHD\\DOELLINGERCHRISTOPH" ||
+                sRealUserName.ToUpper() == "KHD\\WIELANDMATHIAS")
+                Session["IsAdmin"] = true;
+            else
+                Session["IsAdmin"] = false;
+            
+            if((Boolean)Session["IsAdmin"] == true)
                 lnkUserMan.Visible = true;
             else
                 lnkUserMan.Visible = false;

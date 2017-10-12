@@ -4,6 +4,7 @@
 <html lang="de">
 <head runat="server">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8"/>
+    <link rel="shortcut icon" type="image/x-icon" href="Images/bmbh_views_logo3.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BMBH-Views</title>
 
@@ -40,7 +41,7 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/views">
-                    <img style="position: relative; top:-9px; left: 0px; margin-bottom: 0px;" src="Images/BMBH-Logo-med_trans_220.png" alt="BMBH-Logo" width="110" height="42"/>
+                    <img style="position: relative; top:-11px; left: 0px; margin-bottom: 0px;" src="Images/bmbh_views_logo.png" alt="BMBH-Views-Logo"/>
                 </a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-menubuilder">
                     <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
@@ -48,42 +49,21 @@
             </div>
             <div class="collapse navbar-collapse navbar-menubuilder">
                 <ul class="nav navbar-nav navbar-left">
-                    <li> <a href="/views/contact">Kontakt</a> </li>
+                    <!--<li> <a href="/views/about">Info</a> </li> -->
                     <li> <a href="/views/help">Hilfe</a> </li>
+                    <li> <asp:HyperLink ID="lnkUserMan" Text="Benutzerverwaltung" NavigateURL="/views/UserMan" runat="server">Benutzerverwaltung</asp:HyperLink> </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li> <asp:HyperLink ID="lnkUserMan" Text="Benutzerverwaltung" NavigateURL="/views/UserMan" runat="server">Benutzerverwaltung</asp:HyperLink> </li>
-                    <li> <p class="nav navbar-text navbar-right">Login: <asp:LoginName runat="server" /></p> </li>
+                    <li> <p class="nav navbar-text navbar-right">Benutzer: <asp:Label ID="lblUserName" runat="server" Text="Benutzername"></asp:Label>
+                        </p> </li>
                 </ul>
             </div>
           </div>                  
         </div>
-
-<%--        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" runat="server" href="~/">BMBH-Views</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a runat="server" href="~/">Startseite</a></li>
-                        <li><a runat="server" href="~/About">Informationen</a></li>
-                        <li><a runat="server" href="~/Contact">Kontakt</a></li>
-                    </ul>
-                    <p class="nav navbar-text navbar-right">Hallo <asp:LoginName runat="server" />!</p>
-                </div>
-            </div>
-        </div>--%>
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
         </div>
-
     </form>
 </body>
 </html>

@@ -10,33 +10,33 @@
 namespace BMBH_View {
     
     
-    public partial class SiteMaster {
+    public partial class DiagramView {
         
         /// <summary>
-        /// lnkUserMan-Steuerelement
+        /// DropDownList1-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkUserMan;
+        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
         
         /// <summary>
-        /// lblUserName-Steuerelement
+        /// chkShowValues-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblUserName;
+        protected global::System.Web.UI.WebControls.CheckBox chkShowValues;
         
         /// <summary>
-        /// MainContent-Steuerelement
+        /// Chart1-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.DataVisualization.Charting.Chart Chart1;
     }
 }

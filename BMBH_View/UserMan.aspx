@@ -4,12 +4,14 @@
     &nbsp;Benutzer:
     <asp:DropDownList ID="cboUser" runat="server" AutoPostBack="True" DataSourceID="SqlDataSource1" DataTextField="name" DataValueField="name" Font-Names="Verdana" Height="25px" Width="220px">
     </asp:DropDownList>
+        &nbsp;
+        <asp:Button ID="btnChangeToUser" runat="server" CssClass="btn btn-default btn-small" OnClick="btnChangeToUser_Click" Text="Zu Benutzer wechseln" Width="145px" />
 </asp:Panel>
     <asp:GridView ID="dgdViewPermissions" runat="server" AutoGenerateColumns="False" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333">
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
         <Columns>
-            <asp:BoundField DataField="ViewName" HeaderText="ViewName" ReadOnly="True" SortExpression="ViewName" />
-            <asp:TemplateField HeaderText="Permission" SortExpression="Permission">
+            <asp:BoundField DataField="ViewName" HeaderText="View" ReadOnly="True" SortExpression="ViewName" />
+            <asp:TemplateField HeaderText="Freigabe" SortExpression="Permission">
                 <ItemTemplate>
                     <asp:CheckBox ID="chkPermission" runat="server" Checked='<%# Bind("Permission") %>' AutoPostBack="True" OnCheckedChanged="chkPermission_CheckedChanged" />
                 </ItemTemplate>
@@ -23,7 +25,13 @@
                 <ItemTemplate>
                     <asp:Button ID="btnClearTemp" runat="server" CssClass="btn btn-default btn-small" OnClick="btnClearTemp_Click" Text="Neu erstellen" ToolTip="Temp-Tabelle neu erstellen" />
                 </ItemTemplate>
-            </asp:TemplateField>        </Columns>
+            </asp:TemplateField>        
+            <asp:TemplateField>
+                <ItemTemplate>
+                    <asp:Button ID="btnValueCnt" runat="server" CssClass="btn btn-default btn-small" OnClick="btnValueCnt_Click" Text="Aktualisieren" ToolTip="Attributanzahlen neu berechnen" />
+                </ItemTemplate>
+            </asp:TemplateField>        
+        </Columns>
         <EditRowStyle BackColor="#F7F6F3" />
         <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
         <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -35,9 +43,9 @@
         <SortedDescendingCellStyle BackColor="#FFFDF8" />
         <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
     </asp:GridView>
-<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:CLIN106_DATAConnectionString2 %>" SelectCommand="select name from sys.server_principals where type_desc = 'WINDOWS_LOGIN' and name LIKE 'KHD\%' order by name"></asp:SqlDataSource>
+<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select name from sys.server_principals where type_desc = 'WINDOWS_LOGIN' and name LIKE 'KHD\%' order by name"></asp:SqlDataSource>
 <br />
-    <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:CLIN106_DATAConnectionString2 %>" SelectCommand="EXEC GetPermittedViewsChecked @User">
+    <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetPermittedViewsChecked @User">
         <SelectParameters>
             <asp:ControlParameter ControlID="cboUser" Name="User" PropertyName="SelectedValue" />
         </SelectParameters>

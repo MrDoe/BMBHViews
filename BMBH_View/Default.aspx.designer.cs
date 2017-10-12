@@ -40,6 +40,15 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Panel pnlTBB;
         
         /// <summary>
+        /// btnAntrag-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAntrag;
+        
+        /// <summary>
         /// btnNCT_TBB_Gesamt-Steuerelement
         /// </summary>
         /// <remarks>
@@ -184,13 +193,40 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Panel pnlLiquid;
         
         /// <summary>
-        /// btnDKTKliquid-Steuerelement
+        /// btnProbase-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnDKTKliquid;
+        protected global::System.Web.UI.WebControls.Button btnProbase;
+        
+        /// <summary>
+        /// btnMelanom-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnMelanom;
+        
+        /// <summary>
+        /// btnHIPO-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnHIPO;
+        
+        /// <summary>
+        /// btnSportUndKrebs-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSportUndKrebs;
         
         /// <summary>
         /// btnNCTLBBsupport-Steuerelement
@@ -236,6 +272,15 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnDZIFreleases;
+        
+        /// <summary>
+        /// btnInfect-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnInfect;
         
         /// <summary>
         /// btnDZIFupload-Steuerelement
@@ -353,5 +398,50 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnThoraxSamples;
+        
+        /// <summary>
+        /// btnThoraxGesamt-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnThoraxGesamt;
+        
+        /// <summary>
+        /// pnlSTARLIMS-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlSTARLIMS;
+        
+        /// <summary>
+        /// btnActiveUsers-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnActiveUsers;
+        
+        /// <summary>
+        /// btnUserStats-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnUserStats;
+        
+        /// <summary>
+        /// btnDiagram-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDiagram;
     }
 }

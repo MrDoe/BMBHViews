@@ -1,15 +1,15 @@
-﻿<%@ Page Title="BMBH-Views - Suchformular" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Search.aspx.cs" Inherits="BMBH_View.Search" %>
+﻿<%@ Page Title="BMBH-Views - Suchformular" Language="C#" Debug="true" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Search.aspx.cs" Inherits="BMBH_View.Search" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <asp:HiddenField ID="width" runat="server" />
 <asp:HiddenField ID="height" runat="server" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
 
-<asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderStyle="Solid" BorderWidth="5px" Width="99%">
+<asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderStyle="Solid" BorderWidth="5px" Width="99%" style="top:3px; position:relative">
     <asp:Button ID="btnSubmit" runat="server" Text="Absenden" CssClass="btn btn-default btn-small" Width="70px" OnClick="btnSubmit_Click" Font-Bold="False" />
 
     &nbsp;&nbsp; Gespeicherte Suche:&nbsp;<div style="float:right;position:relative;left:auto">
-        <asp:Button ID="btnNew" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" OnClick="btnNew_Click" style="margin-left:26px" Text="Neue Suche" Width="60px" />
+        <asp:Button ID="btnNew" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" OnClick="btnNew_Click" style="margin-left:26px" Text="Neue Suche" Width="80px" />
     </div>
     <div style="float:right;position:relative;left:auto;top:3px;margin-right:30px">
         <div style="float:left;position:relative;top:3px;left:auto">
@@ -31,7 +31,7 @@
     </div>
     <asp:DropDownList ID="cboSaveSearch" runat="server" DataSourceID="SqlDataSource1" DataTextField="SearchName" DataValueField="SearchName">
     </asp:DropDownList>
-    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:CLIN106_DATAConnectionString2 %>" SelectCommand="select distinct SearchName from V_Save_Search where UserId = @User and ViewName = @View">
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select distinct SearchName from V_Save_Search where UserId = @User and ViewName = @View">
         <SelectParameters>
             <asp:SessionParameter Name="User" SessionField="UserName" />
             <asp:SessionParameter Name="View" SessionField="View" />
@@ -39,6 +39,7 @@
     </asp:SqlDataSource>
     &nbsp;<asp:Button ID="btnLoadSearch" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" Text="Laden" Width="57px" OnClick="btnLoadSearch_Click" />
     &nbsp;<asp:Button ID="btnSaveSearch" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" ClientIDMode="Static" OnClientClick="InputBox('PostfromSave');" Text="Speichern" Width="68px" />
+    &nbsp;<asp:Button ID="btnDeleteSearch" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" ClientIDMode="Static" OnClientClick="DeleteSearch('PostfromDelete');" Text="Löschen" Width="68px" />
 </asp:Panel>
     <asp:Table ID= "Table1" runat="server">
         <asp:TableRow>
@@ -52,11 +53,15 @@
                 <EditItemTemplate>
                     <asp:DropDownList ID="cboOperator" runat="server" SelectedValue='<%# Bind("Operator") %>' AutoPostBack="True" OnSelectedIndexChanged="cboOperator_SelectedIndexChanged">
                         <asp:ListItem>=</asp:ListItem>
+                        <asp:ListItem Value="&lt;&gt;"></asp:ListItem>
                         <asp:ListItem Value="LIKE">ENTHÄLT</asp:ListItem>
+                        <asp:ListItem Value="NOT LIKE">ENTHÄLT NICHT</asp:ListItem>
                         <asp:ListItem Value="IN"></asp:ListItem>
                         <asp:ListItem Value="&lt;"></asp:ListItem>
                         <asp:ListItem Value="&gt;"></asp:ListItem>
                         <asp:ListItem Value="BETWEEN">ZWISCHEN</asp:ListItem>
+                        <asp:ListItem Value="IS NULL">IST LEER</asp:ListItem>
+                        <asp:ListItem Value="IS NOT NULL">IST NICHT LEER</asp:ListItem>
                     </asp:DropDownList>
                 </EditItemTemplate>
                 <ItemTemplate>
@@ -82,19 +87,23 @@
                     <div style="float:left; position:relative; top:-20px">
                         <asp:DropDownList ID="cboValue" runat="server" Width="248px">
                         </asp:DropDownList>
-                        <asp:TextBox ID="txtValue" runat="server" EnableViewState="False" Text='<%# Bind("Wert") %>' Width="220px" Wrap="False"></asp:TextBox>
-                        <asp:ImageButton ID="btnInSelect" runat="server" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="2px" CssClass="btn-info" Height="22px" ImageUrl="~/Images/paste_16x16.gif" OnClick="btnInSelect_Click" ToolTip="Daten aus Zwischenablage einfügen" EnableViewState="False" ViewStateMode="Disabled" style="left: 1px; top: 5px"  />
+                        <asp:TextBox ID="txtValue" runat="server" Text='<%# Bind("Wert") %>' Width="220px" Wrap="False" OnTextChanged="txtValue_TextChanged"></asp:TextBox>
+                        <asp:ImageButton ID="btnInSelect" runat="server" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="2px" CssClass="btn-info" Height="22px" ImageUrl="~/Images/paste_16x16.gif" OnClick="btnInSelect_Click" ToolTip="Daten aus Zwischenablage einfügen" style="left: 1px; top: 5px"  />
                     </div>
                         <br />
                     </asp:Panel>
                     <asp:CheckBoxList ID="chkValue" runat="server" CellPadding="1" CellSpacing="1" CssClass="chkChoice" Font-Bold="False" Font-Italic="False" Font-Names="Arial" Width="169px">
                     </asp:CheckBoxList>
+                    <div style="float:left; position:relative">
+                    <asp:CheckBox ID="chkSingleValue" runat="server" CssClass="chkSingle" Text="Auswahl (Ja):" Visible="false" style="width:160px" OnCheckedChanged="chkSingleValue_CheckedChanged"/>
+                    <asp:ImageButton ID="btnClearValue" runat="server" ImageUrl="~/Images/delete_field.gif" BackColor="#EAF5F8" BorderColor="#E5E5E5" BorderStyle="Outset" BorderWidth="2px" CssClass="btn-info" Height="22px" AlternateText="Löschen" OnClick="btnClearValue_Click" Visible="false" ToolTip="Wert löschen" style="width:22px;top:-11px"/>
+                    </div>
                 </EditItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label2" runat="server" Text='<%# Bind("Wert") %>'></asp:Label>
+                    <asp:Label ID="Label2" runat="server" Text='<%# Bind("Wert") %>' Style="word-wrap: normal; word-break: break-all;"></asp:Label>
                 </ItemTemplate>
                 <ControlStyle Width="250px" />
-                <ItemStyle Width="250px"></ItemStyle>
+                <ItemStyle Width="250px" Wrap="true"></ItemStyle>
             </asp:TemplateField>
 			<asp:BoundField DataField="Datatype" HeaderText="Datentyp" SortExpression="Datatype" ReadOnly="True" />
             <asp:BoundField DataField="UserId" HeaderText="UserId" SortExpression="UserId" Visible="False" />
@@ -134,7 +143,7 @@
     </asp:GridView>
         </asp:TableCell>
         <asp:TableCell>
-        <div style="position:absolute; top:80px;">
+        <div style="position:absolute; top:81px;">
         <asp:Panel ID="pnlSQLhistory" runat="server" BorderWidth="10px" BorderColor="White" Visible="false">
             Suchhistorie:<br />
             <asp:GridView ID="dgdHistory" runat="server" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333" GridLines="Horizontal" AutoGenerateColumns="false">
@@ -151,7 +160,7 @@
             <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
             <Columns>
             <asp:BoundField DataField="Iteration" HeaderText="Iteration" ReadOnly="True" />
-            <asp:BoundField DataField="SearchType" HeaderText="Suchtyp" ReadOnly="True" />
+            <asp:BoundField DataField="SearchMode" HeaderText="Suchtyp" ReadOnly="True" />
             <asp:BoundField DataField="Suchkriterium" HeaderText="Suchkriterium" ReadOnly="True" />
             <asp:templatefield>
             <ItemStyle Width="60px"></ItemStyle>
@@ -161,14 +170,14 @@
 			</asp:templatefield>
             </Columns>
         </asp:GridView>
-            <%--<asp:TextBox ID="txtHistory" runat="server" TextMode="MultiLine" Wrap="true" Width="300" Height="500"></asp:TextBox>--%>
         </asp:Panel>
         </div>
+        <%--<asp:TextBox ID="txtHistory" runat="server" TextMode="MultiLine" Wrap="true" Width="300" Height="500"></asp:TextBox>--%>
         </asp:TableCell>
     </asp:TableRow>
     </asp:Table>
 
-    <asp:SqlDataSource ID="dsSearch" runat="server" ConnectionString="<%$ ConnectionStrings:CLIN106_DATAConnectionString %>" >
+    <asp:SqlDataSource ID="dsSearch" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" >
         <DeleteParameters>
             <asp:Parameter Name="ID" Type="Int32" />
         </DeleteParameters>
@@ -191,10 +200,9 @@
 
     <asp:HiddenField ID="HiddenInputBox" runat="server" />
 
-    <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:CLIN106_DATAConnectionString2 %>" SelectCommand="select Iteration, SQL as 'Suchkriterium', SearchType from V_Recursive_Log where GUID = @GUID order by Iteration DESC">
+    <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select Iteration, SQL as 'Suchkriterium', SearchMode from V_Recursive_Log where GUID = @GUID order by Iteration DESC">
         <SelectParameters>
             <asp:SessionParameter Name="GUID" SessionField="GUID" />
         </SelectParameters>
     </asp:SqlDataSource>
-
 </asp:Content>

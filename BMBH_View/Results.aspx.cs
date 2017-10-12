@@ -13,7 +13,7 @@ using OfficeOpenXml;
 
 namespace BMBH_View
 {
-    public partial class NCT_TBB : System.Web.UI.Page
+    public partial class Results : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -23,6 +23,10 @@ namespace BMBH_View
                 dgdNCT.DataSource = GetData();
                 dgdNCT.DataBind();
             }
+
+            pnlMain.DefaultButton = btnRefresh.UniqueID;
+            ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "SetScrollBars(); ", true);
+
             //pnlGrid.Height = Convert.ToInt32(height.Value) - 100;
             txtMaxPage.Text = dgdNCT.PageCount.ToString();
         }
@@ -35,18 +39,25 @@ namespace BMBH_View
         public DataTable GetData()
         {
             string sSQL;
+            string sOrderBy = "";
+
+            //if (Session["SortCriteria"] != null && Session["SortDirection"] != null)
+            //    sOrderBy = "order by v.[" + Session["SortCriteria"].ToString() + "], ID " + Session["SortDirection"].ToString();
+            //else
+            //    sOrderBy = "order by v.[ID]";
 
             if (Session["LastQuery"] == null)
-                sSQL = "SELECT * FROM [" + Session["View"] + "] order by ID";
+                sSQL = "SELECT * FROM [" + Session["View"] + "] v " + sOrderBy;
             else
-                sSQL = Session["LastQuery"].ToString();
-
-            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["CLIN106_DataConnectionString"].ConnectionString))
+                sSQL = Session["LastQuery"].ToString() + " " + sOrderBy;
+           
+            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             using (var cmd = new SqlCommand(sSQL, conn))
             using (var adapter = new SqlDataAdapter(cmd))
             {
                 var dt = new DataTable();
                 adapter.Fill(dt);
+                Session["MainTable"] = dt;
                 txtTotalRows.Text = dt.Rows.Count.ToString();
                 Session["DataCount"] = txtTotalRows.Text;
                 return dt;
@@ -71,7 +82,8 @@ namespace BMBH_View
             using (var memoryStream = new MemoryStream())
             {
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment;  filename=export.xlsx");
+                string sFileName = "Export_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".xlsx";
+                Response.AddHeader("content-disposition", "attachment;  filename=" + sFileName);
                 excel.SaveAs(memoryStream);
                 memoryStream.WriteTo(Response.OutputStream);
                 Response.Flush();
@@ -81,7 +93,7 @@ namespace BMBH_View
 
         protected void btnRefresh_Click(object sender, EventArgs e)
         {
-            dgdNCT.PageIndex = Int32.Parse(txtPage.Text) - 1;
+            dgdNCT.PageIndex = Int32.Parse(txtPage.Text);
             dgdNCT.PageSize = Int32.Parse(txtRowPerPage.Text);
             dgdNCT.DataSource = GetData();
             dgdNCT.DataBind();
@@ -114,9 +126,47 @@ namespace BMBH_View
             Response.Redirect("~/Search.aspx");
         }
 
+        private string GetSortDirection(string column)
+        {
+            // By default, set the sort direction to ascending.
+            string sortDirection = "ASC";
+
+            // Retrieve the last column that was sorted.
+            string sortExpression = ViewState["SortExpression"] as string;
+
+            if (sortExpression != null)
+            {
+                // Check if the same column is being sorted.
+                // Otherwise, the default value can be returned.
+                if (sortExpression == column)
+                {
+                    string lastDirection = ViewState["SortDirection"] as string;
+                    if ((lastDirection != null) && (lastDirection == "ASC"))
+                    {
+                        sortDirection = "DESC";
+                    }
+                }
+            }
+
+            // Save new values in ViewState.
+            ViewState["SortDirection"] = sortDirection;
+            ViewState["SortExpression"] = column;
+
+            return sortDirection;
+        }
+
         protected void dgdNCT_Sorting(object sender, GridViewSortEventArgs e)
         {
+            //Retrieve the table from the session object.
+            DataTable dt = Session["MainTable"] as DataTable;
 
+            if (dt != null)
+            {
+                //Sort the data.
+                dt.DefaultView.Sort = e.SortExpression + " " + GetSortDirection(e.SortExpression);
+                dgdNCT.DataSource = Session["MainTable"];
+                dgdNCT.DataBind();
+            }
         }
     }
 }
