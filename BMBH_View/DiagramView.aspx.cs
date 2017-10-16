@@ -34,7 +34,8 @@ namespace BMBH_View
                 // Retrieve the Series to which we want to add DataPoints
                 Series series = Chart1.Series["Series1"];
                 series.IsValueShownAsLabel = bShowLabels;
-                series.ToolTip = "#VAL";
+                series.XValueType = ChartValueType.DateTime;
+                series.ToolTip = "#Benutzer: #VALY\nZeitpunkt: #AXISLABEL";
 
                 // Loop through each record
                 while (rdr.Read())
