@@ -154,6 +154,7 @@ namespace BMBH_View
 
         protected void btnChangeToUser_Click(object sender, EventArgs e)
         {
+            // benutzer
             Session["UserName"] = cboUser.SelectedValue;
             Response.Redirect("Default.aspx");
         }
