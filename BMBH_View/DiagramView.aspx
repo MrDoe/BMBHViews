@@ -14,7 +14,7 @@
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <asp:CheckBox ID="chkShowValues" runat="server" AutoPostBack="True" CssClass="chkChoice" Font-Size="Small" OnCheckedChanged="chkShowValues_CheckedChanged" Text="Werte anzeigen" /><br />
             <asp:Panel ID="Panel2" runat="server" BackColor="#F8FCFC" Width="270px" style="float:left; position:relative;">
-            <b>Zeitspanne</b><br />
+            <b>Zeitspanne:</b><br />
             <div style="float:left; width:40px; position:relative; top:1px">
                 <asp:Label ID="lblFrom" runat="server" Text="Von:" BorderWidth="2px" BorderColor="Transparent" />
                 <asp:Label ID="lblTo" runat="server" Text="Bis:" BorderWidth="2px" BorderColor="Transparent"/>
