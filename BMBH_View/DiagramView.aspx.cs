@@ -16,18 +16,25 @@ namespace BMBH_View
         {
             if (!IsPostBack)
             {
-                // Call Get ChartData() method in the PageLoad event
-                GetChartData(chkShowValues.Checked);
+                txtCalFrom.Text = DateTime.Now.AddDays(-14).ToString(calFrom.Format);
+                txtCalTo.Text = DateTime.Now.ToString(calTo.Format);
+                GetChartData(chkShowValues.Checked, txtCalFrom.Text, txtCalTo.Text);
                 GetChartTypes();
             }
         }
 
-        private void GetChartData(bool bShowLabels)
+        private void GetChartData(bool bShowLabels, string sFrom, string sTo)
         {
             string cs = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
             using (SqlConnection con = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand("Select [USERCOUNT], [TIMESTAMP] from CLIN106_DATA.dbo.USERCOUNT", con);
+                string sSQL = "Select [USERCOUNT], [TIMESTAMP] from CLIN106_DATA.dbo.USERCOUNT";
+
+                if (sFrom.Length > 0 && sTo.Length > 0)
+                    sSQL += " where [TIMESTAMP] between '" + sFrom + "' and '" + sTo + "'";
+                
+                SqlCommand cmd = new SqlCommand(sSQL, con);
+
                 con.Open();
                 SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -60,14 +67,24 @@ namespace BMBH_View
         protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Call Get ChartData() method when the user select a different chart type
-            GetChartData(chkShowValues.Checked);
+            GetChartData(chkShowValues.Checked, null, null);
             this.Chart1.Series["Series1"].ChartType = (SeriesChartType)Enum.Parse(
                 typeof(SeriesChartType), DropDownList1.SelectedValue);
         }
 
         protected void chkShowValues_CheckedChanged(object sender, EventArgs e)
         {
-            GetChartData(chkShowValues.Checked);
+            GetChartData(chkShowValues.Checked, txtCalFrom.Text, txtCalTo.Text);
+        }
+
+        protected void txtCalFrom_TextChanged(object sender, EventArgs e)
+        {
+            GetChartData(chkShowValues.Checked, txtCalFrom.Text, txtCalTo.Text);
+        }
+
+        protected void txtCalTo_TextChanged(object sender, EventArgs e)
+        {
+            GetChartData(chkShowValues.Checked, txtCalFrom.Text, txtCalTo.Text);
         }
     }
 }
