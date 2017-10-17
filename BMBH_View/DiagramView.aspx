@@ -6,7 +6,7 @@
        
     
         
-        <asp:Panel ID="Panel1" runat="server" BackColor="#F8FCFC" BorderStyle="Outset" BorderWidth="1px" Width="400px" style="float:left; position:relative; padding:10px;">
+        <asp:Panel ID="Panel1" runat="server" BackColor="#F8FCFC" BorderStyle="Outset" BorderWidth="1px" Width="410px" style="float:left; position:relative; padding:10px;">
             <b>Diagrammtyp:</b>
             <asp:DropDownList ID="DropDownList1" AutoPostBack="true" runat="server"
             OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged">

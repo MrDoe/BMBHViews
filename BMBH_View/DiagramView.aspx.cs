@@ -67,7 +67,7 @@ namespace BMBH_View
         protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Call Get ChartData() method when the user select a different chart type
-            GetChartData(chkShowValues.Checked, null, null);
+            GetChartData(chkShowValues.Checked, txtCalFrom.Text, txtCalTo.Text);
             this.Chart1.Series["Series1"].ChartType = (SeriesChartType)Enum.Parse(
                 typeof(SeriesChartType), DropDownList1.SelectedValue);
         }
