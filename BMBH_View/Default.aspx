@@ -90,6 +90,7 @@
                 <asp:Button ID="btnThoraxCases" runat="server" CssClass="btn btn-default" OnClick="btnGeneric_Click" Text="Fälle_Thorax »" Width="131px" Visible="False" />
                 <asp:Button ID="btnThoraxSamples" runat="server" CssClass="btn btn-default" OnClick="btnGeneric_Click" Text="Proben_Thorax »" Width="131px" Visible="False" />
                 <asp:Button ID="btnThoraxGesamt" runat="server" CssClass="btn btn-default" OnClick="btnGeneric_Click" Text="Thorax_Gesamt »" Width="131px" Visible="False" />
+                <asp:Button ID="btnThoraxGewebe" runat="server" CssClass="btn btn-default" OnClick="btnGeneric_Click" Text="Thorax_Gewebe »" Width="131px" Visible="False" />
             </p>
         </asp:Panel>
         <asp:Panel ID="pnlSTARLIMS" runat="server" BackColor="#FFFED5" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">

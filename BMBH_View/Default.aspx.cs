@@ -68,7 +68,8 @@ namespace BMBH_View
                 {
                     case "V_ANTRAGSBEARBEITUNG_NCT":
                         pnlTBB.Visible = true;
-                        btnAntrag.Visible = true;
+                        Button btnAntrag = new Button();
+                        btnAntrag.OnClientClick = "btnGeneric_Click()";
                         btnAntrag.ToolTip = sUserPerm;
                         break;
                     case "V_NCT_TBB_GESAMT":
@@ -115,6 +116,11 @@ namespace BMBH_View
                         pnlThorax.Visible = true;
                         btnThoraxGesamt.Visible = true;
                         btnThoraxGesamt.ToolTip = sUserPerm;
+                        break;
+                    case "V_THORAX_GEWEBE":
+                        pnlThorax.Visible = true;
+                        btnThoraxGewebe.Visible = true;
+                        btnThoraxGewebe.ToolTip = sUserPerm;
                         break;
                     case "V_DZIF_PRIMARY":
                         pnlDZIF.Visible = true;
