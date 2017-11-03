@@ -157,5 +157,21 @@ namespace BMBH_View
             Session["UserName"] = cboUser.SelectedValue;
             Response.Redirect("Default.aspx");
         }
+
+        protected void btnOK_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
+            string sCaption = ((TextBox)row.FindControl("txtCaption")).Text;
+            string sView = row.Cells[0].Text;
+            SQLexecute("update VIEW_SETTINGS set VIEW_CAPTION='" + sCaption + "' where VIEW_NAME = '" + sView + "'");
+        }
+
+        protected void cboPanel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((DropDownList)sender).NamingContainer;
+            string sPanel = ((DropDownList)row.FindControl("cboPanel")).SelectedValue;
+            string sView = row.Cells[0].Text;
+            SQLexecute("update VIEW_SETTINGS set PANEL_NAME='" + sPanel + "' where VIEW_NAME = '" + sView + "'");
+        }
     }
 }

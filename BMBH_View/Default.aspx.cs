@@ -13,6 +13,32 @@ using RestSharp;
 
 namespace BMBH_View
 {
+    static class Utils
+    {
+        public static Control FindAnyControl(this Page page, string controlId)
+        {
+            return FindControlRecursive(controlId, page.Form);
+        }
+
+        public static Control FindAnyControl(this UserControl control, string controlId)
+        {
+            return FindControlRecursive(controlId, control);
+        }
+
+        public static Control FindControlRecursive(string controlId, Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                Control result = FindControlRecursive(controlId, control);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+            return parent.FindControl(controlId);
+        }
+    }
+
     public partial class _Default : Page
     {
         private void ShowMsg(string message)
@@ -22,23 +48,28 @@ namespace BMBH_View
         
         private void ShowDataSet(DataSet ds)
         {
-            StringWriter sw = new StringWriter();
+            StringWriter sw = new StringWriter(); 
             ds.WriteXml(sw);
             ShowMsg("DataSet: " + sw.ToString());
         }
 
-        private string[] StringArray(DataSet ds)
+        private string[][] StringArray(DataSet ds)
         {
             int nRows = ds.Tables[0].Rows.Count;
-            string[] stringArray = new string[nRows];
+            string[][] stringArray = new string[nRows][];
 
             for (int row = 0; row < nRows; ++row)
-                stringArray[row] = ds.Tables[0].Rows[row][0].ToString();
+            {
+                stringArray[row] = new string[3]
+                                   { ds.Tables[0].Rows[row][0].ToString(),
+                                     ds.Tables[0].Rows[row][1].ToString(),
+                                     ds.Tables[0].Rows[row][2].ToString() };
+            }
 
             return stringArray;
         }
 
-        public String[] GetUserPermissions()
+        public String[][] GetUserPermissions()
         {
             string sUser = (string)Session["UserName"];
             DataSet ds = new DataSet("Permissions");
@@ -59,204 +90,28 @@ namespace BMBH_View
             }
         }
 
-        protected void HideShowPanels(String[] aUserPerm)
+        protected void GenerateButton(string sView, string sCaption, Panel pnl)
+        {
+            pnl.Visible = true;
+            Button btnNew = new Button();
+            btnNew.ID = "btn" + sView;
+            btnNew.Text = sCaption + " » ";
+            btnNew.ControlStyle.CssClass = "btn btn-default";
+            btnNew.ToolTip = sView;
+            btnNew.Click += new EventHandler(btnGeneric_Click);
+            pnl.Controls.Add(btnNew);
+        }
+
+        protected void GenerateButtons(String[][] aUserPerm)
         {
             for (int i = 0; i < aUserPerm.Length; ++i)
             {
-                String sUserPerm = aUserPerm[i].ToUpper();
-                switch (sUserPerm)
+                if (aUserPerm[i][2].Length > 0)
                 {
-                    case "V_ANTRAGSBEARBEITUNG_NCT":
-                        pnlTBB.Visible = true;
-                        Button btnAntrag = new Button();
-                        btnAntrag.OnClientClick = "btnGeneric_Click()";
-                        btnAntrag.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_TBB_GESAMT":
-                        pnlTBB.Visible = true;
-                        btnNCT_TBB_Gesamt.Visible = true;
-                        btnNCT_TBB_Gesamt.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_TBB_COLOCARE":
-                        pnlTBB.Visible = true;
-                        btnNCT_TBB_ColoCare.Visible = true;
-                        btnNCT_TBB_ColoCare.ToolTip = sUserPerm;
-                        break;
-                    case "V_PANCOBANK_LIQUID":
-                        pnlPanco.Visible = true;
-                        btnPancoBank_Liquid.Visible = true;
-                        btnPancoBank_Liquid.ToolTip = sUserPerm;
-                        break;
-                    case "V_PANCOBANK_KRYO":
-                        pnlPanco.Visible = true;
-                        btnPancoBank_Kryo.Visible = true;
-                        btnPancoBank_Kryo.ToolTip = sUserPerm;
-                        break;
-                    case "V_PANCOBANK_PARAFFIN":
-                        pnlPanco.Visible = true;
-                        btnPancoBank_Paraffin.Visible = true;
-                        btnPancoBank_Paraffin.ToolTip = sUserPerm;
-                        break;
-                    case "V_PANCOBANK_BIOPAC":
-                        pnlPanco.Visible = true;
-                        btnPancoBank_BioPac.Visible = true;
-                        btnPancoBank_BioPac.ToolTip = sUserPerm;
-                        break;
-                    case "V_THORAX_CASES":
-                        pnlThorax.Visible = true;
-                        btnThoraxCases.Visible = true;
-                        btnThoraxCases.ToolTip = sUserPerm;
-                        break;
-                    case "V_THORAX_PROBEN":
-                        pnlThorax.Visible = true;
-                        btnThoraxSamples.Visible = true;
-                        btnThoraxSamples.ToolTip = sUserPerm;
-                        break;
-                    case "V_THORAX_GESAMT":
-                        pnlThorax.Visible = true;
-                        btnThoraxGesamt.Visible = true;
-                        btnThoraxGesamt.ToolTip = sUserPerm;
-                        break;
-                    case "V_THORAX_GEWEBE":
-                        pnlThorax.Visible = true;
-                        btnThoraxGewebe.Visible = true;
-                        btnThoraxGewebe.ToolTip = sUserPerm;
-                        break;
-                    case "V_DZIF_PRIMARY":
-                        pnlDZIF.Visible = true;
-                        btnDZIFprimary.Visible = true;
-                        btnDZIFupload.Visible = true;
-                        btnDZIFprimary.ToolTip = sUserPerm;
-                        break;
-                    case "V_DZIF_ALIQUOTS":
-                        pnlDZIF.Visible = true;
-                        btnDZIFaliquots.Visible = true;
-                        btnDZIFupload.Visible = true;
-                        btnDZIFaliquots.ToolTip = sUserPerm;
-                        break;
-                    case "V_DZIF_RELEASES":
-                        pnlDZIF.Visible = true;
-                        btnDZIFreleases.Visible = true;
-                        btnDZIFupload.Visible = true;
-                        btnDZIFreleases.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_SUPPORT":
-                        pnlLiquid.Visible = true;
-                        btnNCTLBBsupport.Visible = true;
-                        btnNCTLBBsupport.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_LBB_PO_GEKKO":
-                        pnlPraevonk.Visible = true;
-                        btnGEKKO.Visible = true;
-                        btnGEKKO.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_LBB_PO_DARIO":
-                        pnlPraevonk.Visible = true;
-                        btnDARIO.Visible = true;
-                        btnDARIO.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_COLOCARE":
-                        pnlPraevonk.Visible = true;
-                        btnColoCare.Visible = true;
-                        btnColoCare.ToolTip = sUserPerm;
-                        break;
-                    case "V_NEXUS_EINGAENGE":
-                        pnlPatho.Visible = true;
-                        btnNexusEingaenge.Visible = true;
-                        btnNexusEingaenge.ToolTip = sUserPerm;
-                        break;
-                    case "V_NEXUS_PATIENTEN":
-                        pnlPatho.Visible = true;
-                        btnNexusPatienten.Visible = true;
-                        btnNexusPatienten.ToolTip = sUserPerm;
-                        break;
-                    case "V_NEXUS_PATIENTEN_GESAMT":
-                        pnlPatho.Visible = true;
-                        btnNexusPatientenGesamt.Visible = true;
-                        btnNexusPatientenGesamt.ToolTip = sUserPerm;
-                        break;
-                    case "V_NEXUS_PATIENTEN_THORAX":
-                        pnlPatho.Visible = true;
-                        btnNexusPatientenThorax.Visible = true;
-                        btnNexusPatientenThorax.ToolTip = sUserPerm;
-                        break;
-                    case "V_WIDERRUF_KOMPLETT":
-                        pnlPatho.Visible = true;
-                        btnWiderrufKomplett.Visible = true;
-                        btnWiderrufKomplett.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_TBB_NEXUS":
-                        pnlTBB.Visible = true;
-                        btnTBBNexus.Visible = true;
-                        btnTBBNexus.ToolTip = sUserPerm;
-                        break;
-                    case "V_STATISTIK_SFB1118_PRO_PROJEKT":
-                        pnlTBB.Visible = true;
-                        btnSFB1118.Visible = true;
-                        btnSFB1118.ToolTip = sUserPerm;
-                        break;
-                    case "V_STATISTIK_SFB_1118_ANTIKOERPER":
-                        pnlTBB.Visible = true;
-                        btnSFB1118_AK.Visible = true;
-                        btnSFB1118_AK.ToolTip = sUserPerm;
-                        break;
-                    case "V_STATISTIK_DIENSTLEISTUNGEN_PRO_JAHR":
-                        pnlTBB.Visible = true;
-                        btnDLJahr.Visible = true;
-                        btnDLJahr.ToolTip = sUserPerm;
-                        break;
-                    case "V_STATISTIK_SCHNITTE_PRO_JAHR":
-                        pnlTBB.Visible = true;
-                        btnSchnitteJahr.Visible = true;
-                        btnSchnitteJahr.ToolTip = sUserPerm;
-                        break;
-                    case "V_STATISTIK_SCHNITTE_PRO_MONAT":
-                        pnlTBB.Visible = true;
-                        btnSchnitteMonat.Visible = true;
-                        btnSchnitteMonat.ToolTip = sUserPerm;
-                        break;
-                    case "V_STATISTIK_SCHNITTE_PRO_PROJEKT":
-                        pnlTBB.Visible = true;
-                        btnSchnitteProjekt.Visible = true;
-                        btnSchnitteProjekt.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_LBB_PROBASE":
-                        pnlLiquid.Visible = true;
-                        btnProbase.Visible = true;
-                        btnProbase.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_LBB_MELANOM":
-                        pnlLiquid.Visible = true;
-                        btnMelanom.Visible = true;
-                        btnMelanom.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_LBB_HIPO":
-                        pnlLiquid.Visible = true;
-                        btnHIPO.Visible = true;
-                        btnHIPO.ToolTip = sUserPerm;
-                        break;
-                    case "V_NCT_LBB_SPORTUNDKREBS":
-                        pnlLiquid.Visible = true;
-                        btnSportUndKrebs.Visible = true;
-                        btnSportUndKrebs.ToolTip = sUserPerm;
-                        break;
-                    case "V_DZIF_INFEKTIOLOGIE":
-                        pnlDZIF.Visible = true;
-                        btnInfect.Visible = true;
-                        btnInfect.ToolTip = sUserPerm;
-                        break;
-                    case "V_STARLIMS_USER_LOGGED_IN":
-                        pnlSTARLIMS.Visible = true;
-                        btnDiagram.Visible = true;
-                        btnActiveUsers.Visible = true;
-                        btnActiveUsers.ToolTip = sUserPerm;
-                        break;
-                    case "V_STARLIMS_USER_STATISTICS":
-                        pnlSTARLIMS.Visible = true;
-                        btnDiagram.Visible = true;
-                        btnUserStats.Visible = true;
-                        btnUserStats.ToolTip = sUserPerm;
-                        break;
+                    Panel pnl = (Panel)Utils.FindAnyControl(Page, aUserPerm[i][2]);
+   
+                    if(pnl != null)
+                        GenerateButton(aUserPerm[i][0], aUserPerm[i][1], pnl);
                 }
             }
         }
@@ -302,8 +157,8 @@ namespace BMBH_View
             if (Session["UserName"] == null)
                 Session["UserName"] = Page.User.Identity.Name;
 
-            String[] aUserPerm = GetUserPermissions();
-            HideShowPanels(aUserPerm);
+            String[][] aUserPerm = GetUserPermissions();
+            GenerateButtons(aUserPerm);
         }
 
         protected void btnDZIFupload_Click(object sender, EventArgs e)

@@ -31,6 +31,27 @@
                     <asp:Button ID="btnValueCnt" runat="server" CssClass="btn btn-default btn-small" OnClick="btnValueCnt_Click" Text="Aktualisieren" ToolTip="Attributanzahlen neu berechnen" />
                 </ItemTemplate>
             </asp:TemplateField>        
+            <asp:TemplateField HeaderText="Beschriftung">
+                <ItemTemplate>
+                    <asp:TextBox ID="txtCaption" runat="server" Text='<%# Bind("VIEW_CAPTION") %>' Width="200px" />
+                    <asp:Button ID="btnOK" runat="server" CssClass="btn btn-default btn-small" OnClick="btnOK_Click" Text="OK" />
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Panel">
+                <ItemTemplate>
+                    <asp:DropDownList ID="cboPanel" runat="server" AutoPostBack="True" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="121px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged">
+                        <asp:ListItem>pnlDZIF</asp:ListItem>
+                        <asp:ListItem>pnlTBB</asp:ListItem>
+                        <asp:ListItem>pnlTBB_Projekte</asp:ListItem>
+                        <asp:ListItem>pnlPatho</asp:ListItem>
+                        <asp:ListItem>pnlThorax</asp:ListItem>
+                        <asp:ListItem>pnlLiquid</asp:ListItem>
+                        <asp:ListItem>pnlPanco</asp:ListItem>
+                        <asp:ListItem>pnlPraevOnk</asp:ListItem>
+                        <asp:ListItem>pnlSTARLIMS</asp:ListItem>
+                    </asp:DropDownList>
+                </ItemTemplate>
+            </asp:TemplateField>
         </Columns>
         <EditRowStyle BackColor="#F7F6F3" />
         <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
