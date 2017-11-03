@@ -99,6 +99,8 @@ namespace BMBH_View
             btnNew.ControlStyle.CssClass = "btn btn-default";
             btnNew.ToolTip = sView;
             btnNew.Click += new EventHandler(btnGeneric_Click);
+            if(btnNew.Text.Length < 25)
+                btnNew.Width = 170;
             pnl.Controls.Add(btnNew);
         }
 

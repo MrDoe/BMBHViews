@@ -40,6 +40,7 @@
             <asp:TemplateField HeaderText="Panel">
                 <ItemTemplate>
                     <asp:DropDownList ID="cboPanel" runat="server" AutoPostBack="True" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="121px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged">
+                        <asp:ListItem></asp:ListItem>
                         <asp:ListItem>pnlDZIF</asp:ListItem>
                         <asp:ListItem>pnlTBB</asp:ListItem>
                         <asp:ListItem>pnlTBB_Projekte</asp:ListItem>
@@ -48,6 +49,7 @@
                         <asp:ListItem>pnlLiquid</asp:ListItem>
                         <asp:ListItem>pnlPanco</asp:ListItem>
                         <asp:ListItem>pnlPraevOnk</asp:ListItem>
+                        <asp:ListItem>pnlMedV</asp:ListItem>
                         <asp:ListItem>pnlSTARLIMS</asp:ListItem>
                     </asp:DropDownList>
                 </ItemTemplate>

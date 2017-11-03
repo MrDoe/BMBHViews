@@ -76,22 +76,13 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Panel pnlLiquid;
         
         /// <summary>
-        /// pnlDZIF-Steuerelement
+        /// pnlMedV-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlDZIF;
-        
-        /// <summary>
-        /// btnDZIFupload-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnDZIFupload;
+        protected global::System.Web.UI.WebControls.Panel pnlMedV;
         
         /// <summary>
         /// pnlPraevonk-Steuerelement
@@ -110,6 +101,24 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlPanco;
+        
+        /// <summary>
+        /// pnlDZIF-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDZIF;
+        
+        /// <summary>
+        /// btnDZIFupload-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDZIFupload;
         
         /// <summary>
         /// pnlThorax-Steuerelement
