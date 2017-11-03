@@ -21,7 +21,7 @@
                     <asp:Button ID="btnShowView" runat="server" CssClass="btn btn-default btn-small" OnClick="btnShowView_Click" Text="Anzeigen" ToolTip="Suchformular öffnen"/>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Suchtabelle">
+            <asp:TemplateField>
                 <ItemTemplate>
                     <asp:Button ID="btnClearTemp" runat="server" CssClass="btn btn-default btn-small" OnClick="btnClearTemp_Click" Text="Neu erstellen" ToolTip="Temp-Tabelle neu erstellen" />
                 </ItemTemplate>
