@@ -16,17 +16,17 @@
                     <asp:CheckBox ID="chkPermission" runat="server" Checked='<%# Bind("Permission") %>' AutoPostBack="True" OnCheckedChanged="chkPermission_CheckedChanged" />
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField>
+            <asp:TemplateField HeaderText="Suchtabelle">
                 <ItemTemplate>
                     <asp:Button ID="btnShowView" runat="server" CssClass="btn btn-default btn-small" OnClick="btnShowView_Click" Text="Anzeigen" ToolTip="Suchformular öffnen"/>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField>
+            <asp:TemplateField HeaderText="Suchtabelle">
                 <ItemTemplate>
                     <asp:Button ID="btnClearTemp" runat="server" CssClass="btn btn-default btn-small" OnClick="btnClearTemp_Click" Text="Neu erstellen" ToolTip="Temp-Tabelle neu erstellen" />
                 </ItemTemplate>
             </asp:TemplateField>        
-            <asp:TemplateField>
+            <asp:TemplateField HeaderText="Attributzähler">
                 <ItemTemplate>
                     <asp:Button ID="btnValueCnt" runat="server" CssClass="btn btn-default btn-small" OnClick="btnValueCnt_Click" Text="Aktualisieren" ToolTip="Attributanzahlen neu berechnen" />
                 </ItemTemplate>
