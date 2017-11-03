@@ -8,7 +8,7 @@
 </div>
 <div style="position:relative;top:-10px">
 
-<asp:Panel ID="pnlTBBmain" runat="server" BorderWidth="3px" BackColor="#FFF0E6" BorderColor="#FFFFFF" CssClass="inlineBlock">
+<asp:Panel ID="pnlTBBmain" runat="server" BorderWidth="3px" BackColor="#FFF0E6" BorderColor="#FFFFFF" CssClass="inlineBlock" Visible="false">
     <h2>Gewebebank des NCT</h2>  
     <asp:Panel ID="pnlTBB" runat="server" BorderWidth="0px" BackColor="#FFF0E6" BorderColor="#FFFFFF" Visible="false">
     <p>Probenkollektive:</p>

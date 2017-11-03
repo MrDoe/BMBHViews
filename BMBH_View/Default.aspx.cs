@@ -93,6 +93,9 @@ namespace BMBH_View
         protected void GenerateButton(string sView, string sCaption, Panel pnl)
         {
             pnl.Visible = true;
+            if (pnl.Parent.GetType().Equals(typeof(Panel)))
+                pnl.Parent.Visible = true;
+
             Button btnNew = new Button();
             btnNew.ID = "btn" + sView;
             btnNew.Text = sCaption + " » ";
