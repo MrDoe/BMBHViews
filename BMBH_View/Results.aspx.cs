@@ -17,12 +17,12 @@ namespace BMBH_View
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
+            //if (!IsPostBack)
+            //{
                 dgdNCT.AllowPaging = true;
                 dgdNCT.DataSource = GetData();
                 dgdNCT.DataBind();
-            }
+            //}
 
             pnlMain.DefaultButton = btnRefresh.UniqueID;
             ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "SetScrollBars(); ", true);
@@ -123,6 +123,14 @@ namespace BMBH_View
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+        }
+
+        protected void btnSendList_Click(object sender, EventArgs e)
+        {
+        }
+
+        protected void btnList_Click(object sender, EventArgs e)
+        {
             Response.Redirect("~/Search.aspx");
         }
 
@@ -166,6 +174,16 @@ namespace BMBH_View
                 dt.DefaultView.Sort = e.SortExpression + " " + GetSortDirection(e.SortExpression);
                 dgdNCT.DataSource = Session["MainTable"];
                 dgdNCT.DataBind();
+            }
+        }
+
+        protected void cboDept_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string sNewDept = ((DropDownList)sender).SelectedValue;
+            if(sNewDept != (string)Session["UserDept"])
+            {
+                Session["UserDept"] = sNewDept;
+                MPE.Show();
             }
         }
     }

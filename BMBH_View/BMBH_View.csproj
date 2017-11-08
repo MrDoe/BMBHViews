@@ -177,6 +177,8 @@
     <Content Include="Images\on.png" />
     <Content Include="Images\on16.png" />
     <Content Include="Images\paste_16x16.gif" />
+    <Content Include="Images\script_%28add%29_16x16.gif" />
+    <Content Include="Images\script_16x16.gif" />
     <Content Include="Images\table_16x16.gif" />
     <Content Include="Search.aspx" />
     <Content Include="Results.aspx" />
@@ -248,7 +250,6 @@
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
