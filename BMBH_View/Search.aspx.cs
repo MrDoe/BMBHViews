@@ -877,6 +877,5 @@ namespace BMBH_View
         protected void txtValue_TextChanged(object sender, EventArgs e)
         {
         }
-
     }
 }

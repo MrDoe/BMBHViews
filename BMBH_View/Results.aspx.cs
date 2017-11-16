@@ -18,29 +18,19 @@ namespace BMBH_View
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //if (!IsPostBack)
-            //{
-            dgdNCT.AllowPaging = true;
             dgdNCT.DataSource = GetData();
             dgdNCT.DataBind();
-            //}
 
             pnlMain.DefaultButton = btnRefresh.UniqueID;
             ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "SetScrollBars(); ", true);
 
             //pnlGrid.Height = Convert.ToInt32(height.Value) - 100;
             txtMaxPage.Text = dgdNCT.PageCount.ToString();
-
-            //if (Session["ListSentMsg"] != null)
-            //{
-            //    ShowMsg((string)Session["ListSentMsg"]);
-            //    Session["ListSentMsg"] = null;
-            //}
         }
          
         private void ShowMsg(string message)
         {
-            Response.Write("<script>alert('" + message + "');</script>");
+            Response.Write("<script>alert(\"" + message + "\");</script>");
         }
 
         public DataTable GetData()
@@ -137,6 +127,7 @@ namespace BMBH_View
         protected void btnList_Click(object sender, EventArgs e)
         {
             Session["ShowListDialog"] = true;
+            txtListName.Focus();
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)
@@ -248,6 +239,8 @@ namespace BMBH_View
             }
         }
 
+        // example for sending datagrid via table variable
+        //
         //private static DataTable CreateDataTable(IEnumerable<int> ids)
         //{
         //    DataTable table = new DataTable();
@@ -315,11 +308,18 @@ namespace BMBH_View
 
         protected void btnSendList_Click(object sender, EventArgs e)
         {
-            CreateCart(txtListName.Text.Trim(), cboSLuser.SelectedValue);
-            //Session["ListSentMsg"] = "Die Liste '" + txtListName.Text.Trim() + "' wurde an den STARLIMS-Benutzer '" + cboSLuser.SelectedValue + "' gesendet!";
-            //ShowMsg((string)Session["ListSentMsg"]);
-            //string sCon = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString2"].ConnectionString;
-            //ExecuteProcedure(false, sCon, GetAllIDs(), txtListName.Text.Trim(), cboSLuser.SelectedValue);
+            if (txtListName.Text.Trim().Length > 0 && cboSLuser.SelectedValue.Length > 0)
+            {
+                CreateCart(txtListName.Text.Trim(), cboSLuser.SelectedValue);
+                Session["ListSentMsg"] = "Die Liste \'" + txtListName.Text.Trim() + "\' wurde an den STARLIMS-Benutzer \'" + cboSLuser.SelectedValue + "\' gesendet!";
+                ShowMsg((string)Session["ListSentMsg"]);
+            }
+            else
+            {
+                ShowMsg("Bitte einen Listennamen eingeben und einen Benutzer auswählen.");
+                MPE.Show();
+                txtListName.Focus();
+            }
         }
     }
 }

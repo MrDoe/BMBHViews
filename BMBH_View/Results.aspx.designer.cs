@@ -175,15 +175,6 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.GridView dgdNCT;
         
         /// <summary>
-        /// up-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel up;
-        
-        /// <summary>
         /// pnlList-Steuerelement
         /// </summary>
         /// <remarks>

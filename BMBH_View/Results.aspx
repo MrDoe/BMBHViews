@@ -1,6 +1,15 @@
 ﻿<%@ Page Title="BMBH-Views - Tabellenansicht" Language="C#" EnableEventValidation="false" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Results.aspx.cs" Inherits="BMBH_View.Results" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+<script type="text/javascript">
+    function pageLoad() {
+        $find("MPE_ID").add_shown(onModalPopupShown);
+    }
+    function onModalPopupShown() {
+        document.getElementById("txtListName").focus();
+    }
+</script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
 <asp:HiddenField ID="width" runat="server" />
 <asp:HiddenField ID="height" runat="server" />
@@ -32,7 +41,7 @@ order by USRNAM">
 
         <div style="display:block;float:right">
             <asp:ImageButton ID="btnList" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/script_(add)_32.png" BorderColor="#E2E2E2" ToolTip="Als STARLIMS-Liste speichern" style="left:-14px; top:5px;" TabIndex="9" AutoPostBack="true"/>
-            <AjaxControlToolkit:ModalPopupExtender ID="MPE" runat="server" TargetControlID="btnList" PopupControlID="pnlList" PopupDragHandleControlID="pnlListHeader" BackgroundCssClass="modalBackground"></AjaxControlToolkit:ModalPopupExtender>
+            <AjaxControlToolkit:ModalPopupExtender ID="MPE" runat="server" TargetControlID="btnList" PopupControlID="pnlList" PopupDragHandleControlID="pnlListHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
             <asp:ImageButton ID="btnExcel" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/Excel-icon.png" OnClick="btnExcel_Click" BorderColor="#E2E2E2" ToolTip="Excel-Export" style="left:-14px; top:5px;" EnableViewState="False" TabIndex="10"/>
         </div>
 
@@ -50,13 +59,13 @@ order by USRNAM">
         </asp:Panel>
     </asp:Panel>
 
-<asp:UpdatePanel ID="up" runat="server">
-<ContentTemplate>
+<%--<asp:UpdatePanel ID="up" runat="server">--%>
+<%--<ContentTemplate>--%>
 <asp:Panel ID="pnlList" runat="server" CssClass="modalPopup" align="center" style="display:none" TabIndex="0">
-<asp:Panel ID="pnlListHeader" runat="server" CssClass="modalHeader" HorizontalAlign="center" TabIndex="99">
+<asp:Panel ID="pnlListHeader" runat="server" CssClass="modalHeader" HorizontalAlign="center" TabIndex="0">
     Suchergebnis als STARLIMS-Liste speichern <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click"/>
 </asp:Panel>
-    Name der Liste:&nbsp;<asp:TextBox ID="txtListName" runat="server" TabIndex="0" /> <br /><br />
+    Name der Liste:&nbsp;<asp:TextBox ID="txtListName" runat="server" TabIndex="1" ClientIDMode="Static"/> <br /><br />
     <div class="panel panel-default" style="line-height:normal;">
     <div class="panel-heading" style="padding:5px;">Liste an STARLIMS-Benutzer senden</div>
     <div class="panel-body" style="line-height:30px">
@@ -65,13 +74,12 @@ order by USRNAM">
     Benutzername:
     </div>
     <div style="float:right; position:relative; left:-250px; width:100px;">
-    <asp:DropDownList ID="cboDept" runat="server" DataSourceID="SqlDataSource2" DataTextField="DEPT" DataValueField="DEPT" OnSelectedIndexChanged="cboDept_SelectedIndexChanged" AutoPostBack="true" ClientIDMode="static" AppendDataBoundItems="true" onchange="return DeptChange();"></asp:DropDownList><br />
-    <asp:DropDownList ID="cboSLuser" runat="server" DataSourceID="SqlDataSource1" DataTextField="USER" DataValueField="USRNAM"></asp:DropDownList>
+    <asp:DropDownList ID="cboDept" runat="server" DataSourceID="SqlDataSource2" DataTextField="DEPT" DataValueField="DEPT" OnSelectedIndexChanged="cboDept_SelectedIndexChanged" AutoPostBack="true" ClientIDMode="static" AppendDataBoundItems="true" onchange="return DeptChange();" TabIndex="2"></asp:DropDownList><br />
+    <asp:DropDownList ID="cboSLuser" runat="server" DataSourceID="SqlDataSource1" DataTextField="USER" DataValueField="USRNAM" TabIndex="3"></asp:DropDownList>
     </div>
     </div></div>
-    <asp:Button ID="btnSendList" runat="server" Text="Liste anlegen & senden" CssClass="btn btn-default btn-small" OnClick="btnSendList_Click" style="padding:5px;" TabIndex="2" />
+    <asp:Button ID="btnSendList" runat="server" Text="Liste anlegen & senden" CssClass="btn btn-default btn-small" OnClick="btnSendList_Click" style="padding:5px;" TabIndex="4" />
 </asp:Panel>
-</ContentTemplate>
-</asp:UpdatePanel>
-
+<%--</ContentTemplate>--%>
+<%--</asp:UpdatePanel>--%>
 </asp:Content>
