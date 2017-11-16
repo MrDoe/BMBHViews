@@ -10,6 +10,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using OfficeOpenXml;
+using Microsoft.SqlServer.Server;
 
 namespace BMBH_View
 {
@@ -19,9 +20,9 @@ namespace BMBH_View
         {
             //if (!IsPostBack)
             //{
-                dgdNCT.AllowPaging = true;
-                dgdNCT.DataSource = GetData();
-                dgdNCT.DataBind();
+            dgdNCT.AllowPaging = true;
+            dgdNCT.DataSource = GetData();
+            dgdNCT.DataBind();
             //}
 
             pnlMain.DefaultButton = btnRefresh.UniqueID;
@@ -29,6 +30,12 @@ namespace BMBH_View
 
             //pnlGrid.Height = Convert.ToInt32(height.Value) - 100;
             txtMaxPage.Text = dgdNCT.PageCount.ToString();
+
+            //if (Session["ListSentMsg"] != null)
+            //{
+            //    ShowMsg((string)Session["ListSentMsg"]);
+            //    Session["ListSentMsg"] = null;
+            //}
         }
          
         private void ShowMsg(string message)
@@ -82,7 +89,7 @@ namespace BMBH_View
             using (var memoryStream = new MemoryStream())
             {
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                string sFileName = "Export_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".xlsx";
+                string sFileName = (string)Session["View"] + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".xlsx";
                 Response.AddHeader("content-disposition", "attachment;  filename=" + sFileName);
                 excel.SaveAs(memoryStream);
                 memoryStream.WriteTo(Response.OutputStream);
@@ -121,15 +128,18 @@ namespace BMBH_View
             dgdNCT.DataBind();
         }
 
-        protected void btnSearch_Click(object sender, EventArgs e)
+        protected void btnCancel_Click(object sender, EventArgs e)
         {
-        }
-
-        protected void btnSendList_Click(object sender, EventArgs e)
-        {
+            Session["ShowListDialog"] = null;
+            Session["UserDept"] = null;
         }
 
         protected void btnList_Click(object sender, EventArgs e)
+        {
+            Session["ShowListDialog"] = true;
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
         {
             Response.Redirect("~/Search.aspx");
         }
@@ -180,11 +190,136 @@ namespace BMBH_View
         protected void cboDept_SelectedIndexChanged(object sender, EventArgs e)
         {
             string sNewDept = ((DropDownList)sender).SelectedValue;
-            if(sNewDept != (string)Session["UserDept"])
+            Session["UserDept"] = sNewDept;
+            MPE.Show();
+        }
+
+        private void CreateCart(string sCartName, string sUserName)
+        {
+            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString2"].ConnectionString;
+            SqlConnection con = new SqlConnection(sConnString);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "dbo.CreateSTARLIMScart";
+            cmd.Connection = con;
+            
+            // Add the input parameter and set its properties.
+            SqlParameter parameter = new SqlParameter();
+            parameter.ParameterName = "@CartName";
+            parameter.SqlDbType = SqlDbType.NVarChar;
+//            parameter.Direction = ParameterDirection.Input;
+            parameter.Value = sCartName;
+            cmd.Parameters.Add(parameter);
+
+            SqlParameter parameter2 = new SqlParameter();
+            parameter2.ParameterName = "@UserName";
+            parameter2.SqlDbType = SqlDbType.NVarChar;
+//            parameter2.Direction = ParameterDirection.Input;
+            parameter2.Value = sUserName;
+            cmd.Parameters.Add(parameter2);
+
+            SqlParameter parameter3 = new SqlParameter();
+            parameter3.ParameterName = "@GUID";
+            parameter3.SqlDbType = SqlDbType.NVarChar;
+//            parameter3.Direction = ParameterDirection.Input;
+            parameter3.Value = Session["GUID"];
+            cmd.Parameters.Add(parameter3);
+
+            SqlParameter parameter4 = new SqlParameter();
+            parameter4.ParameterName = "@Iteration";
+            parameter4.SqlDbType = SqlDbType.Int;
+            //            parameter3.Direction = ParameterDirection.Input;
+            parameter4.Value = Session["Iteration"];
+            cmd.Parameters.Add(parameter4);
+
+            try
             {
-                Session["UserDept"] = sNewDept;
-                MPE.Show();
+                con.Open();
+                cmd.ExecuteNonQuery();
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+        //private static DataTable CreateDataTable(IEnumerable<int> ids)
+        //{
+        //    DataTable table = new DataTable();
+        //    table.Columns.Add("nID", typeof(int));
+        //    foreach (int id in ids)
+        //    {
+        //        table.Rows.Add(id);
+        //    }
+        //    return table;
+        //}
+        //private static void ExecuteProcedure(bool useDataTable,
+        //                             string connectionString,
+        //                             IEnumerable<int> ids,
+        //                             string sCartName,
+        //                             string sUserName)
+        //{
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        connection.Open();
+        //        using (SqlCommand command = connection.CreateCommand())
+        //        {
+        //            command.CommandText = "BMBH_VIEWS.dbo.CreateSTARLIMScart";
+        //            command.CommandType = CommandType.StoredProcedure;
+
+        //            SqlParameter parameter1;
+        //            parameter1 = command.Parameters.AddWithValue("@CartName", sCartName);
+        //            parameter1.SqlDbType = SqlDbType.NVarChar;
+
+        //            SqlParameter parameter2;
+        //            parameter2 = command.Parameters.AddWithValue("@UserName", sUserName);
+        //            parameter2.SqlDbType = SqlDbType.NVarChar;
+
+        //            SqlParameter parameter3;
+        //            if (useDataTable)
+        //            {
+        //                parameter3 = command.Parameters.AddWithValue("@Inventory", CreateDataTable(ids));
+        //            }
+        //            else
+        //            {
+        //                parameter3 = command.Parameters.AddWithValue("@Inventory", CreateSqlDataRecords(ids));
+        //            }
+        //            parameter3.SqlDbType = SqlDbType.Structured;
+        //            parameter3.TypeName = "dbo.IDType";
+
+        //            command.ExecuteNonQuery();
+        //        }
+        //    }
+        //}
+        //private static IEnumerable<SqlDataRecord> CreateSqlDataRecords(IEnumerable<int> ids)
+        //{
+        //    SqlMetaData[] metaData = new SqlMetaData[1];
+        //    metaData[0] = new SqlMetaData("nID", SqlDbType.Int);
+        //    SqlDataRecord record = new SqlDataRecord(metaData);
+        //    foreach (int id in ids)
+        //    {
+        //        record.SetInt32(0, id);
+        //        yield return record;
+        //    }
+        //}
+        //private IEnumerable<int> GetAllIDs()
+        //{
+        //    DataTable dt = GetData();
+        //    return dt.AsEnumerable().Select(x => x.Field<int>("ID"));
+        //}
+
+        protected void btnSendList_Click(object sender, EventArgs e)
+        {
+            CreateCart(txtListName.Text.Trim(), cboSLuser.SelectedValue);
+            //Session["ListSentMsg"] = "Die Liste '" + txtListName.Text.Trim() + "' wurde an den STARLIMS-Benutzer '" + cboSLuser.SelectedValue + "' gesendet!";
+            //ShowMsg((string)Session["ListSentMsg"]);
+            //string sCon = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString2"].ConnectionString;
+            //ExecuteProcedure(false, sCon, GetAllIDs(), txtListName.Text.Trim(), cboSLuser.SelectedValue);
         }
     }
 }

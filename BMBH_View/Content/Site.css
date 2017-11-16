@@ -298,3 +298,26 @@ textarea {
     background-size: auto auto;
     text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
 }
+
+.styled-select {
+    width: 308px;
+    height: 23px;
+    overflow: hidden;
+    background: url(arrow_xs.png) no-repeat 225px #FFF;
+    border: 1px solid #ccc;
+}
+
+.styled-select select {
+    background: transparent;
+    width: 309px;
+    padding-right: 4px;
+    padding-bottom: 7px;
+    padding-left: 4px;
+    padding-top: 0px;
+    font-size: 12px;
+    line-height: 1;
+    border: none;
+    border-radius: 0;
+    height: 34px;
+    -webkit-appearance: none;
+}

@@ -44,3 +44,37 @@ function DeleteSearch(params) {
     document.getElementById("MainContent_HiddenInputBox").value = result;
     __doPostBack('<%= btnDeleteSearch.UniqueID%>', params);
 }
+
+$(document).ready(function () {
+    if (window.location.pathname == "/views/Results" ||
+        window.location.pathname == "/Results") {
+        $("#MainContent_pnlGrid").height($(window).height() - 100);
+        $("#MainContent_pnlGrid").width($(window).width() - 20);
+        $("body").css("overflow", "hidden");
+    }
+    else
+        $("body").css("overflow", "visible");
+});
+
+function SetScrollBars(e) {
+    if (window.location.pathname == "/views/Results" ||
+        window.location.pathname == "/Results") {
+        $("#MainContent_pnlGrid").height($(window).height() - 100);
+        $("#MainContent_pnlGrid").width($(window).width() - 20);
+        $("body").css("overflow", "hidden");
+    }
+    else
+        $("body").css("overflow", "visible");
+
+};
+
+$(document).load($(window).bind("resize", SetScrollBars));
+
+function DeptChange() {
+    var value = $("#cboDept option:selected").val();
+    if (value == "")
+        return false;
+    else {
+        __doPostBack(value, '');
+    }
+}

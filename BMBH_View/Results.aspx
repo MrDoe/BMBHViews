@@ -5,18 +5,18 @@
 <asp:HiddenField ID="width" runat="server" />
 <asp:HiddenField ID="height" runat="server" />
 
-<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBH_ViewsConnectionString %>" SelectCommand="select USRNAM + ' - ' + FULLNAME as 'USER'
+<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString2 %>" SelectCommand="select USRNAM + ' - ' + FULLNAME as 'USER',USRNAM
 from V_STARLIMS_USERS
 where DEPTLIST LIKE '%' + @UserDept + '%'
 order by USRNAM">
     <SelectParameters>
-        <asp:SessionParameter Name="UserDept" SessionField="UserDept" />
+        <asp:SessionParameter Name="UserDept" SessionField="UserDept" DefaultValue="None" />
     </SelectParameters>
     </asp:SqlDataSource>
-<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBH_ViewsConnectionString %>" SelectCommand="select DEPT from V_STARLIMS_DEPT"></asp:SqlDataSource>
+<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString2 %>" SelectCommand="select DEPT from V_STARLIMS_DEPT"></asp:SqlDataSource>
 
     <asp:Panel ID="pnlMain" runat="server" EnableViewState="False" Height="1000px" Width="100%" style="top:4px; position:relative" >
-        <asp:Button ID="btnSearch" runat="server" Text="Suche" CssClass="btn btn-default btn-small" EnableViewState="False" style="left:0px; position:relative; top:-2px; height:24px; width:60px" TabIndex="999" OnClick="btnSearch_Click" UseSubmitBehavior="False"/>
+        <asp:Button ID="btnSearch" runat="server" Text="Suche" CssClass="btn btn-default btn-small" EnableViewState="False" OnClick="btnSearch_Click" style="left:0px; position:relative; top:-2px; height:24px; width:60px" TabIndex="999" UseSubmitBehavior="False"/>
         &nbsp;
         <asp:ImageButton ID="btnPrevPage" runat="server" EnableViewState="False" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateBackwards_6270.png" OnClick="btnPrevPage_Click" ToolTip="Vorherige Seite" style="left: 1px; top: 5px" TabIndex="3" />
         &nbsp;<asp:ImageButton ID="btnNextPage" runat="server" EnableViewState="False" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateForward_6271.png" OnClick="btnNextPage_Click" ToolTip="Nächste Seite" style="left: 1px; top: 5px" TabIndex="4" />
@@ -31,27 +31,8 @@ order by USRNAM">
         <asp:TextBox ID="txtTotalRows" runat="server" Width="63px" TabIndex="8"></asp:TextBox>
 
         <div style="display:block;float:right">
-            <asp:ImageButton ID="btnList" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/script_(add)_16x16.gif" BorderColor="#E2E2E2" ToolTip="Als STARLIMS-Liste speichern" style="left:-14px; top:5px;" TabIndex="9"/>
-            <AjaxControlToolkit:ModalPopupExtender ID="MPE" runat="server" TargetControlID="btnList" PopupControlID="pnlList" CancelControlID="btnCancel" PopupDragHandleControlID="pnlListHeader" BackgroundCssClass="modalBackground"></AjaxControlToolkit:ModalPopupExtender>
-            <asp:Panel ID="pnlList" runat="server" CssClass="modalPopup" align="center" style="display:none" TabIndex="0">
-            <asp:Panel ID="pnlListHeader" runat="server" CssClass="modalHeader" HorizontalAlign="center" TabIndex="99">
-                Suchergebnis als STARLIMS-Liste speichern <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButton" Text=" x " TabIndex="99"/>
-            </asp:Panel>
-                Name der Liste:&nbsp<asp:TextBox ID="txtListName" runat="server" TabIndex="0" /> <br /><br />
-                <div class="panel panel-default" style="line-height:normal;">
-                <div class="panel-heading" style="padding:5px;">Liste an STARLIMS-Benutzer senden</div>
-                <div class="panel-body" style="line-height:30px">
-                <div style="float:left; position:relative; width:50px;">
-                Biobank:
-                Benutzername:
-                </div>
-                <div style="float:right; position:relative; left:-250px; width:100px;">
-                <asp:DropDownList ID="cboDept" runat="server" DataSourceID="SqlDataSource2" DataTextField="DEPT" DataValueField="DEPT" AutoPostBack="True" OnSelectedIndexChanged="cboDept_SelectedIndexChanged"></asp:DropDownList><br />
-                <asp:DropDownList ID="cboSLuser" runat="server" DataSourceID="SqlDataSource1" DataTextField="USER" DataValueField="USER"></asp:DropDownList>
-                </div>
-                </div></div>
-                <asp:Button ID="btnSendList" runat="server" Text="Liste anlegen & senden" CssClass="btn btn-default btn-small" style="padding:5px;" TabIndex="2" OnClick="btnSendList_Click"/>
-            </asp:Panel>
+            <asp:ImageButton ID="btnList" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/script_(add)_32.png" BorderColor="#E2E2E2" ToolTip="Als STARLIMS-Liste speichern" style="left:-14px; top:5px;" TabIndex="9" AutoPostBack="true"/>
+            <AjaxControlToolkit:ModalPopupExtender ID="MPE" runat="server" TargetControlID="btnList" PopupControlID="pnlList" PopupDragHandleControlID="pnlListHeader" BackgroundCssClass="modalBackground"></AjaxControlToolkit:ModalPopupExtender>
             <asp:ImageButton ID="btnExcel" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/Excel-icon.png" OnClick="btnExcel_Click" BorderColor="#E2E2E2" ToolTip="Excel-Export" style="left:-14px; top:5px;" EnableViewState="False" TabIndex="10"/>
         </div>
 
@@ -68,4 +49,29 @@ order by USRNAM">
             </asp:GridView>
         </asp:Panel>
     </asp:Panel>
-    </asp:Content>
+
+<asp:UpdatePanel ID="up" runat="server">
+<ContentTemplate>
+<asp:Panel ID="pnlList" runat="server" CssClass="modalPopup" align="center" style="display:none" TabIndex="0">
+<asp:Panel ID="pnlListHeader" runat="server" CssClass="modalHeader" HorizontalAlign="center" TabIndex="99">
+    Suchergebnis als STARLIMS-Liste speichern <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click"/>
+</asp:Panel>
+    Name der Liste:&nbsp;<asp:TextBox ID="txtListName" runat="server" TabIndex="0" /> <br /><br />
+    <div class="panel panel-default" style="line-height:normal;">
+    <div class="panel-heading" style="padding:5px;">Liste an STARLIMS-Benutzer senden</div>
+    <div class="panel-body" style="line-height:30px">
+    <div style="float:left; position:relative; width:50px;">
+    Biobank:
+    Benutzername:
+    </div>
+    <div style="float:right; position:relative; left:-250px; width:100px;">
+    <asp:DropDownList ID="cboDept" runat="server" DataSourceID="SqlDataSource2" DataTextField="DEPT" DataValueField="DEPT" OnSelectedIndexChanged="cboDept_SelectedIndexChanged" AutoPostBack="true" ClientIDMode="static" AppendDataBoundItems="true" onchange="return DeptChange();"></asp:DropDownList><br />
+    <asp:DropDownList ID="cboSLuser" runat="server" DataSourceID="SqlDataSource1" DataTextField="USER" DataValueField="USRNAM"></asp:DropDownList>
+    </div>
+    </div></div>
+    <asp:Button ID="btnSendList" runat="server" Text="Liste anlegen & senden" CssClass="btn btn-default btn-small" OnClick="btnSendList_Click" style="padding:5px;" TabIndex="2" />
+</asp:Panel>
+</ContentTemplate>
+</asp:UpdatePanel>
+
+</asp:Content>

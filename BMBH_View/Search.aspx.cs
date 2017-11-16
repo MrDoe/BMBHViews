@@ -33,9 +33,16 @@ namespace BMBH_View
             {
                 //Session["UserName"] = Page.User.Identity.Name;
                 Session["JumpedBack"] = false;
+                Session["ShowListDialog"] = null;
 
                 //if (Session["LastQuery"] == null)
                 ClearTempTable();
+
+                if (Session["GUID"] == null)
+                {
+                    Session["GUID"] = Guid.NewGuid().ToString();
+                    Session["Iteration"] = 1;
+                }
 
                 Session["LastQuery"] = null;
 
@@ -161,7 +168,7 @@ namespace BMBH_View
                 SQLexecute("delete from V_Recursive_Temp where GUID='" + Session["GUID"] + "'");
                 SQLexecute("delete from V_Recursive_Log where GUID='" + Session["GUID"] + "'");
                 lblRecursive.Text = "Rekursive Suche";
-                Session["GUID"] = null;
+                Session["GUID"] = Guid.NewGuid().ToString();
                 Session["Iteration"] = 1;
                 Session["Recursive"] = null;
                 Session["Additive"] = null;
@@ -201,6 +208,7 @@ namespace BMBH_View
             string sFrom = " from [" + Session["View"] + "] v ";
             bool bRecursive = false;
             bool bAdditive = false;
+
             int nLastIteration = Session["Iteration"] == null? 0 : (int)(Session["Iteration"]) - 1;
 
             if (Session["Recursive"] != null)
@@ -208,7 +216,7 @@ namespace BMBH_View
 
             if (Session["Additive"] != null)
                 bAdditive = (Session["Additive"].ToString() == "True");
-
+ 
             if (bRecursive) // recursive search
                 if (nLastIteration > 0)
                     sFrom += " inner join V_Recursive_Temp t on v.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
@@ -334,7 +342,7 @@ namespace BMBH_View
 
             string sSQL = Server.HtmlDecode(sSelect + sFrom + sWhere);
 
-            if ((bRecursive || bAdditive) && (bool)Session["JumpedBack"] == false) // save result to temporary table
+            if ((bool)Session["JumpedBack"] == false) // save result to temporary table
             {
                 string sInsert = "insert into V_Recursive_Temp (ID, GUID, ITERATION) ";
                 string sSQL2 = "";
@@ -352,11 +360,16 @@ namespace BMBH_View
                     sSQL2 = Server.HtmlDecode(sInsert + sSelect + " from (" + sSQL + ") u");
                     sMode = "Additiv";
                 }
+                else // standard search
+                {
+                    sSelect = "select v.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
+                    sSQL2 = Server.HtmlDecode(sInsert + sSelect + sFrom + sWhere);
+                    sMode = "Standard";
+                }
 
                 SQLexecute(sSQL2);
                 SQLexecute("insert into V_Recursive_Log (GUID, Iteration, SQL, SEARCHMODE) values ('" + Session["GUID"] + "'," + Session["Iteration"] + ",'" + EscapeSQL(sWhere) + "','" + sMode + "')");
-                //txtHistory.Text = sSQL2;
-                //ShowMsg(sSQL);
+
                 Session["Iteration"] = (int)Session["Iteration"] + 1;
             }
 
@@ -752,12 +765,6 @@ namespace BMBH_View
             {
                 chkRecursive.Checked = false;
                 Session["Recursive"] = false;
-
-                if (Session["GUID"] == null)
-                {
-                    Session["GUID"] = Guid.NewGuid().ToString();
-                    Session["Iteration"] = 1;
-                }
             }
 
             btnSubmit.Focus();
@@ -772,12 +779,6 @@ namespace BMBH_View
             {
                 chkAdditive.Checked = false;
                 Session["Additive"] = false;
-
-                if (Session["GUID"] == null)
-                {
-                    Session["GUID"] = Guid.NewGuid().ToString();
-                    Session["Iteration"] = 1;
-                }
             }
 
             btnSubmit.Focus();

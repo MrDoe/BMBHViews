@@ -178,6 +178,8 @@
     <Content Include="Images\on16.png" />
     <Content Include="Images\paste_16x16.gif" />
     <Content Include="Images\script_%28add%29_16x16.gif" />
+    <Content Include="Images\script_%28add%29_16x16.png" />
+    <Content Include="Images\script_%28add%29_32.png" />
     <Content Include="Images\script_16x16.gif" />
     <Content Include="Images\table_16x16.gif" />
     <Content Include="Search.aspx" />

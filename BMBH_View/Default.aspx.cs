@@ -71,6 +71,7 @@ namespace BMBH_View
 
         public String[][] GetUserPermissions()
         {
+            //Session["UserName"] = "KHD\\doellingerchristoph";
             string sUser = (string)Session["UserName"];
             DataSet ds = new DataSet("Permissions");
 
@@ -148,6 +149,7 @@ namespace BMBH_View
         protected void Page_Load(object sender, EventArgs e)
         {
             Session["LastQuery"] = null;
+            Session["ShowListDialog"] = null;
 
             if (Session["GUID"] != null)
             {
