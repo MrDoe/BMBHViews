@@ -21,7 +21,7 @@ namespace BMBH_View
 
         protected void SetDataSource()
         {
-            dsSearch.SelectCommand = "SELECT * FROM [" + Session["FormTable"] + "] WHERE ([UserId] = '" + (String)Session["UserName"] + "')";
+            dsSearch.SelectCommand = "SELECT * FROM [" + Session["FormTable"] + "] WHERE ([UserId] = '" + (String)Session["UserName"] + "') order by ID";
             dsSearch.UpdateCommand = "UPDATE [" + Session["FormTable"] + "] SET [Operator] = @Operator, [Wert] = @Wert, [Controltype] = @Controltype WHERE [ID] = @ID";
             dsSearch.InsertCommand = "INSERT INTO [" + Session["FormTable"] + "] ([Attribut], [Operator], [Wert], [Datatype], [UserId]) VALUES (@Attribut, @Operator, @Wert, @Datatype, @UserId)";
             dsSearch.DeleteCommand = "DELETE FROM [" + Session["FormTable"] + "] WHERE [ID] = @ID";
@@ -46,6 +46,9 @@ namespace BMBH_View
 
                 Session["LastQuery"] = null;
 
+                if((int)Session["Iteration"] > 1)
+                    pnlSQLhistory.Visible = true;
+
                 if (Session["Recursive"] != null)
                 {
                     if(Session["Recursive"].ToString() == "False")
@@ -54,7 +57,6 @@ namespace BMBH_View
                     if (Session["Recursive"].ToString() == "True")
                     {
                         chkRecursive.Checked = true;
-                        pnlSQLhistory.Visible = true;
 
                         if (Session["DataCount"] != null)
                             lblRecursive.Text = "Rekursive Suche (" + Session["DataCount"] + " Datensätze)";
@@ -208,6 +210,7 @@ namespace BMBH_View
             string sFrom = " from [" + Session["View"] + "] v ";
             bool bRecursive = false;
             bool bAdditive = false;
+            bool bStandard = false;
 
             int nLastIteration = Session["Iteration"] == null? 0 : (int)(Session["Iteration"]) - 1;
 
@@ -216,9 +219,11 @@ namespace BMBH_View
 
             if (Session["Additive"] != null)
                 bAdditive = (Session["Additive"].ToString() == "True");
- 
-            if (bRecursive) // recursive search
-                if (nLastIteration > 0)
+
+            if (!bRecursive && !bAdditive)
+                bStandard = true;
+
+            if (bRecursive && nLastIteration > 0 || (bStandard && (bool)Session["JumpedBack"]))
                     sFrom += " inner join V_Recursive_Temp t on v.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
 
             string sWhere = "";
@@ -847,7 +852,7 @@ namespace BMBH_View
                 Session["JumpedBack"] = true;
                 lblRecursive.Text = "Rekursive Suche";
                 lblAdditive.Text = "Additive Suche";
-                chkRecursive.Checked = true;
+                //chkRecursive.Checked = true;
                 SQLexecute("delete from V_Recursive_Log where GUID = '" + Session["GUID"] + "' and Iteration > " + sIterationSelected);
                 dgdHistory.DataBind();
             }
