@@ -20,6 +20,8 @@ namespace BMBH_View
             {
                 if ((Boolean)Session["IsAdmin"] == false) // no admin, go back to previous page
                     Response.Redirect(Request.UrlReferrer.ToString());
+
+                cboUser.SelectedValue = (string)Session["UserName"];
             }
         }
 

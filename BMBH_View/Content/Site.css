@@ -196,7 +196,7 @@ textarea {
 
 .inlineBlock {
     position: relative;
-    height: 370px !important;
+    height: 410px !important;
     width: 460px;
     float: left;
     padding: 10px;
@@ -219,7 +219,9 @@ textarea {
     border: 1px solid rgba(179,189,229,1);
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    font: class="support css-value">normal 17px/1 "Lucida Console", Monaco, monospace;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-style: normal;
+    font-size: 13px;
     color: rgba(0,0,0,1);
     text-align: left;
     -o-text-overflow: ellipsis;
@@ -310,10 +312,11 @@ textarea {
 .styled-select select {
     background: transparent;
     width: 309px;
-    padding-right: 4px;
+    padding: 4px 7px 4px 0px;
+/*    padding-right: 4px;
     padding-bottom: 7px;
     padding-left: 4px;
-    padding-top: 0px;
+    padding-top: 0px; */
     font-size: 12px;
     line-height: 1;
     border: none;
