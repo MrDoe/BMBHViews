@@ -51,6 +51,7 @@
                         <asp:ListItem>pnlPraevOnk</asp:ListItem>
                         <asp:ListItem>pnlMedV</asp:ListItem>
                         <asp:ListItem>pnlSTARLIMS</asp:ListItem>
+                        <asp:ListItem>pnlGyn</asp:ListItem>
                     </asp:DropDownList>
                 </ItemTemplate>
             </asp:TemplateField>

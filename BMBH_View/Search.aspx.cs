@@ -307,9 +307,10 @@ namespace BMBH_View
                                     if (sOperator == "BETWEEN")
                                     {
                                         int nSeperator = sValue.IndexOf(',');
-                                        string sDate1 = sValue.Substring(0, nSeperator - 2);
-                                        string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 1);
+                                        string sDate1 = sValue.Substring(0, nSeperator);
+                                        string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 2);
                                         sValue = sDate1 + " AND " + sDate2;
+                                        //ShowMsg(sValue);
                                         sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
                                     }
                                     else
@@ -323,6 +324,7 @@ namespace BMBH_View
                                         string sDate1 = sValue.Substring(0, nSeperator - 2) + ":00.00'";
                                         string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 3) + ":00.00'";
                                         sValue = sDate1 + " AND " + sDate2;
+                                        ShowMsg(sValue);
                                         sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
                                     }
                                     else
