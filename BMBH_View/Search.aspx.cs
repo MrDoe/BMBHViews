@@ -416,7 +416,6 @@ namespace BMBH_View
         {
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
-            //GridViewRow row = (GridViewRow)Session["CurrentRow"];
             TextBox txtValue = (TextBox)row.Cells[3].FindControl("txtValue");
             DropDownList cboValue = (DropDownList)row.Cells[3].FindControl("cboValue");
             CheckBoxList chkValue = (CheckBoxList)row.Cells[3].FindControl("chkValue");
@@ -488,8 +487,8 @@ namespace BMBH_View
 
         protected void cboOperator_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //DropDownList cboOperator = (DropDownList)sender;
-            GridViewRow row = (GridViewRow)Session["CurrentRow"];
+            DropDownList cboOperator = (DropDownList)sender;
+            GridViewRow row = (GridViewRow)cboOperator.NamingContainer;
             EnableControls(row, false);
         }
 
@@ -501,8 +500,8 @@ namespace BMBH_View
 
         protected void btnInSelect_Click(object sender, ImageClickEventArgs e)
         {
-            //ImageButton btn = (ImageButton)sender;
-            GridViewRow row = (GridViewRow)Session["CurrentRow"];
+            ImageButton btn = (ImageButton)sender;
+            GridViewRow row = (GridViewRow)btn.NamingContainer;
             string sRow = row.RowIndex.ToString();
             string sDatatype = row.Cells[4].Text;
             GetFromClipboard("MainContent_dgdSearch_txtValue_" + sRow, sDatatype);
@@ -510,18 +509,6 @@ namespace BMBH_View
 
         protected void btnEdit_Click(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
-            GridViewRow row = (GridViewRow)btn.NamingContainer;
-
-
-            //GridViewRow currentRow = (GridViewRow)Session["CurrentRow"];
-
-            //if (row != currentRow && Session["CurrentRow"] != null)
-            //{
-            //    btnOK_Click(currentRow.FindControl("btnOK"), null);
-            //    dgdSearch.DataBind();
-            //}
-
             btnNew.Enabled = false;
             btnSubmit.Enabled = false;
             btnLoadSearch.Enabled = false;
@@ -586,11 +573,6 @@ namespace BMBH_View
                 cboOperator.Items.Clear();
                 cboOperator.Items.Add(new ListItem("="));
                 cboOperator.Items.Add(new ListItem("≠", "<>"));
-                cboOperator.Items.Add(new ListItem("ENTHÄLT", "LIKE"));
-                cboOperator.Items.Add(new ListItem("ENTHÄLT NICHT", "NOT LIKE"));
-                cboOperator.Items.Add(new ListItem("IN"));
-                cboOperator.Items.Add(new ListItem("IST LEER", "IS NULL"));
-                cboOperator.Items.Add(new ListItem("IST NICHT LEER", "IS NOT NULL"));
 
                 string sSelectedControlType = cboControltype.SelectedValue;
                 cboControltype.Items.Clear();
@@ -602,12 +584,14 @@ namespace BMBH_View
                         cboOperator.Items.Add(new ListItem("<"));
                         cboOperator.Items.Add(new ListItem(">"));
                         cboOperator.Items.Add(new ListItem("ZWISCHEN", "BETWEEN"));
+                        cboOperator.Items.Add(new ListItem("IST LEER", "IS NULL"));
+                        cboOperator.Items.Add(new ListItem("IST NICHT LEER", "IS NOT NULL"));
                         cboOperator.SelectedValue = sSelectedOperator;
                         
                         // calendar only
                         cboControltype.Items.Add(new ListItem("Calendar"));
                         break;
-                    
+
                     case "int":
                     case "bigint":
                     case "float":
@@ -615,6 +599,11 @@ namespace BMBH_View
                         cboOperator.Items.Add(new ListItem("<"));
                         cboOperator.Items.Add(new ListItem(">"));
                         cboOperator.Items.Add(new ListItem("ZWISCHEN", "BETWEEN"));
+                        cboOperator.Items.Add(new ListItem("ENTHÄLT", "LIKE"));
+                        cboOperator.Items.Add(new ListItem("ENTHÄLT NICHT", "NOT LIKE"));
+                        cboOperator.Items.Add(new ListItem("IN"));
+                        cboOperator.Items.Add(new ListItem("IST LEER", "IS NULL"));
+                        cboOperator.Items.Add(new ListItem("IST NICHT LEER", "IS NOT NULL"));
                         cboOperator.SelectedValue = sSelectedOperator;
 
                         // user can choose between TextBox and DropDown
@@ -625,9 +614,15 @@ namespace BMBH_View
                     case "nvarchar":
                     case "char":
                     case "varchar":
+                        cboOperator.Items.Add(new ListItem("ENTHÄLT", "LIKE"));
+                        cboOperator.Items.Add(new ListItem("ENTHÄLT NICHT", "NOT LIKE"));
+                        cboOperator.Items.Add(new ListItem("IN"));
+                        cboOperator.Items.Add(new ListItem("IST LEER", "IS NULL"));
+                        cboOperator.Items.Add(new ListItem("IST NICHT LEER", "IS NOT NULL"));
+
                         if (cboOperator.SelectedValue == "<" ||
-                            cboOperator.SelectedValue == "<" ||
-                            cboOperator.SelectedValue == "<" ||
+                            cboOperator.SelectedValue == ">" ||
+                            cboOperator.SelectedValue == "<>" ||
                             cboOperator.SelectedValue == "BETWEEN")
                             cboOperator.SelectedValue = "=";
                         else
@@ -636,6 +631,15 @@ namespace BMBH_View
                         // user can choose between TextBox and DropDown
                         cboControltype.Items.Add(new ListItem("TextBox"));
                         cboControltype.Items.Add(new ListItem("DropDownList"));
+                        break;
+
+                    case "bit":
+                        cboOperator.Items.Add(new ListItem("IST LEER", "IS NULL"));
+                        cboOperator.Items.Add(new ListItem("IST NICHT LEER", "IS NOT NULL"));
+                        cboOperator.SelectedValue = sSelectedOperator;
+
+                        // checkbox only
+                        cboControltype.Items.Add(new ListItem("TextBox"));
                         break;
                 }
                 cboControltype.SelectedValue = sSelectedControlType;
@@ -790,14 +794,13 @@ namespace BMBH_View
                 if ((e.Row.RowState & DataControlRowState.Edit) > 0)
                 {
                     EnableControls(e.Row, true);
-                    Session["CurrentRow"] = e.Row;
                 }
         }
 
         protected void cboControltype_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //DropDownList cboOperator = (DropDownList)sender;
-            GridViewRow row = (GridViewRow)Session["CurrentRow"];
+            DropDownList cboOperator = (DropDownList)sender;
+            GridViewRow row = (GridViewRow)cboOperator.NamingContainer;
             EnableControls(row, false);
         }
         
@@ -899,8 +902,8 @@ namespace BMBH_View
         }
         protected void btnClearValue_Click(object sender, EventArgs e)
         {
-            //ImageButton btnClearValue = (ImageButton)sender;
-            GridViewRow row = (GridViewRow)Session["CurrentRow"];
+            ImageButton btnClearValue = (ImageButton)sender;
+            GridViewRow row = (GridViewRow)btnClearValue.NamingContainer;
             CheckBox chkSingleValue = (CheckBox)row.FindControl("chkSingleValue");
             TextBox txtValue = (TextBox)row.FindControl("txtValue");
             chkSingleValue.Checked = false;
