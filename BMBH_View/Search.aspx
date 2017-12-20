@@ -44,7 +44,7 @@
     <asp:Table ID= "Table1" runat="server">
         <asp:TableRow>
             <asp:TableCell>
-    <asp:GridView ID="dgdSearch" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" DataKeyNames="ID" OnRowEditing="dgdSearch_RowEditing" Width="50%" OnRowDataBound="dgdSearch_RowDataBound" DataSourceID="dsSearch" Font-Names="Arial" Font-Size="Small">
+    <asp:GridView ID="dgdSearch" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" DataKeyNames="ID" OnRowEditing="dgdSearch_RowEditing" Width="50%" OnRowDataBound="dgdSearch_RowDataBound" OnRowCommand="dgdSearch_RowCommand" DataSourceID="dsSearch" Font-Names="Arial" Font-Size="Small">
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" Width="50%" Height="10px" />
         <Columns>
             <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="True" InsertVisible="False" SortExpression="ID" Visible="False" />

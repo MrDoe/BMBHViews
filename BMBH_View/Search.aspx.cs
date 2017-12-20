@@ -404,7 +404,8 @@ namespace BMBH_View
                 }
             }
         }
-
+        
+        // executed after hitting the "Edit" button, but before loading controls
         protected void dgdSearch_RowEditing(object sender, GridViewEditEventArgs e)
         {
             string sCurrentField = (string)dgdSearch.Rows[e.NewEditIndex].Cells[1].Text;
@@ -415,6 +416,7 @@ namespace BMBH_View
         {
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
+            //GridViewRow row = (GridViewRow)Session["CurrentRow"];
             TextBox txtValue = (TextBox)row.Cells[3].FindControl("txtValue");
             DropDownList cboValue = (DropDownList)row.Cells[3].FindControl("cboValue");
             CheckBoxList chkValue = (CheckBoxList)row.Cells[3].FindControl("chkValue");
@@ -486,8 +488,8 @@ namespace BMBH_View
 
         protected void cboOperator_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DropDownList cboOperator = (DropDownList)sender;
-            GridViewRow row = (GridViewRow)cboOperator.NamingContainer;
+            //DropDownList cboOperator = (DropDownList)sender;
+            GridViewRow row = (GridViewRow)Session["CurrentRow"];
             EnableControls(row, false);
         }
 
@@ -499,8 +501,8 @@ namespace BMBH_View
 
         protected void btnInSelect_Click(object sender, ImageClickEventArgs e)
         {
-            ImageButton btn = (ImageButton)sender;
-            GridViewRow row = (GridViewRow)btn.NamingContainer;
+            //ImageButton btn = (ImageButton)sender;
+            GridViewRow row = (GridViewRow)Session["CurrentRow"];
             string sRow = row.RowIndex.ToString();
             string sDatatype = row.Cells[4].Text;
             GetFromClipboard("MainContent_dgdSearch_txtValue_" + sRow, sDatatype);
@@ -508,6 +510,18 @@ namespace BMBH_View
 
         protected void btnEdit_Click(object sender, EventArgs e)
         {
+            Button btn = (Button)sender;
+            GridViewRow row = (GridViewRow)btn.NamingContainer;
+
+
+            //GridViewRow currentRow = (GridViewRow)Session["CurrentRow"];
+
+            //if (row != currentRow && Session["CurrentRow"] != null)
+            //{
+            //    btnOK_Click(currentRow.FindControl("btnOK"), null);
+            //    dgdSearch.DataBind();
+            //}
+
             btnNew.Enabled = false;
             btnSubmit.Enabled = false;
             btnLoadSearch.Enabled = false;
@@ -530,7 +544,7 @@ namespace BMBH_View
                 return dt;
             }
         }
-
+    
         public void EnableControls(GridViewRow row, bool bLoadOperators)
         {
             // controls
@@ -566,9 +580,9 @@ namespace BMBH_View
             DropDownList cboOperator = (DropDownList)row.FindControl("cboOperator");
             string sDatatype = (string)row.Cells[4].Text;
 
-            if (bLoadOperators)
+            if (bLoadOperators) // Load Operator and Control Type Items
             {
-                string sSelectedValue = cboOperator.SelectedValue;
+                string sSelectedOperator = cboOperator.SelectedValue;
                 cboOperator.Items.Clear();
                 cboOperator.Items.Add(new ListItem("="));
                 cboOperator.Items.Add(new ListItem("≠", "<>"));
@@ -578,10 +592,22 @@ namespace BMBH_View
                 cboOperator.Items.Add(new ListItem("IST LEER", "IS NULL"));
                 cboOperator.Items.Add(new ListItem("IST NICHT LEER", "IS NOT NULL"));
 
+                string sSelectedControlType = cboControltype.SelectedValue;
+                cboControltype.Items.Clear();
+
                 switch (sDatatype)
                 {
                     case "date":
                     case "datetime":
+                        cboOperator.Items.Add(new ListItem("<"));
+                        cboOperator.Items.Add(new ListItem(">"));
+                        cboOperator.Items.Add(new ListItem("ZWISCHEN", "BETWEEN"));
+                        cboOperator.SelectedValue = sSelectedOperator;
+                        
+                        // calendar only
+                        cboControltype.Items.Add(new ListItem("Calendar"));
+                        break;
+                    
                     case "int":
                     case "bigint":
                     case "float":
@@ -589,7 +615,11 @@ namespace BMBH_View
                         cboOperator.Items.Add(new ListItem("<"));
                         cboOperator.Items.Add(new ListItem(">"));
                         cboOperator.Items.Add(new ListItem("ZWISCHEN", "BETWEEN"));
-                        cboOperator.SelectedValue = sSelectedValue;
+                        cboOperator.SelectedValue = sSelectedOperator;
+
+                        // user can choose between TextBox and DropDown
+                        cboControltype.Items.Add(new ListItem("TextBox"));
+                        cboControltype.Items.Add(new ListItem("DropDownList"));
                         break;
 
                     case "nvarchar":
@@ -601,9 +631,14 @@ namespace BMBH_View
                             cboOperator.SelectedValue == "BETWEEN")
                             cboOperator.SelectedValue = "=";
                         else
-                            cboOperator.SelectedValue = sSelectedValue;
+                            cboOperator.SelectedValue = sSelectedOperator;
+
+                        // user can choose between TextBox and DropDown
+                        cboControltype.Items.Add(new ListItem("TextBox"));
+                        cboControltype.Items.Add(new ListItem("DropDownList"));
                         break;
                 }
+                cboControltype.SelectedValue = sSelectedControlType;
             }
 
             // get cell values
@@ -753,13 +788,16 @@ namespace BMBH_View
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
                 if ((e.Row.RowState & DataControlRowState.Edit) > 0)
+                {
                     EnableControls(e.Row, true);
+                    Session["CurrentRow"] = e.Row;
+                }
         }
 
         protected void cboControltype_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DropDownList cboOperator = (DropDownList)sender;
-            GridViewRow row = (GridViewRow)cboOperator.NamingContainer;
+            //DropDownList cboOperator = (DropDownList)sender;
+            GridViewRow row = (GridViewRow)Session["CurrentRow"];
             EnableControls(row, false);
         }
         
@@ -861,8 +899,8 @@ namespace BMBH_View
         }
         protected void btnClearValue_Click(object sender, EventArgs e)
         {
-            ImageButton btnClearValue = (ImageButton)sender;
-            GridViewRow row = (GridViewRow)btnClearValue.NamingContainer;
+            //ImageButton btnClearValue = (ImageButton)sender;
+            GridViewRow row = (GridViewRow)Session["CurrentRow"];
             CheckBox chkSingleValue = (CheckBox)row.FindControl("chkSingleValue");
             TextBox txtValue = (TextBox)row.FindControl("txtValue");
             chkSingleValue.Checked = false;
@@ -883,6 +921,29 @@ namespace BMBH_View
 
         protected void txtValue_TextChanged(object sender, EventArgs e)
         {
+        }
+
+        protected void dgdSearch_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Edit")
+            {
+                // get row index
+                Button btn = (Button)e.CommandSource;
+                GridViewRow row = (GridViewRow)btn.NamingContainer;
+                int newIndex = row.RowIndex;
+                if (Session["PreviousIndex"] != null)
+                {
+                    int prevIndex = (int)Session["PreviousIndex"];
+
+                    if (prevIndex != newIndex) // update previous row
+                    {
+                        object prevSender = dgdSearch.Rows[prevIndex].FindControl("btnOK");
+                        btnOK_Click(prevSender, e);
+                        dgdSearch.UpdateRow(prevIndex, false);
+                    }
+                }
+                Session["PreviousIndex"] = newIndex;
+            }
         }
     }
 }
