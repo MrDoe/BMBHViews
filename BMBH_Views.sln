@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMBH_View", "BMBH_View\BMBH_View.csproj", "{869DBA88-71B8-4E38-9290-C9ADD41CDCE1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMBH_Views", "BMBH_Views\BMBH_Views.csproj", "{869DBA88-71B8-4E38-9290-C9ADD41CDCE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
