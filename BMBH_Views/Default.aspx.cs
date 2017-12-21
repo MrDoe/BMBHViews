@@ -46,6 +46,7 @@ namespace BMBH_View
             Response.Write("<script>alert(\"" + message + "\");</script>");
         }
         
+        // Show dataset contents (for debugging reasons)
         private void ShowDataSet(DataSet ds)
         {
             StringWriter sw = new StringWriter(); 
@@ -53,6 +54,7 @@ namespace BMBH_View
             ShowMsg("DataSet: " + sw.ToString());
         }
 
+        // convert dataset to 2D string array
         private string[][] StringArray(DataSet ds)
         {
             int nRows = ds.Tables[0].Rows.Count;
