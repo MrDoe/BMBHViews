@@ -1,0 +1,69 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="BMBH_View.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="de">
+<head runat="server">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8"/>
+    <link rel="shortcut icon" type="image/x-icon" href="Images/bmbh_views_logo3.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BMBH-Views</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server" EnableScriptGlobalization="true">
+            <Scripts>
+                <%--Informationen zur Bündelung von Skripts in ScriptManager finden Sie unter https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework-Skripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="respond" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Websiteskripts--%>
+                <asp:ScriptReference Path="~/Scripts/Clipboard.js" />
+            </Scripts>
+        </asp:ScriptManager>
+        <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/views">
+                    <img style="position: relative; top:-11px; left: 0px; margin-bottom: 0px;" src="Images/bmbh_views_logo.png" alt="BMBH-Views-Logo"/>
+                </a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-menubuilder">
+                    <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse navbar-menubuilder">
+                <ul class="nav navbar-nav navbar-left">
+                    <!--<li> <a href="/views/about">Info</a> </li> -->
+                    <li> <a href="/views/help">Hilfe</a> </li>
+                    <li> <asp:HyperLink ID="lnkUserMan" Text="Benutzerverwaltung" NavigateURL="/views/UserMan" runat="server">Benutzerverwaltung</asp:HyperLink> </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li> <p class="nav navbar-text navbar-right">Benutzer: <asp:Label ID="lblUserName" runat="server" Text="Benutzername"></asp:Label>
+                        </p> </li>
+                </ul>
+            </div>
+          </div>                  
+        </div>
+        <div class="container body-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
