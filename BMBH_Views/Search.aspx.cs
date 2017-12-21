@@ -34,6 +34,7 @@ namespace BMBH_View
                 //Session["UserName"] = Page.User.Identity.Name;
                 Session["JumpedBack"] = false;
                 Session["ShowListDialog"] = null;
+                Session["PreviousIndex"] = null;
 
                 //if (Session["LastQuery"] == null)
                 ClearTempTable();
