@@ -1,3 +1,0 @@
-﻿Build wurde gestartet...
-    BMBH_View -> E:\Visual Studio 2017\Projects\BMBH_View\BMBH_View\bin\BMBH_View.dll
-========== Erstellen: 1 erfolgreich, 0 fehlerhaft, 0 aktuell, 0 übersprungen ==========
