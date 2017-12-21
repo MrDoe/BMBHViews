@@ -73,7 +73,7 @@ namespace BMBH_View
 
         public String[][] GetUserPermissions()
         {
-            //Session["UserName"] = "KHD\\doellingerchristoph";
+            //Session["UserName"] = "KHD\\doellingerchristoph"; //
             string sUser = (string)Session["UserName"];
             DataSet ds = new DataSet("Permissions");
 
