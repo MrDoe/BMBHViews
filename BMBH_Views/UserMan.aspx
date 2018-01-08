@@ -41,7 +41,7 @@
                 <ItemTemplate>
                     <asp:DropDownList ID="cboPanel" runat="server" AutoPostBack="True" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="121px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged">
                         <asp:ListItem></asp:ListItem>
-                        <asp:ListItem>pnlPubs</asp:ListItem>
+                        <asp:ListItem>pnlDZIF</asp:ListItem>
                         <asp:ListItem>pnlTBB</asp:ListItem>
                         <asp:ListItem>pnlTBB_Projekte</asp:ListItem>
                         <asp:ListItem>pnlPatho</asp:ListItem>
@@ -52,6 +52,7 @@
                         <asp:ListItem>pnlMedV</asp:ListItem>
                         <asp:ListItem>pnlSTARLIMS</asp:ListItem>
                         <asp:ListItem>pnlGyn</asp:ListItem>
+                        <asp:ListItem>pnlPubs</asp:ListItem>
                         <%--add more panels here--%>
                     </asp:DropDownList>
                 </ItemTemplate>
