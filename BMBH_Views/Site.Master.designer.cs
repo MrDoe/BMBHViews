@@ -13,6 +13,24 @@ namespace BMBH_View {
     public partial class SiteMaster {
         
         /// <summary>
+        /// home-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink home;
+        
+        /// <summary>
+        /// lnkHelp-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkHelp;
+        
+        /// <summary>
         /// lnkUserMan-Steuerelement
         /// </summary>
         /// <remarks>

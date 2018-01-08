@@ -72,5 +72,11 @@
     <h2>Frauenklinik</h2>
     <p>Probenkollektive der Frauenklinik</p>
 </asp:Panel>
+
+<asp:Panel ID="pnlPubs" runat="server" BackColor="#E8E8FF" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
+    <h2>Publications</h2>
+    <p>Microsoft Example Database</p>
+</asp:Panel>
+
 </div>
 </asp:Content>
