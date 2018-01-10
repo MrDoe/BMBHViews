@@ -20,8 +20,7 @@
 
 <asp:Panel ID="pnlPatho" runat="server" BackColor="#E4EDFB" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>Pathologisches Institut</h2>
-    <p>
-        Informationen aus dem Pathologiesystem Nexus und ISH.med:</p>
+    <p>Informationen aus dem Pathologiesystem Nexus und ISH.med:</p>
 </asp:Panel>
 
 <asp:Panel ID="pnlLiquid" runat="server" BackColor="#E4FFE4" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
@@ -36,14 +35,12 @@
 
 <asp:Panel ID="pnlPraevonk" runat="server" BackColor="#E2FBF7" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>Präventive Onkologie</h2>
-    <p>
-        Studienkollektive der Abteilung Präventive Onkologie am NCT:</p>
+    <p>Studienkollektive der Abteilung Präventive Onkologie am NCT:</p>
 </asp:Panel>
 
 <asp:Panel ID="pnlPanco" runat="server" BackColor="#FFF1D7" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>PancoBank/EPZ</h2>
-    <p>
-        Probenkollektive der PancoBank am Europäischen Pankreaszentrum:</p>
+    <p>Probenkollektive der PancoBank am Europäischen Pankreaszentrum:</p>
 </asp:Panel>
 
 <asp:Panel ID="pnlDZIF" runat="server" BackColor="#EAFFFF" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
@@ -56,8 +53,7 @@
 
 <asp:Panel ID="pnlThorax" runat="server" BackColor="#FCF6FF" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>Lungenbiobank der Thoraxklinik</h2>
-    <p>
-        Patienten- und Probenkollektive der Lungenbiobank an der Thoraxklinik:</p>
+    <p>Patienten- und Probenkollektive der Lungenbiobank an der Thoraxklinik:</p>
 </asp:Panel>
 
 <asp:Panel ID="pnlSTARLIMS" runat="server" BackColor="#FFFED5" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">

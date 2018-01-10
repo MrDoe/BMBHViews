@@ -942,8 +942,11 @@ namespace BMBH_View
                     if (prevIndex != newIndex) // update previous row
                     {
                         object prevSender = dgdSearch.Rows[prevIndex].FindControl("btnOK");
-                        btnOK_Click(prevSender, e);
-                        dgdSearch.UpdateRow(prevIndex, false);
+                        if (prevSender != null)
+                        {
+                            btnOK_Click(prevSender, e);
+                            dgdSearch.UpdateRow(prevIndex, false);
+                        }
                     }
                 }
                 Session["PreviousIndex"] = newIndex;
