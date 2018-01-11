@@ -793,10 +793,36 @@ namespace BMBH_View
         protected void dgdSearch_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
+            {
                 if ((e.Row.RowState & DataControlRowState.Edit) > 0)
                 {
                     EnableControls(e.Row, true);
                 }
+            }
+            else            
+            {
+                HashSet<string> DateCols = new HashSet<string>();
+                HashSet<string> DateTimeCols = new HashSet<string>();
+                foreach (GridViewRow row in dgdSearch.Rows)
+                {
+                    string sDatatype = row.Cells[4].Text;
+                    string sColumnName = row.Cells[1].Text;
+
+                    if (sDatatype =="date")
+                    {
+                        if (!DateCols.Contains(sColumnName))
+                            DateCols.Add(sColumnName);
+                    }
+
+                    if (sDatatype == "datetime")
+                    {
+                        if (!DateTimeCols.Contains(sColumnName))
+                            DateTimeCols.Add(sColumnName);
+                    }
+                }
+                Session["DateCols"] = DateCols;
+                Session["DateTimeCols"] = DateTimeCols;
+            }
         }
 
         protected void cboControltype_SelectedIndexChanged(object sender, EventArgs e)

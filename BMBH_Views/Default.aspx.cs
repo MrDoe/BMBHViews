@@ -152,6 +152,8 @@ namespace BMBH_View
         {
             Session["LastQuery"] = null;
             Session["ShowListDialog"] = null;
+            Session["DateCols"] = null;
+            Session["DateTimeCols"] = null;
 
             if (Session["GUID"] != null)
             {
@@ -172,40 +174,6 @@ namespace BMBH_View
 
         protected void btnDZIFupload_Click(object sender, EventArgs e)
         {
-            //RestClient restClient = new RestClient("https://dzif-www.helmholtz-muenchen.de:8443/FileUploadService/rest/upload");
-            //restClient.Authenticator = new RestSharp.Authenticators.HttpBasicAuthenticator("DZIF-HD", "-*Ab&Y/9qF");
-
-            //RestRequest restRequest = new RestRequest();
-            //restRequest.Method = Method.POST;
-
-            ////restRequest.AlwaysMultipartFormData = true;
-            //restRequest.AddHeader("content-type", "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
-            //restRequest.AddHeader("accept", "text/html");
-            //restRequest.AddHeader("cache-control", "no-cache");
-
-            //// add files to upload (works with compatible verbs)
-            //restRequest.AddFile("files", "Z:\\temp\\DZIF_HD_TX_Stammproben.csv");
-            //restRequest.AddFile("files", "Z:\\temp\\DZIF_HD_TX_Aliquote.csv");
-
-            //// execute the request
-            //IRestResponse response = restClient.Execute(restRequest);
-            
-            //var content = response.Content; // raw content as string
-            //ShowMsg(content);
-
-            var client = new RestClient("https://dzif-www.helmholtz-muenchen.de:8443/FileUploadService/rest/upload");
-            var request = new RestRequest(Method.POST);
-            request.AddFile("files", "Z:\\temp\\DZIF_HD_TX_Stammproben.csv");
-            request.AddFile("files", "Z:\\temp\\DZIF_HD_TX_Aliquote.csv");
-            request.AddHeader("cache-control", "no-cache");
-            request.AddHeader("authorization", "Basic RFpJRi1IRDotKkFiJlkvOXFG");
-            request.AddHeader("content-type", "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
-            request.AddHeader("accept", "text/html");
-            request.AddParameter("multipart/form-data", ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
-
-            var content = response.Content; // raw content as string
-            ShowMsg(content);
         }
 
         protected void btnGeneric_Click(object sender, EventArgs e)

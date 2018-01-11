@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using OfficeOpenXml;
+using System.Collections.Generic;
 
 namespace BMBH_View
 {
@@ -63,18 +64,29 @@ namespace BMBH_View
 
         protected void btnExcel_Click(object sender, EventArgs e)
         {
-            var datatable = GetData();
+            var datatable = (Session["MainTable"] as DataTable).DefaultView.ToTable();
             ExcelPackage excel = new ExcelPackage();
             var workSheet = excel.Workbook.Worksheets.Add("Exportierte Daten");
             var totalCols = datatable.Columns.Count;
             var totalRows = datatable.Rows.Count;
+            HashSet<string> DateCols = Session["DateCols"] as HashSet<string>;
+            HashSet<string> DateTimeCols = Session["DateTimeCols"] as HashSet<string>;
 
             for (var col = 1; col <= totalCols; col++)
                 workSheet.Cells[1, col].Value = datatable.Columns[col - 1].ColumnName;
 
             for (var row = 1; row <= totalRows; row++)
                 for (var col = 0; col < totalCols; col++)
+                {
                     workSheet.Cells[row + 1, col + 1].Value = datatable.Rows[row - 1][col];
+
+                    string sColName = datatable.Columns[col].ColumnName;
+                   
+                    if (DateCols.Contains(sColName))
+                        workSheet.Cells[row + 1, col + 1].Style.Numberformat.Format = "dd.mm.yyyy";
+                    if (DateTimeCols.Contains(sColName))
+                        workSheet.Cells[row + 1, col + 1].Style.Numberformat.Format = "dd.mm.yyyy HH:mm";
+                }
 
             using (var memoryStream = new MemoryStream())
             {
