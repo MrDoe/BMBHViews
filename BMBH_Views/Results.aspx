@@ -27,14 +27,14 @@ order by USRNAM">
     <asp:Panel ID="pnlMain" runat="server" EnableViewState="False" Height="1000px" Width="100%" style="top:4px; position:relative" >
         <asp:Button ID="btnSearch" runat="server" Text="Suche" CssClass="btn btn-default btn-small" EnableViewState="False" OnClick="btnSearch_Click" style="left:0px; position:relative; top:-2px; height:24px; width:60px" TabIndex="999" UseSubmitBehavior="False"/>
         &nbsp;
-        <asp:ImageButton ID="btnPrevPage" runat="server" EnableViewState="False" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateBackwards_6270.png" OnClick="btnPrevPage_Click" ToolTip="Vorherige Seite" style="left: 1px; top: 5px" TabIndex="3" />
-        &nbsp;<asp:ImageButton ID="btnNextPage" runat="server" EnableViewState="False" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateForward_6271.png" OnClick="btnNextPage_Click" ToolTip="Nächste Seite" style="left: 1px; top: 5px" TabIndex="4" />
+        <asp:ImageButton ID="btnPrevPage" runat="server" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateBackwards_6270.png" OnClick="btnPrevPage_Click" ToolTip="Vorherige Seite" style="left: 1px; top: 5px" TabIndex="3" AutoPostBack="true" />
+        &nbsp;<asp:ImageButton ID="btnNextPage" runat="server" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateForward_6271.png" OnClick="btnNextPage_Click" ToolTip="Nächste Seite" style="left: 1px; top: 5px" TabIndex="4" AutoPostBack="true"/>
         &nbsp;Seite&nbsp;
         <asp:TextBox ID="txtPage" runat="server" Width="44px" TabIndex="4">1</asp:TextBox>
         &nbsp;von &nbsp;
         <asp:TextBox ID="txtMaxPage" runat="server" ReadOnly="True" Width="53px" TabIndex="5">1</asp:TextBox>
         &nbsp;&nbsp; Einträge pro Seite:&nbsp;
-        <asp:TextBox ID="txtRowPerPage" runat="server" Width="46px" TabIndex="6">30</asp:TextBox>
+        <asp:TextBox ID="txtRowPerPage" runat="server" Width="46px" TabIndex="6" OnTextChanged="txtRowPerPage_TextChanged">30</asp:TextBox>
         &nbsp;<asp:Button ID="btnRefresh" runat="server" CssClass="btn btn-default btn-small" OnClick="btnRefresh_Click" Text="OK" UseSubmitBehavior="True" style="position:relative; top:-2px; height:24px" TabIndex="2"/>
         &nbsp; # Datensätze:
         <asp:TextBox ID="txtTotalRows" runat="server" Width="63px" TabIndex="8"></asp:TextBox>

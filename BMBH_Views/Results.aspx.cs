@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
-using System.Drawing;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using OfficeOpenXml;
-using Microsoft.SqlServer.Server;
 
 namespace BMBH_View
 {
@@ -18,14 +13,19 @@ namespace BMBH_View
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            dgdNCT.DataSource = GetData();
-            dgdNCT.DataBind();
+            if (!Page.IsPostBack)
+            {
+                if (Session["MainTable"] == null)
+                    dgdNCT.DataSource = GetData();
+                else
+                    dgdNCT.DataSource = Session["MainTable"] as DataTable;
 
-            pnlMain.DefaultButton = btnRefresh.UniqueID;
-            ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "SetScrollBars(); ", true);
-
-            //pnlGrid.Height = Convert.ToInt32(height.Value) - 100;
-            txtMaxPage.Text = dgdNCT.PageCount.ToString();
+                dgdNCT.DataBind();
+                txtMaxPage.Text = dgdNCT.PageCount.ToString();
+                pnlMain.DefaultButton = btnRefresh.UniqueID;
+                ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "SetScrollBars(); ", true);
+                //pnlGrid.Height = Convert.ToInt32(height.Value) - 100;
+            }
         }
          
         private void ShowMsg(string message)
@@ -88,34 +88,39 @@ namespace BMBH_View
             }
         }
 
-        protected void btnRefresh_Click(object sender, EventArgs e)
+        protected void RefreshPage()
         {
-            dgdNCT.PageIndex = Int32.Parse(txtPage.Text);
+            dgdNCT.DataSource = Session["MainTable"];
+            dgdNCT.PageIndex = Int32.Parse(txtPage.Text)-1;
             dgdNCT.PageSize = Int32.Parse(txtRowPerPage.Text);
-            dgdNCT.DataSource = GetData();
             dgdNCT.DataBind();
             txtMaxPage.Text = dgdNCT.PageCount.ToString();
         }
 
+        protected void btnRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshPage();
+        }
+
         protected void btnPrevPage_Click(object sender, ImageClickEventArgs e)
         {
-            int nPageNo = Int32.Parse(txtPage.Text) - 1;
-            if (nPageNo > 0)
+            int nPageNo = Int32.Parse(txtPage.Text);
+            if (nPageNo > 1)
             {
-                txtPage.Text = nPageNo.ToString();
-                dgdNCT.PageIndex = nPageNo - 1;
-                dgdNCT.DataSource = GetData();
-                dgdNCT.DataBind();
+                txtPage.Text = (nPageNo - 1).ToString();
             }
+            RefreshPage();
         }
 
         protected void btnNextPage_Click(object sender, ImageClickEventArgs e)
-        {
-            int nPageNo = Int32.Parse(txtPage.Text) + 1;
-            txtPage.Text = nPageNo.ToString();
-            dgdNCT.PageIndex = nPageNo - 1;
-            dgdNCT.DataSource = GetData();
-            dgdNCT.DataBind();
+        {       
+            int nPageNo = Int32.Parse(txtPage.Text);
+            int nMaxPage = dgdNCT.PageCount;
+            if (nPageNo < nMaxPage)
+            {
+                txtPage.Text = (nPageNo + 1).ToString();
+            }
+            RefreshPage();
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
@@ -172,9 +177,12 @@ namespace BMBH_View
             if (dt != null)
             {
                 //Sort the data.
-                dt.DefaultView.Sort = e.SortExpression + " " + GetSortDirection(e.SortExpression);
-                dgdNCT.DataSource = Session["MainTable"];
-                dgdNCT.DataBind();
+                string sSorting = e.SortExpression + " " + GetSortDirection(e.SortExpression);
+                dt.DefaultView.Sort = sSorting;
+                //Session["Sorting"] = sSorting;
+                RefreshPage();
+                //dgdNCT.DataSource = Session["MainTable"];
+                //dgdNCT.DataBind();
             }
         }
 
@@ -320,6 +328,11 @@ namespace BMBH_View
                 MPE.Show();
                 txtListName.Focus();
             }
+        }
+
+        protected void txtRowPerPage_TextChanged(object sender, EventArgs e)
+        {
+            txtPage.Text = "1";
         }
     }
 }

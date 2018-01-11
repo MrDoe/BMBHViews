@@ -35,7 +35,8 @@ namespace BMBH_View
                 Session["JumpedBack"] = false;
                 Session["ShowListDialog"] = null;
                 Session["PreviousIndex"] = null;
-
+                Session["MainTable"] = null;
+                
                 //if (Session["LastQuery"] == null)
                 ClearTempTable();
 
