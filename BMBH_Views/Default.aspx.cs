@@ -154,6 +154,7 @@ namespace BMBH_View
             Session["ShowListDialog"] = null;
             Session["DateCols"] = null;
             Session["DateTimeCols"] = null;
+            Session["QuitFromList"] = false;
 
             if (Session["GUID"] != null)
             {

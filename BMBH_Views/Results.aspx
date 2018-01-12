@@ -63,7 +63,7 @@ order by USRNAM">
 <%--<ContentTemplate>--%>
 <asp:Panel ID="pnlList" runat="server" CssClass="modalPopup" align="center" style="display:none" TabIndex="0">
 <asp:Panel ID="pnlListHeader" runat="server" CssClass="modalHeader" HorizontalAlign="center" TabIndex="0">
-    Suchergebnis als STARLIMS-Liste speichern <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click"/>
+    Suchergebnis als STARLIMS-Liste speichern <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnCancel.UniqueID%>', 'PostFromList');" />
 </asp:Panel>
     Name der Liste:&nbsp;<asp:TextBox ID="txtListName" runat="server" TabIndex="1" ClientIDMode="Static"/> <br /><br />
     <div class="panel panel-default" style="line-height:normal;">
