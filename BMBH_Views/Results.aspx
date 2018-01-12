@@ -78,7 +78,7 @@ order by USRNAM">
     <asp:DropDownList ID="cboSLuser" runat="server" DataSourceID="SqlDataSource1" DataTextField="USER" DataValueField="USRNAM" TabIndex="3"></asp:DropDownList>
     </div>
     </div></div>
-    <asp:Button ID="btnSendList" runat="server" Text="Liste anlegen & senden" CssClass="btn btn-default btn-small" OnClick="btnSendList_Click" style="padding:5px;" TabIndex="4" />
+    <asp:Button ID="btnSendList" runat="server" Text="Liste anlegen & senden" CssClass="btn btn-default btn-small" OnClick="btnSendList_Click" style="padding:5px;" TabIndex="4" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnSendList.UniqueID%>', 'PostFromList');"/>
 </asp:Panel>
 <%--</ContentTemplate>--%>
 <%--</asp:UpdatePanel>--%>

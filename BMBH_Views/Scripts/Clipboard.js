@@ -75,6 +75,6 @@ function DeptChange() {
     if (value == "")
         return false;
     else {
-        __doPostBack(value, '');
+        __doPostBack(value, 'PostFromDeptChange');
     }
 }

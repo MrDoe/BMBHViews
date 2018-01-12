@@ -14,7 +14,7 @@ namespace BMBH_View
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack || this.Request["__EVENTARGUMENT"] == "PostFromList")
+            if (!Page.IsPostBack || this.Request["__EVENTARGUMENT"] == "PostFromList" || this.Request["__EVENTARGUMENT"] == "PostFromDeptChange")
             {
                 if (Session["MainTable"] == null)
                     dgdNCT.DataSource = GetData();
