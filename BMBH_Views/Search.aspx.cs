@@ -962,6 +962,7 @@ namespace BMBH_View
                 Button btn = (Button)e.CommandSource;
                 GridViewRow row = (GridViewRow)btn.NamingContainer;
                 int newIndex = row.RowIndex;
+
                 if (Session["PreviousIndex"] != null)
                 {
                     int prevIndex = (int)Session["PreviousIndex"];
@@ -972,6 +973,14 @@ namespace BMBH_View
                         if (prevSender != null)
                         {
                             btnOK_Click(prevSender, e);
+
+                            // disable control buttons
+                            btnSubmit.Enabled = false;
+                            btnSaveSearch.Enabled = false;
+                            btnLoadSearch.Enabled = false;
+                            btnDeleteSearch.Enabled = false;
+                            cboSaveSearch.Enabled = false;
+
                             dgdSearch.UpdateRow(prevIndex, false);
                         }
                     }
