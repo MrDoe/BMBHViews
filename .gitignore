@@ -260,5 +260,9 @@ paket-files/
 __pycache__/
 *.pyc
 
-/BMBH-Views/PAT03
+/BMBH_Views/PAT03
 /BMBH_Views/PAT03/d$/BMBH_Views
+
+/BMBH_Views/Web.config
+/BMBH_Views/Web.Debug.config
+/BMBH_Views/Web.Release.config

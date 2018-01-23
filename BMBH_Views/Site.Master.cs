@@ -19,7 +19,8 @@ namespace BMBH_View
             lblUserName.Text = (String)Session["UserName"];
             
             if (sRealUserName.ToUpper() == "KHD\\DOELLINGERCHRISTOPH" ||
-                sRealUserName.ToUpper() == "KHD\\KUECHLERROBERT")
+                sRealUserName.ToUpper() == "KHD\\KUECHLERROBERT" ||
+                sRealUserName.ToUpper() == "WINDEV1712EVAL\\USER") // change user in UPPERCASE here!
                 Session["IsAdmin"] = true;
             else
                 Session["IsAdmin"] = false;
