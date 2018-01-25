@@ -2,7 +2,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 <h1>BMBH-Views</h1>
-<h4>Web-Applikation zur Datenabfrage von Biomaterialbanken</h4>
+<h4>Web-Applikation zur QBE-Datenabfrage von Biomaterialbanken</h4>
 <address>
 Copyright © 2017 Christoph Döllinger<br />
 BioMaterialBank Heidelberg (BMBH)<br />
