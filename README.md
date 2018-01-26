@@ -2,7 +2,7 @@
 
 ### BMBH-Views ###
 BMBH-Views ist eine ASP.NET/C#-basierte Webapplikation für QBE-Datenabfragen auf Microsoft SQL-Server-Datenbanken.
-Sie wird aktuell bei der BioMaterialBank Heidelberg als Basis für ein lokales Data-Warehouse verwendet.
+Die Entwicklung von BMBH-Views begann im Juli 2017 und wird seit November 2017 produktiv an der BioMaterialBank Heidelberg als Basis für Suchanfragen auf ein lokales Data-Warehouse verwendet.
 
 ### Installationsanleitung ###
 Softwareanforderungen:
