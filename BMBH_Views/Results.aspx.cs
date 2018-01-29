@@ -14,7 +14,9 @@ namespace BMBH_View
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack || this.Request["__EVENTARGUMENT"] == "PostFromList" || this.Request["__EVENTARGUMENT"] == "PostFromDeptChange")
+            if (!Page.IsPostBack ||
+                this.Request["__EVENTARGUMENT"] == "PostFromList" || 
+                this.Request["__EVENTARGUMENT"] == "PostFromDeptChange")
             {
                 if (Session["MainTable"] == null)
                     dgdNCT.DataSource = GetData();
@@ -106,6 +108,8 @@ namespace BMBH_View
             dgdNCT.PageIndex = Int32.Parse(txtPage.Text)-1;
             dgdNCT.PageSize = Int32.Parse(txtRowPerPage.Text);
             dgdNCT.DataBind();
+            Session["CurrentPage"] = dgdNCT.PageIndex + 1;
+            Session["MaxPage"] = dgdNCT.PageCount;
             txtMaxPage.Text = dgdNCT.PageCount.ToString();
         }
 
@@ -116,7 +120,7 @@ namespace BMBH_View
 
         protected void btnPrevPage_Click(object sender, ImageClickEventArgs e)
         {
-            int nPageNo = Int32.Parse(txtPage.Text);
+            int nPageNo = (int)Session["CurrentPage"];
             if (nPageNo > 1)
             {
                 txtPage.Text = (nPageNo - 1).ToString();
@@ -126,8 +130,9 @@ namespace BMBH_View
 
         protected void btnNextPage_Click(object sender, ImageClickEventArgs e)
         {       
-            int nPageNo = Int32.Parse(txtPage.Text);
-            int nMaxPage = dgdNCT.PageCount;
+            int nPageNo = (int)Session["CurrentPage"];
+            int nMaxPage = (int)Session["MaxPage"];
+ 
             if (nPageNo < nMaxPage)
             {
                 txtPage.Text = (nPageNo + 1).ToString();
