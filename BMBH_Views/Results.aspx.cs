@@ -24,8 +24,15 @@ namespace BMBH_View
                     dgdNCT.DataSource = Session["MainTable"] as DataTable;
 
                 dgdNCT.DataBind();
+                
+                // set page count
+                Session["MaxPage"] = dgdNCT.PageCount;
                 txtMaxPage.Text = dgdNCT.PageCount.ToString();
+                
+                // set default button for submit action
                 pnlMain.DefaultButton = btnRefresh.UniqueID;
+                
+                // adapt scrollbars to window size
                 ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "SetScrollBars(); ", true);
                 //pnlGrid.Height = Convert.ToInt32(height.Value) - 100;
             }

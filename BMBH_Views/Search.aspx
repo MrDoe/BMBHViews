@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="BMBH-Views - Suchformular" Language="C#" Debug="true" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Search.aspx.cs" Inherits="BMBH_View.Search" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:HiddenField ID="width" runat="server" />
+<asp:HiddenField ID="width" runat="server" />
 <asp:HiddenField ID="height" runat="server" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
 
