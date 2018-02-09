@@ -67,6 +67,15 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Panel pnlPatho;
         
         /// <summary>
+        /// btnPatientSearch-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnPatientSearch;
+        
+        /// <summary>
         /// pnlLiquid-Steuerelement
         /// </summary>
         /// <remarks>

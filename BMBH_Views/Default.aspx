@@ -21,6 +21,7 @@
 <asp:Panel ID="pnlPatho" runat="server" BackColor="#E4EDFB" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>Pathologisches Institut</h2>
     <p>Informationen aus dem Pathologiesystem Nexus und ISH.med:</p>
+    <asp:Button ID="btnPatientSearch" runat="server" BackColor="#EDFDFE" BorderColor="#BBEEEE" BorderStyle="Outset" BorderWidth="1px" CssClass="btn btn-default" Height="34px" OnClick="btnPatientSearch_Click" Text="Patientensuche »" Width="170px" Visible="True" />
 </asp:Panel>
 
 <asp:Panel ID="pnlLiquid" runat="server" BackColor="#E4FFE4" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">

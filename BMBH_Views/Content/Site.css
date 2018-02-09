@@ -159,6 +159,13 @@ textarea {
     box-shadow: 0px 0px 5px rgb(116, 201, 239);
 }
 
+.btn-header {
+   position: relative;
+   top: 2px;
+   left: 2px;
+   padding: 0px 10px 0px 10px;
+}
+
 .chkChoice input {
     margin-left: -20px;
 }

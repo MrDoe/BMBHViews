@@ -33,6 +33,27 @@
     }
 }
 
+function pasteToGrid(sColumn) {
+    if (window.clipboardData) // Internet Explorer
+    {
+        var sClipboardData = window.clipboardData.getData('Text').replace(/\r\n/g, ",").trim().replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('ß', 'ss').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü','Ue');
+        var aClipboardData = sClipboardData.substring(0, sClipboardData.length - 1).split(',');
+
+        // trim all values
+        for (var i = 0; i < aClipboardData.length; ++i)
+            aClipboardData[i] = aClipboardData[i].trim();
+
+        sClipboardData = aClipboardData.join();
+
+        document.getElementById("MainContent_HiddenInputBox").value = sClipboardData;
+        __doPostBack('', sColumn);
+    }
+    else {   // Not IE
+        alert('Not IE');
+        return false;
+    }
+}
+
 function InputBox(params) {
     var result = prompt("Name der Werteliste:", "");
     document.getElementById("MainContent_HiddenInputBox").value = result;

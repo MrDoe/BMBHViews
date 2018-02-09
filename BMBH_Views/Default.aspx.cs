@@ -154,6 +154,7 @@ namespace BMBH_View
             Session["ShowListDialog"] = null;
             Session["DateCols"] = null;
             Session["DateTimeCols"] = null;
+            Session["init"] = null;
             Session["QuitFromList"] = false;
             Session["CurrentPage"] = 1;
 
@@ -190,6 +191,12 @@ namespace BMBH_View
         protected void btnDiagram_Click(object sender, EventArgs e)
         {
             Response.Redirect("DiagramView.aspx");
+        }
+
+        protected void btnPatientSearch_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("MultipleSearch.aspx");
+            //Server.Transfer("MultipleSearch.aspx");
         }
     }
 }
