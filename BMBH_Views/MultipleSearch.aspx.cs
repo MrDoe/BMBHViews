@@ -336,10 +336,8 @@ namespace BMBH_View
 
         protected void dsPatientSearch_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
         {
-            e.Command.CommandTimeout = 240;
+            e.Command.CommandTimeout = 900;
         }
-
-    
 
         protected void btnExcel_Click(object sender, EventArgs e)
         {
