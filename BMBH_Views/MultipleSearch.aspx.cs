@@ -97,6 +97,7 @@ namespace BMBH_View
             using (var cmd = new SqlCommand(sSQL, conn))
             using (var adapter = new SqlDataAdapter(cmd))
             {
+                cmd.CommandTimeout = 900;
                 var dt = new DataTable();
                 adapter.Fill(dt);
                 Session["MainTable"] = dt;
