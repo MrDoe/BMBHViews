@@ -53,6 +53,7 @@
                         <asp:ListItem>pnlSTARLIMS</asp:ListItem>
                         <asp:ListItem>pnlGyn</asp:ListItem>
                         <asp:ListItem>pnlPubs</asp:ListItem>
+                        <asp:ListItem>pnlGBA</asp:ListItem>
                         <%--add more panels here--%>
                     </asp:DropDownList>
                 </ItemTemplate>

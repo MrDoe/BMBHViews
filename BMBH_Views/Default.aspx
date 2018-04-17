@@ -75,5 +75,10 @@
     <p>Microsoft Example Database</p>
 </asp:Panel>
 
+<asp:Panel ID="pnlGBA" runat="server" BackColor="#EBFFE5" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
+    <h2>German Biobank Alliance</h2>
+    <p>Daten im GBA-Brückenkopf</p>
+</asp:Panel>
+
 </div>
 </asp:Content>
