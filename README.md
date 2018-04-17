@@ -5,7 +5,7 @@ BMBH-Views ist eine ASP.NET/C#-basierte Webapplikation für QBE-Datenabfragen au
 Die Entwicklung von BMBH-Views begann im Juli 2017 und wird seit November 2017 produktiv an der BioMaterialBank Heidelberg als Basis für Suchanfragen auf ein lokales Data-Warehouse verwendet.
 
 ### Installationsanleitung ###
-Softwareanforderungen:
+Softwareanforderungen
 * Microsoft Windows Server 2008+
 * Microsoft IIS 7.0+
 * Microsoft .NET-Framework 4.5+
