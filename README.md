@@ -9,7 +9,7 @@ Die Entwicklung von BMBH-Views begann im Juli 2017 und wird seit November 2017 p
 * Microsoft IIS 7.0+
 * Microsoft .NET-Framework 4.5+
 * Microsoft SQL Server 2008+
-* Microsoft Visual Studio 2013+ (nur als Entwickler)
+* Microsoft Visual Studio 2013+
 * Git for Windows V.2.14+ (nur als Entwickler)
 
 ### Installationsanleitung ###
@@ -24,13 +24,13 @@ Ein Backup der Basisdatenbank und eine Beispieldatenbank (Microsoft Pubs) befind
 * Commits bitte so beschreiben, dass verständlich ist, was geändert wurde
 
 ### Kontakt ###
-Hauptentwickler:
-Christoph Döllinger, M.Sc.
+Hauptentwickler:  
+Christoph Döllinger, M.Sc.  
 
-BioMaterialBank Heidelberg
-am Pathologischen Institut
-Universitätsklinikum Heidelberg
-Im Neuenheimer Feld 224
-69120 Heidelberg
-Tel.: 06221 56-35837
-E-Mail: christoph.doellinger@med.uni-heidelberg.de
+BioMaterialBank Heidelberg  
+am Pathologischen Institut  
+Universitätsklinikum Heidelberg  
+Im Neuenheimer Feld 224  
+69120 Heidelberg  
+Tel.: 06221 56-35837  
+E-Mail: christoph.doellinger(α)med.uni-heidelberg.de
