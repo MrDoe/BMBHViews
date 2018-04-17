@@ -33,4 +33,4 @@ Universitätsklinikum Heidelberg
 Im Neuenheimer Feld 224  
 69120 Heidelberg  
 Tel.: 06221 56-35837  
-E-Mail: christoph.doellinger(ͣ)med.uni-heidelberg.de
+E-Mail: christoph.doellinger(α)med.uni-heidelberg.de
