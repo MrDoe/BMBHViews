@@ -9,6 +9,7 @@ Die Entwicklung von BMBH-Views begann im Juli 2017 und wird seit November 2017 p
 * Microsoft IIS 7.0+
 * Microsoft .NET-Framework 4.5+
 * Microsoft SQL Server 2008+
+
 Als Entwickler zusätzlich:
 * Microsoft Visual Studio 2013
 * Git for Windows V.2.14+ 
