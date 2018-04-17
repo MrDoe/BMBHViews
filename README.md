@@ -24,13 +24,13 @@ Ein Backup der Basisdatenbank und eine Beispieldatenbank (Microsoft Pubs) befind
 * Commits bitte so beschreiben, dass verständlich ist, was geändert wurde
 
 ### Kontakt ###
-Hauptentwickler:
-Christoph Döllinger, M.Sc.
+Hauptentwickler:  
+Christoph Döllinger, M.Sc.  
 
-BioMaterialBank Heidelberg
-am Pathologischen Institut
-Universitätsklinikum Heidelberg
-Im Neuenheimer Feld 224
+BioMaterialBank Heidelberg  
+am Pathologischen Institut  
+Universitätsklinikum Heidelberg  
+Im Neuenheimer Feld 224  
 69120 Heidelberg
 Tel.: 06221 56-35837
 E-Mail: christoph.doellinger@med.uni-heidelberg.de
