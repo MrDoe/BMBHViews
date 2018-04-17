@@ -19,10 +19,4 @@ Im Neuenheimer Feld 224<br />
     <strong>Telefon:</strong> 06221 56-35837<br />
     <strong>Mobil:</strong> 0157 76434767
 </address>
-<address>
-    <strong>Mathias Wieland</strong><br />
-    wissenschaftliche und IT-Koordination BioBanking DKTK / L173<br />
-    <strong>E-Mail: </strong><a href="mailto:mathias.wieland@med.uni-heidelberg.de">mathias.wieland@med.uni-heidelberg.de</a><br />
-    <strong>Telefon:</strong> 06221 56-35038<br />
-</address>
 </asp:Content>
