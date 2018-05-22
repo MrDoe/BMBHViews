@@ -75,6 +75,7 @@
                     <asp:Label ID="lblHistoNrVal" runat="server" Text='<%# Bind("Histo_Nr") %>'></asp:Label>
                 </ItemTemplate>
              </asp:TemplateField>
+            <asp:BoundField DataField="Status" HeaderText="Einwilligungsstatus" ReadOnly="True" />
         </Columns>
         <EditRowStyle BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" />
         <EmptyDataRowStyle BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" />

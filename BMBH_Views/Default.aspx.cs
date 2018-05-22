@@ -112,14 +112,17 @@ namespace BMBH_View
 
         protected void GenerateButtons(String[][] aUserPerm)
         {
-            for (int i = 0; i < aUserPerm.Length; ++i)
+            if (aUserPerm.Length > 0)
             {
-                if (aUserPerm[i][2].Length > 0)
+                for (int i = 0; i < aUserPerm.Length; ++i)
                 {
-                    Panel pnl = (Panel)Utils.FindAnyControl(Page, aUserPerm[i][2]);
-   
-                    if(pnl != null)
-                        GenerateButton(aUserPerm[i][0], aUserPerm[i][1], pnl);
+                    if (aUserPerm[i][2].Length > 0)
+                    {
+                        Panel pnl = (Panel)Utils.FindAnyControl(Page, aUserPerm[i][2]);
+
+                        if (pnl != null)
+                            GenerateButton(aUserPerm[i][0], aUserPerm[i][1], pnl);
+                    }
                 }
             }
         }
