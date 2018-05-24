@@ -14,7 +14,7 @@
 <asp:HiddenField ID="width" runat="server" />
 <asp:HiddenField ID="height" runat="server" />
 
-<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString2 %>" SelectCommand="select USRNAM + ' - ' + FULLNAME as 'USER',USRNAM
+<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select USRNAM + ' - ' + FULLNAME as 'USER',USRNAM
 from V_STARLIMS_USERS
 where DEPTLIST LIKE '%' + @UserDept + '%'
 order by USRNAM">
@@ -22,7 +22,7 @@ order by USRNAM">
         <asp:SessionParameter Name="UserDept" SessionField="UserDept" DefaultValue="None" />
     </SelectParameters>
     </asp:SqlDataSource>
-<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString2 %>" SelectCommand="select DEPT from V_STARLIMS_DEPT"></asp:SqlDataSource>
+<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select DEPT from V_STARLIMS_DEPT"></asp:SqlDataSource>
 
     <asp:Panel ID="pnlMain" runat="server" EnableViewState="False" Height="1000px" Width="100%" style="top:4px; position:relative" >
         <asp:Button ID="btnSearch" runat="server" Text="Suche" CssClass="btn btn-default btn-small" EnableViewState="False" OnClick="btnSearch_Click" style="left:0px; position:relative; top:-2px; height:24px; width:60px" TabIndex="999" UseSubmitBehavior="False"/>

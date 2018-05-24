@@ -219,7 +219,7 @@ namespace BMBH_View
 
         private void CreateCart(string sCartName, string sUserName)
         {
-            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString2"].ConnectionString;
+            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(sConnString);
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
