@@ -264,9 +264,9 @@ __pycache__/
 /BMBH_Views/PAT03/d$/BMBH_Views
 
 # don't update web.config
-/BMBH_Views/Web.config
-/BMBH_Views/Web.Debug.config
-/BMBH_Views/Web.Release.config
-Web.config
-Web.Debug.config
-Web.Release.config
+#/BMBH_Views/Web.config
+#/BMBH_Views/Web.Debug.config
+#/BMBH_Views/Web.Release.config
+#Web.config
+#Web.Debug.config
+#Web.Release.config
