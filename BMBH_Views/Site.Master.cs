@@ -12,6 +12,7 @@ namespace BMBH_View
         protected void Page_Load(object sender, EventArgs e)
         {
             string sRealUserName = Page.User.Identity.Name;
+            //string sRealUserName = "KHD\\DOELLINGERCHRISTOPH";
 
             if (Session["UserName"] == null)
                 Session["UserName"] = sRealUserName;

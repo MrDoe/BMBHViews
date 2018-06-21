@@ -15,9 +15,13 @@ namespace BMBH_View
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack ||
-                this.Request["__EVENTARGUMENT"] == "PostFromList" || 
+                this.Request["__EVENTARGUMENT"] == "PostFromList_Send" ||
+                this.Request["__EVENTARGUMENT"] == "PostFromList_Cancel" ||
                 this.Request["__EVENTARGUMENT"] == "PostFromDeptChange")
             {
+                if (this.Request["__EVENTARGUMENT"] == "PostFromList_Send")
+                    btnSendList_Click(sender, e);
+
                 if (Session["MainTable"] == null)
                     dgdNCT.DataSource = GetData();
                 else
@@ -345,6 +349,7 @@ namespace BMBH_View
                 CreateCart(txtListName.Text.Trim(), cboSLuser.SelectedValue);
                 Session["ListSentMsg"] = "Die Liste \'" + txtListName.Text.Trim() + "\' wurde an den STARLIMS-Benutzer \'" + cboSLuser.SelectedValue + "\' gesendet!";
                 ShowMsg((string)Session["ListSentMsg"]);
+                RefreshPage();
             }
             else
             {

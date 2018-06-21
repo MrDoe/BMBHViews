@@ -173,6 +173,7 @@ namespace BMBH_View
 
             if (Session["UserName"] == null)
                 Session["UserName"] = Page.User.Identity.Name;
+            //Session["UserName"] = "KHD\\DOELLINGERCHRISTOPH";
 
             String[][] aUserPerm = GetUserPermissions();
             GenerateButtons(aUserPerm);
@@ -198,8 +199,14 @@ namespace BMBH_View
 
         protected void btnPatientSearch_Click(object sender, EventArgs e)
         {
+            if (((Button)sender).ID == "btnPatientSearch")
+                Session["OE"] = "NCT-Gewebebank";
+            else if (((Button)sender).ID == "btnPatientSearchLiquid")
+                Session["OE"] = "Präv. Onkologie";
+            else
+                return;
+
             Response.Redirect("MultipleSearch.aspx");
-            //Server.Transfer("MultipleSearch.aspx");
         }
     }
 }

@@ -58,6 +58,14 @@
                     </asp:DropDownList>
                 </ItemTemplate>
             </asp:TemplateField>
+            <asp:TemplateField HeaderText="Bearbeiten">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:Button ID="btnEditView" runat="server" CssClass="btn btn-default btn-small" Text="Bearbeiten" />
+                </ItemTemplate>
+            </asp:TemplateField>
         </Columns>
         <EditRowStyle BackColor="#F7F6F3" />
         <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />

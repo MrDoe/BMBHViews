@@ -63,7 +63,7 @@ order by USRNAM">
 <%--<ContentTemplate>--%>
 <asp:Panel ID="pnlList" runat="server" CssClass="modalPopup" align="center" style="display:none" TabIndex="0">
 <asp:Panel ID="pnlListHeader" runat="server" CssClass="modalHeader" HorizontalAlign="center" TabIndex="0">
-    Suchergebnis als STARLIMS-Liste speichern <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnCancel.UniqueID%>', 'PostFromList');" />
+    Suchergebnis als STARLIMS-Liste speichern <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnCancel.UniqueID%>', 'PostFromList_Cancel');" />
 </asp:Panel>
     Name der Liste:&nbsp;<asp:TextBox ID="txtListName" runat="server" TabIndex="1" ClientIDMode="Static"/> <br /><br />
     <div class="panel panel-default" style="line-height:normal;">
@@ -78,7 +78,7 @@ order by USRNAM">
     <asp:DropDownList ID="cboSLuser" runat="server" DataSourceID="SqlDataSource1" DataTextField="USER" DataValueField="USRNAM" TabIndex="3"></asp:DropDownList>
     </div>
     </div></div>
-    <asp:Button ID="btnSendList" runat="server" Text="Liste anlegen & senden" CssClass="btn btn-default btn-small" OnClick="btnSendList_Click" style="padding:5px;" TabIndex="4" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnSendList.UniqueID%>', 'PostFromList');"/>
+    <asp:Button ID="btnSendList" runat="server" Text="Liste anlegen & senden" CssClass="btn btn-default btn-small" style="padding:5px;" TabIndex="4" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnSendList.UniqueID%>', 'PostFromList_Send');"/>
 </asp:Panel>
 <%--</ContentTemplate>--%>
 <%--</asp:UpdatePanel>--%>

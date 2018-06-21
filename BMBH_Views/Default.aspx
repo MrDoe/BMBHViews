@@ -27,6 +27,7 @@
 <asp:Panel ID="pnlLiquid" runat="server" BackColor="#E4FFE4" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>NCT-Liquidbank</h2>
     <p> Probenkollektive der Liquidbank des NCT:</p>
+    <asp:Button ID="btnPatientSearchLiquid" runat="server" BackColor="#EDFDFE" BorderColor="#BBEEEE" BorderStyle="Outset" BorderWidth="1px" CssClass="btn btn-default" Height="34px" OnClick="btnPatientSearch_Click" Text="Patientensuche »" Width="170px" Visible="True" />
 </asp:Panel>
 
 <asp:Panel ID="pnlMedV" runat="server" BackColor="#FFF2FC" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">

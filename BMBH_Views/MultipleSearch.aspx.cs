@@ -22,7 +22,14 @@ namespace BMBH_View
             else
             {
                 if ((int)Session["SearchMode"] == 0) // Name, Vorname, Geburtsdatum
-                    return "SELECT * FROM [V_PatientSearch_NVG] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
+                {
+                    string sBiobank = Session["OE"].ToString();
+
+                    if (sBiobank == "NCT-Gewebebank")
+                        return "SELECT * FROM [V_PatientSearch_NVG] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
+                    else
+                        return "SELECT * FROM [V_PatientSearch_NVG_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'";
+                }
                 if ((int)Session["SearchMode"] == 1) // ISH_PID
                     return "SELECT * FROM [V_PatientSearch_IP] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
                 if ((int)Session["SearchMode"] == 2) // ISH_FID
@@ -188,6 +195,12 @@ namespace BMBH_View
 
             dgdPatients.DataSource = GetData();
             dgdPatients.DataBind();
+
+            if (Session["OE"].ToString() != "NCT-Gewebebank")
+            {
+                dgdPatients.Columns[8].Visible = false;
+                dgdPatients.Columns[9].Visible = false;
+            }
         }
 
         protected void btnNew_Click(object sender, EventArgs e)
@@ -353,6 +366,10 @@ namespace BMBH_View
             for (var col = 0; col < totalCols; ++col)
             {
                 string sColName = dt.Columns[col].ColumnName;
+
+                if (Session["OE"].ToString() != "NCT-Gewebebank" && (sColName == "Histo_Nr" || sColName == "Status" || sColName == "Biobank"))
+                    continue;
+
                 if (sColName != "GUID" && sColName != "ID")
                 {
                     workSheet.Cells[1, col_w].Value = sColName;
@@ -367,6 +384,10 @@ namespace BMBH_View
                 for (var col = 0; col < totalCols; ++col)
                 {
                     string sColName = dt.Columns[col].ColumnName;
+
+                    if (Session["OE"].ToString() != "NCT-Gewebebank" && (sColName == "Histo_Nr" || sColName == "Status" || sColName == "Biobank"))
+                        continue;
+
                     if (sColName != "GUID" && sColName != "ID")
                     {
                         workSheet.Cells[row + 2, col_w].Value = dt.Rows[row][col];

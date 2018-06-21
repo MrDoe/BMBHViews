@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MultipleSearch.aspx.cs" Inherits="BMBH_View.MultipleSearch" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+    <br />
     <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-default btn-small" Text="Suche starten" Width="92px" OnClick="btnSearch_Click" />
     <asp:Button ID="btnNew" runat="server" CssClass="btn btn-default btn-small" Text="Neue Suche" OnClick="btnNew_Click" />
     <asp:Button ID="btnExcel" runat="server" CssClass="btn btn-default btn-small" OnClick="btnExcel_Click" Text="Excel-Export" />
