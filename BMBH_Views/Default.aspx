@@ -33,6 +33,7 @@
 <asp:Panel ID="pnlMedV" runat="server" BackColor="#FFF2FC" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>Medizinische Klinik V</h2>
     <p>Patienten- und Probenkollektive der Medizinischen Klinik V:</p>
+    <asp:Button ID="btnPatientSearchMedV" runat="server" BackColor="#EDFDFE" BorderColor="#BBEEEE" BorderStyle="Outset" BorderWidth="1px" CssClass="btn btn-default" Height="34px" OnClick="btnPatientSearch_Click" Text="Patientensuche »" Width="170px" Visible="True" />
 </asp:Panel>
 
 <asp:Panel ID="pnlPraevonk" runat="server" BackColor="#E2FBF7" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
@@ -43,6 +44,7 @@
 <asp:Panel ID="pnlPanco" runat="server" BackColor="#FFF1D7" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>PancoBank/EPZ</h2>
     <p>Probenkollektive der PancoBank am Europäischen Pankreaszentrum:</p>
+    <asp:Button ID="btnPatientSearchPanco" runat="server" BackColor="#EDFDFE" BorderColor="#BBEEEE" BorderStyle="Outset" BorderWidth="1px" CssClass="btn btn-default" Height="34px" OnClick="btnPatientSearch_Click" Text="Patientensuche »" Width="170px" Visible="True" />
 </asp:Panel>
 
 <asp:Panel ID="pnlDZIF" runat="server" BackColor="#EAFFFF" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">

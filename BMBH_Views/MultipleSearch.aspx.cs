@@ -21,23 +21,40 @@ namespace BMBH_View
             }
             else
             {
+                string sBiobank = Session["OE"].ToString();
+
                 if ((int)Session["SearchMode"] == 0) // Name, Vorname, Geburtsdatum
                 {
-                    string sBiobank = Session["OE"].ToString();
-
                     if (sBiobank == "NCT-Gewebebank")
                         return "SELECT * FROM [V_PatientSearch_NVG] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
                     else
                         return "SELECT * FROM [V_PatientSearch_NVG_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'";
                 }
                 if ((int)Session["SearchMode"] == 1) // ISH_PID
-                    return "SELECT * FROM [V_PatientSearch_IP] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
+                {
+                    if (sBiobank == "NCT-Gewebebank")
+                        return "SELECT * FROM [V_PatientSearch_IP] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
+                    else
+                        return "SELECT * FROM [V_PatientSearch_IP_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'";
+                }
                 if ((int)Session["SearchMode"] == 2) // ISH_FID
-                    return "SELECT * FROM [V_PatientSearch_IF] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
+                {
+                    if (sBiobank == "NCT-Gewebebank")
+                        return "SELECT * FROM [V_PatientSearch_IF] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
+                    else
+                        return "SELECT * FROM [V_PatientSearch_IF_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'";
+                }
                 if ((int)Session["SearchMode"] == 3) // BMBH_PID
-                    return "SELECT * FROM [V_PatientSearch_BP] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
+                {
+                    if (sBiobank == "NCT-Gewebebank")
+                        return "SELECT * FROM [V_PatientSearch_BP] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
+                    else
+                        return "SELECT * FROM [V_PatientSearch_BP_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'";
+                }
                 if ((int)Session["SearchMode"] == 5) // Histo_Nr
+                {
                     return "SELECT * FROM [V_PatientSearch_HN] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
+                }
                 return null;
             }
         }
@@ -165,6 +182,9 @@ namespace BMBH_View
                 }
                 Session["IDs"] = aIDs;
                 Session["InitialInsert"] = true;
+
+                if ((int)Session["SearchMode"] != 0)
+                    Session["EditMode"] = false;
             }
             else // do update on existing columns
             {
@@ -174,8 +194,7 @@ namespace BMBH_View
             }
 
             // update gridview 
-            dgdPatients.DataSource = GetData();
-            dgdPatients.DataBind();
+            BindData();
         }
 
         protected void Initialize()
@@ -193,8 +212,7 @@ namespace BMBH_View
             Session["EditMode"] = true;
             Session["SearchMode"] = 4; // show all buttons
 
-            dgdPatients.DataSource = GetData();
-            dgdPatients.DataBind();
+            BindData();
 
             if (Session["OE"].ToString() != "NCT-Gewebebank")
             {
@@ -211,8 +229,24 @@ namespace BMBH_View
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             Session["EditMode"] = false;
+            BindData();
+        }
+
+        private void BindData()
+        {
             dgdPatients.DataSource = GetData();
             dgdPatients.DataBind();
+
+            if ((bool)Session["EditMode"] == false)
+            {
+                SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
+
+                if (dgdPatients.Rows.Count == 0)
+                {
+                    ShowMsg("Die Suche lieferte leider kein Ergebnis.");
+                    btnNew_Click(null, null);
+                }
+            }
         }
 
         protected void dgdPatients_RowDataBound(object sender, GridViewRowEventArgs e)

@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MultipleSearch.aspx.cs" Inherits="BMBH_View.MultipleSearch" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <br />
+    <h2>Patientensuche/Depseudonymisierung</h2>
+    <p><font size=2>Benutzungshinweise: Jeweils eine Spalte mit den Quelldaten in Excel markieren und in die Zwischenablage kopieren. Anschließend in der folgenden Tabelle  den zugehörigen Spaltentitel anklicken. Wenn alle Daten in der Tabelle sind, auf &quot;Suche starten&quot; klicken.</font></p>
     <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-default btn-small" Text="Suche starten" Width="92px" OnClick="btnSearch_Click" />
     <asp:Button ID="btnNew" runat="server" CssClass="btn btn-default btn-small" Text="Neue Suche" OnClick="btnNew_Click" />
     <asp:Button ID="btnExcel" runat="server" CssClass="btn btn-default btn-small" OnClick="btnExcel_Click" Text="Excel-Export" />

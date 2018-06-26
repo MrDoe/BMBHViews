@@ -203,6 +203,10 @@ namespace BMBH_View
                 Session["OE"] = "NCT-Gewebebank";
             else if (((Button)sender).ID == "btnPatientSearchLiquid")
                 Session["OE"] = "Präv. Onkologie";
+            else if (((Button)sender).ID == "btnPatientSearchPanco")
+                Session["OE"] = "PancoBank-EPZ";
+            else if (((Button)sender).ID == "btnPatientSearchMedV")
+                Session["OE"] = "Med. Klinik V";
             else
                 return;
 
