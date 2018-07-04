@@ -140,7 +140,7 @@ namespace BMBH_View
             GridViewRow row = (GridViewRow)btn.NamingContainer;
             string sView = row.Cells[0].Text;
             string sUser = cboUser.SelectedValue;
-            SQLexecute("EXEC RecreateSearchTable '" + sUser + "','" + sView + "'");
+            SQLexecute("EXEC RecreateSearchTable '" + sView + "'");
             //ShowMsg("Die Suchtabelle wurde neu erstellt!");
         }
 

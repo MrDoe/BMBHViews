@@ -103,6 +103,15 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Panel pnlMedV;
         
         /// <summary>
+        /// btnPatientSearchMedV-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnPatientSearchMedV;
+        
+        /// <summary>
         /// pnlPraevonk-Steuerelement
         /// </summary>
         /// <remarks>
@@ -119,6 +128,15 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlPanco;
+        
+        /// <summary>
+        /// btnPatientSearchPanco-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnPatientSearchPanco;
         
         /// <summary>
         /// pnlDZIF-Steuerelement
