@@ -184,6 +184,7 @@
     <Content Include="Images\script_16x16.gif" />
     <Content Include="Images\table_16x16.gif" />
     <Content Include="MultipleSearch.aspx" />
+    <Content Include="UserMgr.aspx" />
     <Content Include="Search.aspx" />
     <Content Include="Results.aspx" />
     <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
@@ -218,7 +219,7 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
-    <Content Include="UserMan.aspx" />
+    <Content Include="RoleMgr.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -268,6 +269,13 @@
     <Compile Include="MultipleSearch.aspx.designer.cs">
       <DependentUpon>MultipleSearch.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UserMgr.aspx.cs">
+      <DependentUpon>UserMgr.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserMgr.aspx.designer.cs">
+      <DependentUpon>UserMgr.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Search.aspx.cs">
       <DependentUpon>Search.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -297,12 +305,12 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
-    <Compile Include="UserMan.aspx.cs">
-      <DependentUpon>UserMan.aspx</DependentUpon>
+    <Compile Include="RoleMgr.aspx.cs">
+      <DependentUpon>RoleMgr.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="UserMan.aspx.designer.cs">
-      <DependentUpon>UserMan.aspx</DependentUpon>
+    <Compile Include="RoleMgr.aspx.designer.cs">
+      <DependentUpon>RoleMgr.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>

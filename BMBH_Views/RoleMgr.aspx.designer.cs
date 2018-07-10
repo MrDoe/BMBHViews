@@ -22,22 +22,22 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Panel pnlTop;
         
         /// <summary>
-        /// cboUser-Steuerelement
+        /// cboRole-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboUser;
+        protected global::System.Web.UI.WebControls.DropDownList cboRole;
         
         /// <summary>
-        /// btnChangeToUser-Steuerelement
+        /// btnUpdateViews-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnChangeToUser;
+        protected global::System.Web.UI.WebControls.Button btnUpdateViews;
         
         /// <summary>
         /// dgdViewPermissions-Steuerelement

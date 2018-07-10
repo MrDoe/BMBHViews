@@ -73,7 +73,6 @@ namespace BMBH_View
 
         public String[][] GetUserPermissions()
         {
-
             string sUser = (string)Session["UserName"];
             DataSet ds = new DataSet("Permissions");
 
@@ -151,6 +150,22 @@ namespace BMBH_View
             }
         }
 
+        private void SetUser()
+        {
+            //string sRealUserName = Page.User.Identity.Name;
+            string sRealUserName = "KHD\\doellingerchristoph";
+
+            if (Session["UserName"] == null)
+                Session["UserName"] = sRealUserName;
+
+            if (sRealUserName.ToUpper() == "KHD\\DOELLINGERCHRISTOPH" ||
+                sRealUserName.ToUpper() == "KHD\\KUECHLERROBERT" ||
+                sRealUserName.ToUpper() == "WINDEV1712EVAL\\USER") // change user in UPPERCASE here!
+                Session["IsAdmin"] = true;
+            else
+                Session["IsAdmin"] = false;
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             Session["LastQuery"] = null;
@@ -168,12 +183,9 @@ namespace BMBH_View
             }
 
             Session["GUID"] = null;
-
             Session["Recursive"] = null;
 
-            if (Session["UserName"] == null)
-                Session["UserName"] = Page.User.Identity.Name;
-            //Session["UserName"] = "KHD\\DOELLINGERCHRISTOPH";
+            SetUser();
 
             String[][] aUserPerm = GetUserPermissions();
             GenerateButtons(aUserPerm);

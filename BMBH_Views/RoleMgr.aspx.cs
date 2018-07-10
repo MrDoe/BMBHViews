@@ -18,10 +18,8 @@ namespace BMBH_View
         {
             if (!Page.IsPostBack)
             {
-                if ((Boolean)Session["IsAdmin"] == false) // no admin, go back to previous page
-                    Response.Redirect(Request.UrlReferrer.ToString());
-
-                cboUser.SelectedValue = (string)Session["UserName"];
+                if (Session["LastRole"] != null)
+                    cboRole.SelectedValue = (string)Session["LastRole"];
             }
         }
 
@@ -111,15 +109,15 @@ namespace BMBH_View
 
             if (chk.Checked)
             {
-                sSQL = "EXEC AddSearchForm @View='" + sViewName + "'";
-                try { SQLexecute(sSQL); } catch (Exception ex) { }
+                //sSQL = "EXEC AddSearchForm @View='" + sViewName + "'";
+                //try { SQLexecute(sSQL); } catch (Exception ex) { }
                 
-                sSQL = "EXEC SetPermission @User='" + cboUser.SelectedValue + "',@View='" + sViewName + "'";
-                try { SQLexecute(sSQL); } catch (Exception ex) { }
+                sSQL = "EXEC SetRolePermission " + cboRole.SelectedValue + ",'" + sViewName + "'";
+                try { SQLexecute(sSQL); } catch (Exception ex) { ShowMsg(ex.ToString());  }
             }
             else
             {
-                sSQL = "EXEC UnsetPermission @User='" + cboUser.SelectedValue + "',@View='" + sViewName + "'";
+                sSQL = "EXEC UnsetRolePermission " + cboRole.SelectedValue + ",'" + sViewName + "'";
                 try { SQLexecute(sSQL); } catch (Exception ex) { }
             }
         }
@@ -139,7 +137,6 @@ namespace BMBH_View
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
             string sView = row.Cells[0].Text;
-            string sUser = cboUser.SelectedValue;
             SQLexecute("EXEC RecreateSearchTable '" + sView + "'");
             //ShowMsg("Die Suchtabelle wurde neu erstellt!");
         }
@@ -149,15 +146,9 @@ namespace BMBH_View
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
             string sView = row.Cells[0].Text;
-            string sUser = cboUser.SelectedValue;
-            SQLexecute("EXEC UPDATE_VALCOUNT '" + sView + "','" + sUser + "'");
+            string sUser = cboRole.SelectedValue;
+            SQLexecute("EXEC UPDATE_VALCOUNT '" + sView + "'");
             ShowMsg("Die Werte wurden neu berechnet!");
-        }
-
-        protected void btnChangeToUser_Click(object sender, EventArgs e)
-        {
-            Session["UserName"] = cboUser.SelectedValue;
-            Response.Redirect("Default.aspx");
         }
 
         protected void btnOK_Click(object sender, EventArgs e)
@@ -174,6 +165,14 @@ namespace BMBH_View
             string sPanel = ((DropDownList)row.FindControl("cboPanel")).SelectedValue;
             string sView = row.Cells[0].Text;
             SQLexecute("update VIEW_SETTINGS set PANEL_NAME='" + sPanel + "' where VIEW_NAME = '" + sView + "'");
+        }
+
+        protected void btnUpdateViews_Click(object sender, EventArgs e)
+        {
+            string sRoleId = cboRole.SelectedValue;
+            Session["LastRole"] = sRoleId;
+            SQLexecute("EXEC UpdateRoleViews " + sRoleId);
+            Server.Transfer("RoleMgr.aspx");
         }
     }
 }
