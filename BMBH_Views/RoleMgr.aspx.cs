@@ -137,7 +137,8 @@ namespace BMBH_View
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
             string sView = row.Cells[0].Text;
-            SQLexecute("EXEC RecreateSearchTable '" + sView + "'");
+            string sRoleId = cboRole.SelectedValue;
+            SQLexecute("EXEC RecreateSearchTable '" + sView + "'," + sRoleId);
             //ShowMsg("Die Suchtabelle wurde neu erstellt!");
         }
 
