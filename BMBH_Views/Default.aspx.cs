@@ -150,17 +150,33 @@ namespace BMBH_View
             }
         }
 
+        private string SQLexecute_SingleResult(string sSQL)
+        {
+            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            SqlConnection con = new SqlConnection(sConnString);
+            using (var command = new SqlCommand(sSQL, con))
+            {
+                con.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    reader.Read();
+                    return reader.GetString(0);
+                }
+            }
+        }
+
         private void SetUser()
         {
-            string sRealUserName = Page.User.Identity.Name;
-            //string sRealUserName = "KHD\\doellingerchristoph";
+            //string sRealUserName = Page.User.Identity.Name;
+            string sRealUserName = "KHD\\doellingerchristoph";
 
             if (Session["UserName"] == null)
                 Session["UserName"] = sRealUserName;
+            
+            // get user role
+            string sRoleId = SQLexecute_SingleResult("select RoleId from UserRoles where UserId = '" + sRealUserName + "'");
 
-            if (sRealUserName.ToUpper() == "KHD\\DOELLINGERCHRISTOPH" ||
-                sRealUserName.ToUpper() == "KHD\\KUECHLERROBERT" ||
-                sRealUserName.ToUpper() == "WINDEV1712EVAL\\USER") // change user in UPPERCASE here!
+            if (sRoleId == "1")
                 Session["IsAdmin"] = true;
             else
                 Session["IsAdmin"] = false;
