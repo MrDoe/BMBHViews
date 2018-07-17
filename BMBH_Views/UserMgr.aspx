@@ -20,6 +20,12 @@
                 <asp:Button ID="btnChangeToUser" runat="server" CssClass="btn btn-default btn-small" OnClick="btnChangeToUser_Click" Text="Zu Benutzer wechseln" Width="145px" />
             </ItemTemplate>
         </asp:TemplateField>
+        <asp:TemplateField>
+            <ItemTemplate>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:CheckBox ID="chkPatientSearch" runat="server" AutoPostBack="True" Checked='<%# Eval("AllowPatientSearch").ToString().Equals("Y") %>' CssClass="chkChoice" OnCheckedChanged="chkPatientSearch_CheckedChanged" Text="Patientensuche erlaubt" />
+            </ItemTemplate>
+        </asp:TemplateField>
     </Columns>
     <EditRowStyle BackColor="#999999" />
     <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -32,5 +38,5 @@
     <SortedDescendingCellStyle BackColor="#FFFDF8" />
     <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
 </asp:GridView>
-    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="SELECT [UserId], [RoleId] FROM [UserRoles]"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="SELECT * FROM [UserRoles]"></asp:SqlDataSource>
 </asp:Content>

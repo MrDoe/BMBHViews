@@ -73,5 +73,23 @@ namespace BMBH_View
             Session["UserName"] = row.Cells[0].Text;
             Response.Redirect("Default.aspx");
         }
+
+        protected void chkPatientSearch_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chk = (CheckBox)sender;
+            GridViewRow row = (GridViewRow)chk.NamingContainer;
+            var sUserName = row.Cells[0].Text;
+            string sSQL;
+            if (chk.Checked)
+            {
+                sSQL = "EXEC GrantPatientSearch '" + sUserName + "'";
+                try { SQLexecute(sSQL); } catch (Exception ex) { }
+            }
+            else
+            {
+                sSQL = "EXEC DenyPatientSearch '" + sUserName + "'";
+                try { SQLexecute(sSQL); } catch (Exception ex) { }
+            }
+        }
     }
 }
