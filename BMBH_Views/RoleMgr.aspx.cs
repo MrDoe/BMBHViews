@@ -175,5 +175,39 @@ namespace BMBH_View
             SQLexecute("EXEC UpdateRoleViews " + sRoleId);
             Server.Transfer("RoleMgr.aspx");
         }
+
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
+        }
+
+        private string SQLexecute_SingleResult(string sSQL)
+        {
+            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            SqlConnection con = new SqlConnection(sConnString);
+            using (var command = new SqlCommand(sSQL, con))
+            {
+                con.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    reader.Read();
+                    return reader.GetString(0);
+                }
+            }
+        }
+
+        protected void btnEditView_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
+            string sView = row.Cells[0].Text;
+            string sSQL = "SELECT OBJECT_DEFINITION (OBJECT_ID(N'" + sView + "'))";
+            string sResult = SQLexecute_SingleResult(sSQL).Replace("\r\nCREATE", "ALTER").Replace("CREATE", "ALTER");
+            txtViewDefinition.Text = sResult;
+            MPE.Show();
+        }
+
+        protected void btnConfirmEditView_Click(object sender, EventArgs e)
+        {
+            SQLexecute(txtViewDefinition.Text);
+        }
     }
 }

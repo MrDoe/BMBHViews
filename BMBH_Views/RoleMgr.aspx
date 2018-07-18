@@ -1,11 +1,14 @@
 ﻿<%@ Page Title="Benutzerverwaltung" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoleMgr.aspx.cs" Inherits="BMBH_View.UserMan" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderWidth="3px" Font-Names="Verdana">
-        &nbsp;Benutzerrolle:
-    <asp:DropDownList ID="cboRole" runat="server" AutoPostBack="True" DataSourceID="SqlDataSource1" DataTextField="RoleName" DataValueField="RoleId" Font-Names="Verdana" Height="25px" Width="220px">
-    </asp:DropDownList> &nbsp;
-        <asp:Button ID="btnUpdateViews" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateViews_Click" Text="Views aktualisieren" Width="131px" />
+<%--<script type="text/javascript" src="~/Scripts/highlight.pack.js">hljs.initHighlightingOnLoad();</script>--%>
+<asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderWidth="3px" Font-Names="Verdana">
+&nbsp;Benutzerrolle:
+<asp:DropDownList ID="cboRole" runat="server" AutoPostBack="True" DataSourceID="SqlDataSource1" DataTextField="RoleName" DataValueField="RoleId" Font-Names="Verdana" Height="25px" Width="220px">
+</asp:DropDownList> &nbsp;
+<asp:Button ID="btnUpdateViews" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateViews_Click" Text="Views aktualisieren" Width="131px" />
 </asp:Panel>
+<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
     <asp:GridView ID="dgdViewPermissions" runat="server" AutoGenerateColumns="False" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333">
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
         <Columns>
@@ -62,7 +65,7 @@
                     <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
                 </EditItemTemplate>
                 <ItemTemplate>
-                    <asp:Button ID="btnEditView" runat="server" CssClass="btn btn-default btn-small" Text="Bearbeiten" />
+                    <asp:Button ID="btnEditView" runat="server" CssClass="btn btn-default btn-small" Text="Bearbeiten" OnClick="btnEditView_Click"/>
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
@@ -77,10 +80,20 @@
         <SortedDescendingCellStyle BackColor="#FFFDF8" />
         <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
     </asp:GridView>
-<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
 <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetPermittedViewsByRole @RoleId">
-        <SelectParameters>
-            <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" />
-        </SelectParameters>
-    </asp:SqlDataSource>
-    </asp:Content>
+<SelectParameters>
+    <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" />
+</SelectParameters>
+</asp:SqlDataSource>
+<asp:Panel ID="pnlEditView" runat="server" CssClass="modalPopupLarge modalPopup" align="center" style="display:none" TabIndex="0">
+    <asp:Panel ID="pnlEditViewHeader" runat="server" CssClass="modalHeaderLarge modalHeader" HorizontalAlign="center" TabIndex="0">
+        View bearbeiten <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButtonLarge modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnCancel.UniqueID%>', 'EditView_Cancel');" />
+    </asp:Panel>
+    View-Definition:<br />
+    <asp:TextBox ID="txtViewDefinition" TextMode="MultiLine" Width="998px" Height="710px" runat="server"></asp:TextBox>
+    <%--<ajaxToolkit:HtmlEditorExtender ID="Editor" TargetControlID="txtViewDefinition" runat="server" />--%>
+    <asp:Button ID="btnConfirmEditView" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="position:relative; left:910px; top:8px; padding:5px;" TabIndex="4" OnClick="btnConfirmEditView_Click"/>
+</asp:Panel>
+<asp:LinkButton ID="lnkFake" runat="server"></asp:LinkButton>
+<AjaxControlToolkit:ModalPopupExtender ID="MPE" runat="server" TargetControlID="lnkFake" PopupControlID="pnlEditView" PopupDragHandleControlID="pnlEditViewHeader" BackgroundCssClass="modalBackground"></AjaxControlToolkit:ModalPopupExtender>
+</asp:Content>

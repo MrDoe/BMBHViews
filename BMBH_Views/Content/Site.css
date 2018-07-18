@@ -17,7 +17,7 @@ body {
 input,
 select,
 textarea {
-    max-width: 280px;
+    /*max-width: 480px;*/
 }
 
 /* Responsive: Portrait tablets and up */
@@ -250,6 +250,12 @@ textarea {
     display: block;
 }
 
+.modalPopupLarge {
+    width: 1000px;
+    height: 800px;
+    top: 8% !important;
+}
+
 .modalHeader {
     position: relative;
     top: -21px;
@@ -279,6 +285,10 @@ textarea {
     text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
 }
 
+.modalHeaderLarge {
+    width: 1012px;
+}
+
 .modalHeaderButton {
     position: absolute;
     left: 492px;
@@ -306,6 +316,11 @@ textarea {
     -webkit-background-size: auto auto;
     background-size: auto auto;
     text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+}
+
+.modalHeaderButtonLarge {
+    left: 992px;
+    top: 2px;
 }
 
 .styled-select {
