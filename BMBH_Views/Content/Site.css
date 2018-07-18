@@ -14,10 +14,10 @@ body {
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
-input,
-select,
-textarea {
+input {
     /*max-width: 480px;*/
+    position: relative;
+    top: 3px;
 }
 
 /* Responsive: Portrait tablets and up */
@@ -147,6 +147,8 @@ textarea {
 
 .btn-small {
     background-color: rgb(245, 250, 255);
+    position: relative;
+    top: 2px;
     padding: 2px 5px;
     margin: 0px;
     font-size: 9pt;

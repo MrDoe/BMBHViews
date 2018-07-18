@@ -18,8 +18,7 @@ namespace BMBH_View
         {
             if (!Page.IsPostBack)
             {
-                if (Session["LastRole"] != null)
-                    cboRole.SelectedValue = (string)Session["LastRole"];
+                cboRole.SelectedValue = (string)Session["RoleId"];
             }
         }
 

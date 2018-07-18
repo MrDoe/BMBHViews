@@ -175,6 +175,7 @@ namespace BMBH_View
             
             // get user role
             string sRoleId = SQLexecute_SingleResult("select RoleId from UserRoles where UserId = '" + sRealUserName + "'");
+            Session["RoleId"] = sRoleId;
 
             if (sRoleId == "1")
                 Session["IsAdmin"] = true;
