@@ -293,7 +293,9 @@ namespace BMBH_View
                                 case "int":
                                 case "bigint":
                                 case "float":
-                                case "bit":
+                                case "numeric":
+                                case "smallint":
+                                case "decimal":
                                     if (sOperator == "BETWEEN")
                                     {
                                         int nSeperator = sValue.IndexOf(',');
@@ -461,6 +463,8 @@ namespace BMBH_View
                 case "bigint":
                 case "float":
                 case "numeric":
+                case "smallint":
+                case "decimal":
                 if (sOperator == "BETWEEN")
                 {
                     if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
