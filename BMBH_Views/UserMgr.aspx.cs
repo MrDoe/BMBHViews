@@ -16,6 +16,12 @@ namespace BMBH_View
         {
             if ((Boolean)Session["IsAdmin"] == false) // no admin, go back to previous page
                 Response.Redirect(Request.UrlReferrer.ToString());
+
+            if (this.Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new user
+            {
+                SQLexecute("EXEC AddNewUser '" + txtUserName.Text.Trim() + "'");
+                Response.Redirect("UserMgr.aspx");
+            }
         }
 
         protected void btnRoleMgr_Click(object sender, EventArgs e)
@@ -90,6 +96,10 @@ namespace BMBH_View
                 sSQL = "EXEC DenyPatientSearch '" + sUserName + "'";
                 try { SQLexecute(sSQL); } catch (Exception ex) { }
             }
+        }
+
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
         }
     }
 }

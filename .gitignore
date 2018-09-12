@@ -270,3 +270,4 @@ BMBH_Views/Web.Release.config
 Web.config
 Web.Debug.config
 Web.Release.config
+*.config
