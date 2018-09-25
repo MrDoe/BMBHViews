@@ -3,9 +3,6 @@
 <%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <h4>Benutzerstatistik</h4>
-       
-    
-        
         <asp:Panel ID="Panel1" runat="server" BackColor="#F8FCFC" BorderStyle="Outset" BorderWidth="1px" Width="410px" style="float:left; position:relative; padding:10px;">
             <b>Diagrammtyp:</b>
             <asp:DropDownList ID="DropDownList1" AutoPostBack="true" runat="server"

@@ -21,8 +21,8 @@ namespace BMBH_View
 
         protected void SetDataSource()
         {
-            dsSearch.SelectCommand = "SELECT * FROM [" + Session["FormTable"] + "] WHERE ([UserId] = '" + (String)Session["UserName"] + "') order by ID";
-            dsSearch.UpdateCommand = "UPDATE [" + Session["FormTable"] + "] SET [Operator] = @Operator, [Wert] = @Wert, [Controltype] = @Controltype WHERE [ID] = @ID";
+            dsSearch.SelectCommand = "SELECT * FROM [" + Session["FormTable"] + "] WHERE ([UserId] = '" + (String)Session["UserName"] + "') order by Sorter";
+            dsSearch.UpdateCommand = "UPDATE [" + Session["FormTable"] + "] SET [Operator] = @Operator, [Wert] = @Wert, [Controltype] = @Controltype, [Logic] = @Logic WHERE [ID] = @ID";
             dsSearch.InsertCommand = "INSERT INTO [" + Session["FormTable"] + "] ([Attribut], [Operator], [Wert], [Datatype], [UserId]) VALUES (@Attribut, @Operator, @Wert, @Datatype, @UserId)";
             dsSearch.DeleteCommand = "DELETE FROM [" + Session["FormTable"] + "] WHERE [ID] = @ID";
         }
@@ -122,7 +122,7 @@ namespace BMBH_View
             string sUser = (string)Session["UserName"];
             cmd.Parameters.Add("@UserId", SqlDbType.NVarChar).Value = sUser;
             cmd.CommandText = " update " + Session["FormTable"] +
-                              " set Wert = null, Operator = '=' where UserId = '" + sUser + "'";
+                              " set Wert = null, Operator = '=', Logic = null where UserId = '" + sUser + "'";
             cmd.Connection = con;
             try
             {
@@ -131,6 +131,7 @@ namespace BMBH_View
             }
             catch (Exception ex)
             {
+                Response.Redirect("Default.aspx");
                 throw ex;
             }
             finally
@@ -183,6 +184,8 @@ namespace BMBH_View
 
             ClearTempTable();
             dgdSearch.DataBind();
+            txtSQLselect.Text = "";
+            txtSQLwhere.Text = "";
         }
 
         protected string EscapeSQL(string SQL)
@@ -193,6 +196,7 @@ namespace BMBH_View
                       .Replace("=", " = ")
                       .Replace("WHERE v.", "")
                       .Replace("AND", "UND")
+                      .Replace("OR", "ODER")
                       .Replace("LIKE", "ENTHÄLT")
                       .Replace("NOT LIKE", "ENTHÄLT NICHT")
                       .Replace("IS NULL", "IST LEER")
@@ -206,15 +210,16 @@ namespace BMBH_View
             return Server.HtmlDecode(SQL);
         }
 
-        protected void btnSubmit_Click(object sender, EventArgs e)
+        protected void GenerateSQL(bool bSubmit)
         {
             string sSelect = "select v.* ";
             string sFrom = " from [" + Session["View"] + "] v ";
+            string sWhere = "";
             bool bRecursive = false;
             bool bAdditive = false;
             bool bStandard = false;
 
-            int nLastIteration = Session["Iteration"] == null? 0 : (int)(Session["Iteration"]) - 1;
+            int nLastIteration = Session["Iteration"] == null ? 0 : (int)(Session["Iteration"]) - 1;
 
             if (Session["Recursive"] != null)
                 bRecursive = (Session["Recursive"].ToString() == "True");
@@ -225,166 +230,203 @@ namespace BMBH_View
             if (!bRecursive && !bAdditive)
                 bStandard = true;
 
-            if (bRecursive && nLastIteration > 0 || (bStandard && (bool)Session["JumpedBack"]))
-                    sFrom += " inner join V_Recursive_Temp t on v.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
+            if ((bRecursive && nLastIteration > 0 || (bStandard && (bool)Session["JumpedBack"])) && bSubmit)
+                sFrom += " inner join V_Recursive_Temp t on v.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
 
-            string sWhere = "";
-            bool bIsFirst = true;
-
-            foreach (GridViewRow row in dgdSearch.Rows)
+            if (!bSubmit)
             {
-                string sAttribute = row.Cells[1].Text;
-                string sValue = ((Label)row.Cells[3].FindControl("Label2")).Text;
-                string sDatatype = row.Cells[4].Text;
+                txtSQLselect.Text = sSelect + sFrom + "WHERE ";
 
-                if(sValue.ToLower().Contains("select") || sValue.ToLower().Contains("delete") || 
-                   sValue.ToLower().Contains("drop") || sValue.ToLower().Contains("truncate") ||
-                   sValue.ToLower().Contains("alter") || sValue.ToLower().Contains("execute") ||
-                   sValue.ToLower().Contains("call") || sValue.ToLower().Contains("updatexml") ||
-                   sValue.ToLower().Contains("extractvalue") || sValue.ToLower().Contains("--") ||
-                   sValue.ToLower().Contains("/*") || sValue.ToLower().Contains("*/") ||
-                   sValue.ToLower().Contains("grant") || sValue.ToLower().Contains("update"))
+                // where clause
+                string sLogic = "";
+                bool bIsFirst = true;
+
+                foreach (GridViewRow row in dgdSearch.Rows)
                 {
-                    ShowMsg("Fehler: Kann die Abfrage nicht ausführen! Nicht erlaubte Schlüsselwörter verwendet. Bitte ändern und noch einmal versuchen.");
-                    return;
-                }
+                    string sAttribute = row.Cells[1].Text;
+                    string sDatatype = row.Cells[4].Text;
 
-                // get value from drop down list
-                Label lb = (Label)row.Cells[2].FindControl("Label1");
-                string sOperator = lb.Text;
+                    string sValue = "";
+                    if (row.FindControl("lblValue") != null)
+                        sValue = ((Label)row.FindControl("lblValue")).Text;
+                    if (row.FindControl("txtValue") != null)
+                        sValue = ((TextBox)row.FindControl("txtValue")).Text;
 
-                if (sValue != "" || sOperator.Contains("NULL"))
-                {
-                    if (!bIsFirst)
+                    if (sValue.ToLower().Contains("select") || sValue.ToLower().Contains("delete") ||
+                       sValue.ToLower().Contains("drop") || sValue.ToLower().Contains("truncate") ||
+                       sValue.ToLower().Contains("alter") || sValue.ToLower().Contains("execute") ||
+                       sValue.ToLower().Contains("call") || sValue.ToLower().Contains("updatexml") ||
+                       sValue.ToLower().Contains("extractvalue") || sValue.ToLower().Contains("--") ||
+                       sValue.ToLower().Contains("/*") || sValue.ToLower().Contains("*/") ||
+                       sValue.ToLower().Contains("grant") || sValue.ToLower().Contains("update"))
                     {
-                        sWhere += " AND ";
-                    }
-                    else
-                    {
-                        sWhere += " WHERE ";
-                        bIsFirst = false;
+                        ShowMsg("Fehler: Kann die Abfrage nicht ausführen! Nicht erlaubte Schlüsselwörter verwendet. Bitte ändern und noch einmal versuchen.");
+                        return;
                     }
 
-                    switch (sOperator)
+                    // get value from drop down list
+                    string sOperator = "";
+                    if (row.FindControl("lblOperator") != null)
+                        sOperator = ((Label)row.FindControl("lblOperator")).Text;
+                    if (row.FindControl("cboOperator") != null)
+                        sOperator = ((DropDownList)row.FindControl("cboOperator")).SelectedValue;
+
+                    if (sValue != "" || sOperator.Contains("NULL"))
                     {
-                        case "IN":
-                            sWhere += "v.[" + sAttribute + "] IN " + sValue;
-                            break;
+                        if (row.FindControl("lblLogic") != null)
+                            sLogic = ((Label)row.FindControl("lblLogic")).Text;
+                        if (row.FindControl("cboLogic") != null)
+                            sLogic = ((DropDownList)row.FindControl("cboLogic")).SelectedValue;
 
-                        case "LIKE":
-                            sWhere += "v.[" + sAttribute + "] LIKE '%" + sValue + "%'";
-                            break;
+                        if (bIsFirst)
+                        {
+                            sWhere += "WHERE ";
+                            bIsFirst = false;
+                        }
 
-                        case "NOT LIKE":
-                            sWhere += "v.[" + sAttribute + "] NOT LIKE '%" + sValue + "%'";
-                            break;
+                        switch (sOperator)
+                        {
+                            case "IN":
+                                sWhere += "v.[" + sAttribute + "] IN " + sValue;
+                                break;
 
-                        case "IS NULL":
-                            sWhere += "v.[" + sAttribute + "] IS NULL";
-                            break;
-                        
-                        case "IS NOT NULL":
-                            sWhere += "v.[" + sAttribute + "] IS NOT NULL";
-                            break;
-                        
-                        default:
-                            switch (sDatatype)
-                            {
-                                case "int":
-                                case "bigint":
-                                case "float":
-                                case "bit":
-                                    if (sOperator == "BETWEEN")
-                                    {
-                                        int nSeperator = sValue.IndexOf(',');
-                                        string sValue1 = sValue.Substring(0, nSeperator);
-                                        string sValue2 = sValue.Substring(nSeperator + 1, sValue.Length - nSeperator - 1);
-                                        sValue = sValue1 + " AND " + sValue2;
-                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
-                                    }
-                                    else
-                                        sWhere += "v.[" + sAttribute + "]" + sOperator + sValue;
-                                    break;
-                                case "date":
-                                    if (sOperator == "BETWEEN")
-                                    {
-                                        int nSeperator = sValue.IndexOf(',');
-                                        string sDate1 = sValue.Substring(0, nSeperator);
-                                        string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 2);
-                                        sValue = sDate1 + " AND " + sDate2;
-                                        //ShowMsg(sValue);
-                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
-                                    }
-                                    else
-                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(date, " + sValue + ")";
-                                    break;
+                            case "LIKE":
+                                sWhere += "v.[" + sAttribute + "] LIKE '%" + sValue + "%'";
+                                break;
 
-                                case "datetime":
-                                    if (sOperator == "BETWEEN")
-                                    {
-                                        int nSeperator = sValue.IndexOf(',');
-                                        string sDate1 = sValue.Substring(0, nSeperator - 2) + ":00.00'";
-                                        string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 3) + ":00.00'";
-                                        sValue = sDate1 + " AND " + sDate2;
-                                        ShowMsg(sValue);
-                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
-                                    }
-                                    else
-                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(datetime, " + sValue + ")";
-                                    break;
-                                
-                                default:
-                                    sWhere += "v.[" + sAttribute + "]" + sOperator + "'" + sValue + "'";
-                                    break;
-                            }
-                            break;
+                            case "NOT LIKE":
+                                sWhere += "v.[" + sAttribute + "] NOT LIKE '%" + sValue + "%'";
+                                break;
+
+                            case "IS NULL":
+                                sWhere += "v.[" + sAttribute + "] IS NULL";
+                                break;
+
+                            case "IS NOT NULL":
+                                sWhere += "v.[" + sAttribute + "] IS NOT NULL";
+                                break;
+
+                            default:
+                                switch (sDatatype)
+                                {
+                                    case "int":
+                                    case "bigint":
+                                    case "float":
+                                    case "bit":
+                                        if (sOperator == "BETWEEN")
+                                        {
+                                            int nSeperator = sValue.IndexOf(',');
+                                            string sValue1 = sValue.Substring(0, nSeperator);
+                                            string sValue2 = sValue.Substring(nSeperator + 1, sValue.Length - nSeperator - 1);
+                                            sValue = sValue1 + " AND " + sValue2;
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                        }
+                                        else
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                        break;
+                                    case "date":
+                                        if (sOperator == "BETWEEN")
+                                        {
+                                            int nSeperator = sValue.IndexOf(',');
+                                            string sDate1 = sValue.Substring(0, nSeperator);
+                                            string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 2);
+                                            sValue = sDate1 + " AND " + sDate2;
+                                            //ShowMsg(sValue);
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                        }
+                                        else
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(date, " + sValue + ")";
+                                        break;
+
+                                    case "datetime":
+                                        if (sOperator == "BETWEEN")
+                                        {
+                                            int nSeperator = sValue.IndexOf(',');
+                                            string sDate1 = sValue.Substring(0, nSeperator - 2) + ":00.00'";
+                                            string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 3) + ":00.00'";
+                                            sValue = sDate1 + " AND " + sDate2;
+                                            ShowMsg(sValue);
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                        }
+                                        else
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(datetime, " + sValue + ")";
+                                        break;
+
+                                    default:
+                                        sWhere += "v.[" + sAttribute + "] " + sOperator + " '" + sValue + "'";
+                                        break;
+                                }
+                                break;
+                        }
+                        sWhere += "\n" + sLogic + " ";
                     }
                 }
-            }
 
-            if (bAdditive && nLastIteration > 0) // additive search
+                if (sWhere.Length > 6)
+                {
+                    // cut last AND
+                    if (sLogic == "AND")
+                        sWhere = sWhere.Substring(0, sWhere.Length - 5);
+                    // cut last OR
+                    if (sLogic == "OR")
+                        sWhere = sWhere.Substring(0, sWhere.Length - 4);
+                }
+
+                txtSQLwhere.Text = sWhere.Replace("WHERE", "");
+            }
+            else // submit search
             {
-                sWhere += " union select v2.*" +
-                          " from [" + Session["View"] + "] v2" +
-                          " inner join V_Recursive_Temp t on v2.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
+                sWhere = txtSQLwhere.Text;
+
+                if (bAdditive && nLastIteration > 0) // additive search
+                {
+                    sWhere += " union select v2.*" +
+                              " from [" + Session["View"] + "] v2" +
+                              " inner join V_Recursive_Temp t on v2.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
+                }
+
+                if(sWhere.Length > 6)
+                    sWhere = " WHERE " + sWhere;
+
+                string sSQL = Server.HtmlDecode(sSelect + sFrom + sWhere);
+                Session["LastQuery"] = sSQL;
+
+                if ((bool)Session["JumpedBack"] == false) // save result to temporary table
+                {
+                    string sInsert = "insert into V_Recursive_Temp (ID, GUID, ITERATION) ";
+                    string sSQL2 = "";
+                    string sMode = "";
+
+                    if (bRecursive)
+                    {
+                        sSelect = "select v.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
+                        sSQL2 = Server.HtmlDecode(sInsert + sSelect + sFrom + sWhere);
+                        sMode = "Rekursiv";
+                    }
+                    else if (bAdditive)
+                    {
+                        sSelect = "select u.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
+                        sSQL2 = Server.HtmlDecode(sInsert + sSelect + " from (" + sSQL + ") u");
+                        sMode = "Additiv";
+                    }
+                    else // standard search
+                    {
+                        sSelect = "select v.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
+                        sSQL2 = Server.HtmlDecode(sInsert + sSelect + sFrom + sWhere);
+                        sMode = "Standard";
+                    }
+
+                    SQLexecute(sSQL2);
+                    SQLexecute("insert into V_Recursive_Log (GUID, Iteration, SQL, SEARCHMODE) values ('" + Session["GUID"] + "'," + Session["Iteration"] + ",'" + EscapeSQL(sWhere.Replace("WHERE","")) + "','" + sMode + "')");
+
+                    Session["Iteration"] = (int)Session["Iteration"] + 1;
+                }
             }
+        }
 
-            string sSQL = Server.HtmlDecode(sSelect + sFrom + sWhere);
-
-            if ((bool)Session["JumpedBack"] == false) // save result to temporary table
-            {
-                string sInsert = "insert into V_Recursive_Temp (ID, GUID, ITERATION) ";
-                string sSQL2 = "";
-                string sMode = "";
-
-                if (bRecursive)
-                {
-                    sSelect = "select v.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
-                    sSQL2 = Server.HtmlDecode(sInsert + sSelect + sFrom + sWhere);
-                    sMode = "Rekursiv";
-                }
-                else if (bAdditive)
-                {
-                    sSelect = "select u.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
-                    sSQL2 = Server.HtmlDecode(sInsert + sSelect + " from (" + sSQL + ") u");
-                    sMode = "Additiv";
-                }
-                else // standard search
-                {
-                    sSelect = "select v.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
-                    sSQL2 = Server.HtmlDecode(sInsert + sSelect + sFrom + sWhere);
-                    sMode = "Standard";
-                }
-
-                SQLexecute(sSQL2);
-                SQLexecute("insert into V_Recursive_Log (GUID, Iteration, SQL, SEARCHMODE) values ('" + Session["GUID"] + "'," + Session["Iteration"] + ",'" + EscapeSQL(sWhere) + "','" + sMode + "')");
-
-                Session["Iteration"] = (int)Session["Iteration"] + 1;
-            }
-
-            //ShowMsg(sSQL);
-
-            Session["LastQuery"] = sSQL;
+        protected void btnSubmit_Click(object sender, EventArgs e)
+        {
+            GenerateSQL(true);
             Response.Redirect(sParentPage, true);
         }
 
@@ -414,20 +456,21 @@ namespace BMBH_View
             Session["CurrentField"] = sCurrentField;
         }
 
+        // save current row to search form table
         protected void btnOK_Click(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
-            TextBox txtValue = (TextBox)row.Cells[3].FindControl("txtValue");
-            DropDownList cboValue = (DropDownList)row.Cells[3].FindControl("cboValue");
-            CheckBoxList chkValue = (CheckBoxList)row.Cells[3].FindControl("chkValue");
-            DropDownList cboOperator = (DropDownList)row.Cells[2].FindControl("cboOperator");
-            TextBox txtCalFrom = (TextBox)row.Cells[3].FindControl("txtCalFrom");
-            TextBox txtCalTo = (TextBox)row.Cells[3].FindControl("txtCalTo");
-            CheckBox chkSingleValue = (CheckBox)row.Cells[3].FindControl("chkSingleValue");
+            TextBox txtValue = (TextBox)row.FindControl("txtValue");
+            DropDownList cboValue = (DropDownList)row.FindControl("cboValue");
+            CheckBoxList chkValue = (CheckBoxList)row.FindControl("chkValue");
+            DropDownList cboOperator = (DropDownList)row.FindControl("cboOperator");
+            TextBox txtCalFrom = (TextBox)row.FindControl("txtCalFrom");
+            TextBox txtCalTo = (TextBox)row.FindControl("txtCalTo");
+            CheckBox chkSingleValue = (CheckBox)row.FindControl("chkSingleValue");
             string sOperator = cboOperator.SelectedValue;
             string sDatatype = row.Cells[4].Text;
-
+                
             if (cboValue.Visible)
                 txtValue.Text = cboValue.SelectedValue;
 
@@ -485,6 +528,8 @@ namespace BMBH_View
             btnDeleteSearch.Enabled = true;
             cboSaveSearch.Enabled = true;
             //EnableDisableButtons(true);
+
+            GenerateSQL(false);
         }
 
         protected void cboOperator_SelectedIndexChanged(object sender, EventArgs e)
@@ -536,7 +581,7 @@ namespace BMBH_View
     
         public void EnableControls(GridViewRow row, bool bLoadOperators)
         {
-            // controls
+            // get controls
             DropDownList cboValue = (DropDownList)row.FindControl("cboValue");
             CheckBoxList chkValue = (CheckBoxList)row.FindControl("chkValue");
             TextBox txtValue = (TextBox)row.FindControl("txtValue");
@@ -550,6 +595,10 @@ namespace BMBH_View
             CheckBox chkSingleValue = (CheckBox)row.FindControl("chkSingleValue");
             DropDownList cboControltype = (DropDownList)row.FindControl("cboControltype");
             ImageButton btnClearValue = (ImageButton)row.FindControl("btnClearValue");
+            DropDownList cboOperator = ((DropDownList)row.FindControl("cboOperator"));
+            DropDownList cboLogic = (DropDownList)row.FindControl("cboLogic");
+            if(cboLogic.SelectedValue == "")
+                cboLogic.SelectedValue = "AND";
 
             // hide all controls
             cboValue.Visible = false;
@@ -566,8 +615,7 @@ namespace BMBH_View
             txtCalTo.Visible = false;
 
             // populate operators
-            DropDownList cboOperator = (DropDownList)row.FindControl("cboOperator");
-            string sDatatype = (string)row.Cells[4].Text;
+            string sDatatype = (string)row.Cells[5].Text;
 
             if (bLoadOperators) // Load Operator and Control Type Items
             {
@@ -649,12 +697,10 @@ namespace BMBH_View
 
             // get cell values
             string sCurrentField = (string)row.Cells[1].Text;
-            string sOperator = ((DropDownList)row.Cells[2].FindControl("cboOperator")).SelectedValue;
-            //string sValue = (string)row.Cells[3].Text;
-            string sControltype = ((DropDownList)row.Cells[3].FindControl("cboControltype")).SelectedValue;
-            CalendarExtender calFrom = (CalendarExtender)row.Cells[2].FindControl("calFrom");
-            CalendarExtender calTo = (CalendarExtender)row.Cells[2].FindControl("calTo");
-            
+            string sOperator = cboOperator.SelectedValue;
+            string sControltype = cboControltype.SelectedValue;
+            CalendarExtender calFrom = (CalendarExtender)row.FindControl("calFrom");
+            CalendarExtender calTo = (CalendarExtender)row.FindControl("calTo");
 
             switch (sControltype)
             {
@@ -799,7 +845,7 @@ namespace BMBH_View
                     EnableControls(e.Row, true);
                 }
             }
-            else            
+            else // save date & datetime column names for correct excel export in results.aspx        
             {
                 HashSet<string> DateCols = new HashSet<string>();
                 HashSet<string> DateTimeCols = new HashSet<string>();
@@ -952,6 +998,10 @@ namespace BMBH_View
 
         protected void txtValue_TextChanged(object sender, EventArgs e)
         {
+            GridViewRow row = (GridViewRow)((TextBox)sender).NamingContainer;
+            DropDownList cboLogic = (DropDownList)row.FindControl("cboLogic");
+            if(cboLogic.SelectedValue == "")
+                cboLogic.SelectedValue = "AND";
         }
 
         protected void dgdSearch_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -986,6 +1036,65 @@ namespace BMBH_View
                     }
                 }
                 Session["PreviousIndex"] = newIndex;
+            }
+        }
+
+        protected void chkExpertMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((CheckBox)sender).Checked)
+            {
+                pnlSQLeditor.Visible = true;
+            }
+            else
+            {
+                pnlSQLeditor.Visible = false;
+            }
+            
+            dgdSearch.DataBind();
+        }
+
+        protected void btnDown_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
+            string sID = row.Cells[0].Text;
+            int nRow = row.RowIndex;
+            string sID2 = dgdSearch.Rows[++nRow].Cells[0].Text;
+            string sSQL = "UPDATE [" + Session["FormTable"] + "] SET [Sorter] = [Sorter] + 1 where ID = " + sID;
+            SQLexecute(sSQL);
+            sSQL = "UPDATE [" + Session["FormTable"] + "] SET [Sorter] = [Sorter] - 1 where ID = " + sID2;
+            SQLexecute(sSQL);
+            dgdSearch.EditIndex = nRow;
+            dgdSearch.DataBind();
+        }
+
+        protected void btnUp_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
+            string sID = row.Cells[0].Text;
+            int nRow = row.RowIndex;
+            string sID2 = dgdSearch.Rows[--nRow].Cells[0].Text;
+            string sSQL = "UPDATE [" + Session["FormTable"] + "] SET [Sorter] = [Sorter] - 1 where ID = " + sID;
+            SQLexecute(sSQL);
+            sSQL = "UPDATE [" + Session["FormTable"] + "] SET [Sorter] = [Sorter] + 1 where ID = " + sID2;
+            SQLexecute(sSQL);
+            dgdSearch.EditIndex = nRow;
+            dgdSearch.DataBind();
+        }
+
+        protected void dgdSearch_RowCreated(object sender, GridViewRowEventArgs e)
+        {
+            e.Row.Cells[0].Visible = false; // hide id column
+            e.Row.Cells[10].Visible = false; // hide sorter column
+
+            if (chkExpertMode.Checked)
+            {
+                e.Row.Cells[5].Visible = true; // show datatype column
+                e.Row.Cells[7].Visible = true; // show control type column
+            }
+            else
+            {
+                e.Row.Cells[5].Visible = false; // hide datatype column
+                e.Row.Cells[7].Visible = false; // hide controltype column
             }
         }
     }

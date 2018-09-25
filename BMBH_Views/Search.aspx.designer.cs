@@ -157,6 +157,15 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Button btnDeleteSearch;
         
         /// <summary>
+        /// chkExpertMode-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkExpertMode;
+        
+        /// <summary>
         /// Table1-Steuerelement
         /// </summary>
         /// <remarks>
@@ -173,6 +182,33 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView dgdSearch;
+        
+        /// <summary>
+        /// pnlSQLeditor-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlSQLeditor;
+        
+        /// <summary>
+        /// txtSQLselect-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSQLselect;
+        
+        /// <summary>
+        /// txtSQLwhere-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSQLwhere;
         
         /// <summary>
         /// pnlSQLhistory-Steuerelement

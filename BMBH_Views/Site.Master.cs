@@ -11,7 +11,8 @@ namespace BMBH_View
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            lblUserName.Text = (String)Session["UserName"];
+            if(Session["UserName"] != null)
+                lblUserName.Text = (String)Session["UserName"];
 
             if ((Boolean)Session["IsAdmin"] == true)
                 lnkUserMan.Visible = true;
