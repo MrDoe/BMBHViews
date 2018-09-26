@@ -215,25 +215,27 @@ namespace BMBH_View
             string sSelect = "select v.* ";
             string sFrom = " from [" + Session["View"] + "] v ";
             string sWhere = "";
+            int nLastIteration = Session["Iteration"] == null ? 0 : (int)(Session["Iteration"]) - 1;
             bool bRecursive = false;
             bool bAdditive = false;
             bool bStandard = false;
 
-            int nLastIteration = Session["Iteration"] == null ? 0 : (int)(Session["Iteration"]) - 1;
+            if (bSubmit) // submit search
+            {
+                if (Session["Recursive"] != null)
+                    bRecursive = (Session["Recursive"].ToString() == "True");
 
-            if (Session["Recursive"] != null)
-                bRecursive = (Session["Recursive"].ToString() == "True");
+                if (Session["Additive"] != null)
+                    bAdditive = (Session["Additive"].ToString() == "True");
 
-            if (Session["Additive"] != null)
-                bAdditive = (Session["Additive"].ToString() == "True");
+                if (!bRecursive && !bAdditive)
+                    bStandard = true;
 
-            if (!bRecursive && !bAdditive)
-                bStandard = true;
+                if ((bRecursive && nLastIteration > 0 || (bStandard && (bool)Session["JumpedBack"])))
+                    sFrom += " inner join V_Recursive_Temp t on v.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
+            }
 
-            if ((bRecursive && nLastIteration > 0 || (bStandard && (bool)Session["JumpedBack"])) && bSubmit)
-                sFrom += " inner join V_Recursive_Temp t on v.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
-
-            if (!bSubmit)
+            if (!bSubmit) // don't submit search, just fill the query editor
             {
                 txtSQLselect.Text = sSelect + sFrom + "WHERE ";
 
@@ -247,14 +249,27 @@ namespace BMBH_View
                     string sDatatype = row.Cells[5].Text;
                     string sValue = row.Cells[3].Text;
 
-                    if (row.FindControl("lblValue") != null)
-                        sValue = ((Label)row.FindControl("lblValue")).Text;
-                    if (row.FindControl("txtValue") != null)
-                        sValue = ((TextBox)row.FindControl("txtValue")).Text;
-                    if (row.FindControl("txtCalFrom") != null)
-                        sValue = ((TextBox)row.FindControl("txtCalFrom")).Text;
-                    if (row.FindControl("txtCalFrom") != null && ((TextBox)row.FindControl("txtCalTo")).Text != "")
-                        sValue = ((TextBox)row.FindControl("txtCalFrom")).Text + ',' + ((TextBox)row.FindControl("txtCalTo")).Text;
+                    if (row.FindControl("cboControltype") != null) // only available for selected row
+                    {
+                        string sControltype = ((DropDownList)row.Cells[7].FindControl("cboControltype")).SelectedValue;
+                        switch (sControltype)
+                        {
+                            case "TextBox":
+                                if (row.FindControl("txtValue") != null)
+                                    sValue = ((TextBox)row.FindControl("txtValue")).Text;
+                                break;
+                            case "DropDownList":
+                                if (row.FindControl("cboValue") != null)
+                                    sValue = ((DropDownList)row.FindControl("cboValue")).SelectedValue;
+                                break;
+                            case "Calendar":
+                                if (row.FindControl("txtCalFrom") != null)
+                                    sValue = ((TextBox)row.FindControl("txtCalFrom")).Text;
+                                if (row.FindControl("txtCalFrom") != null && ((TextBox)row.FindControl("txtCalTo")).Text != "")
+                                    sValue = ((TextBox)row.FindControl("txtCalFrom")).Text + ',' + ((TextBox)row.FindControl("txtCalTo")).Text;
+                                break;
+                        }
+                    }
 
                     if (sValue.ToLower().Contains("select") || sValue.ToLower().Contains("delete") ||
                        sValue.ToLower().Contains("drop") || sValue.ToLower().Contains("truncate") ||
@@ -267,7 +282,7 @@ namespace BMBH_View
                         ShowMsg("Fehler: Kann die Abfrage nicht ausführen! Nicht erlaubte Schlüsselwörter verwendet. Bitte ändern und noch einmal versuchen.");
                         return;
                     }
-
+                    
                     // get value from drop down list
                     string sOperator = "";
                     if (row.FindControl("lblOperator") != null)
@@ -276,7 +291,7 @@ namespace BMBH_View
                         sOperator = ((DropDownList)row.FindControl("cboOperator")).SelectedValue;
 
                     if (sValue != "" || sOperator.Contains("NULL"))
-                    {
+                    { 
                         if (row.FindControl("lblLogic") != null)
                             sLogic = ((Label)row.FindControl("lblLogic")).Text;
                         if (row.FindControl("cboLogic") != null)
@@ -319,9 +334,9 @@ namespace BMBH_View
                                     case "bit":
                                         if (sOperator == "BETWEEN")
                                         {
-                                            int nSeperator = sValue.IndexOf(',');
-                                            string sValue1 = sValue.Substring(0, nSeperator);
-                                            string sValue2 = sValue.Substring(nSeperator + 1, sValue.Length - nSeperator - 1);
+                                            int nSeparator = sValue.IndexOf(',');
+                                            string sValue1 = sValue.Substring(0, nSeparator);
+                                            string sValue2 = sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 1);
                                             sValue = sValue1 + " AND " + sValue2;
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
                                         }
@@ -331,9 +346,9 @@ namespace BMBH_View
                                     case "date":
                                         if (sOperator == "BETWEEN")
                                         {
-                                            int nSeperator = sValue.IndexOf(',');
-                                            string sDate1 = sValue.Substring(0, nSeperator);
-                                            string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 2);
+                                            int nSeparator = sValue.IndexOf(',');
+                                            string sDate1 = sValue.Substring(0, nSeparator);
+                                            string sDate2 = sValue.Substring(nSeparator + 2, sValue.Length - nSeparator - 2);
                                             sValue = sDate1 + " AND " + sDate2;
 
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
@@ -345,9 +360,9 @@ namespace BMBH_View
                                     case "datetime":
                                         if (sOperator == "BETWEEN")
                                         {
-                                            int nSeperator = sValue.IndexOf(',');
-                                            string sDate1 = "'" + sValue.Substring(0, nSeperator) + ":00.00'";
-                                            string sDate2 = "'" + sValue.Substring(nSeperator + 1, sValue.Length - nSeperator - 1) + ":00.00'";
+                                            int nSeparator = sValue.IndexOf(',');
+                                            string sDate1 = "'" + sValue.Substring(0, nSeparator) + ":00.00'";
+                                            string sDate2 = "'" + sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 1) + ":00.00'";
                                             sValue = sDate1 + " AND " + sDate2;
 
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;

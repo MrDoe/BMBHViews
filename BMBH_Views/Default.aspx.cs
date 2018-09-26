@@ -167,8 +167,8 @@ namespace BMBH_View
 
         private void SetUser()
         {
-            string sRealUserName = Page.User.Identity.Name;
-            //string sRealUserName = "KHD\\doellingerchristoph";
+            //string sRealUserName = Page.User.Identity.Name;
+            string sRealUserName = "KHD\\doellingerchristoph";
 
             if (Session["UserName"] == null)
                 Session["UserName"] = sRealUserName;
