@@ -76,13 +76,13 @@
                     <asp:Panel ID="Panel2" runat="server" Width="375px">
                     <div style="float:left; width:50px; position:relative; top:1px">
                         <asp:Label ID="lblFrom" runat="server" Text="Von:" BorderWidth="2px" BorderColor="Transparent" />
-                        <asp:Label ID="lblTo" runat="server" Text="Bis:" BorderWidth="2px" BorderColor="Transparent"/>
+                        <asp:Label ID="lblTo" runat="server" Text="Bis:" BorderWidth="2px" style="position:relative; top:13px;" BorderColor="Transparent"/>
                     </div>
                     <div style="float:right; position:relative; width:180px; left:-20px">
-                        <asp:TextBox ID="txtCalFrom" runat="server" width="150px" Visible="False"/>
+                        <asp:TextBox ID="txtCalFrom" runat="server" width="120px" style="position:relative; top:-8px;" Visible="False"/>
                         <asp:ImageButton ID="btnCalFrom" runat="server" ImageUrl="~/Images/table_16x16.gif" AlternateText="Kalender anzeigen" /><br />
                         <ajaxToolkit:CalendarExtender ID="calFrom" runat="server" TargetControlID="txtCalFrom" PopupButtonID="btnCalFrom" TodaysDateFormat="dd.MM.yyyy HH:mm" Format="dd.MM.yyyy HH:mm"/>
-                        <asp:TextBox ID="txtCalTo" runat="server" width="150px" Visible="False"/>
+                        <asp:TextBox ID="txtCalTo" runat="server" width="120px" style="position:relative; top:-8px;" Visible="False"/>
                         <asp:ImageButton ID="btnCalTo" runat="server" ImageUrl="~/Images/table_16x16.gif" AlternateText="Kalender anzeigen" /><br />
                         <ajaxToolkit:CalendarExtender ID="calTo" runat="server" TargetControlID="txtCalTo" PopupButtonID="btnCalTo" TodaysDateFormat="dd.MM.yyyy HH:mm" Format="dd.MM.yyyy HH:mm"/>
                     </div>
@@ -174,7 +174,7 @@
             <asp:TextBox ID="txtSQLselect" runat="server" Width="600px" style="box-shadow: 1px 1px 8px rgba(0,0,0,0.3); background-color:rgb(93, 123, 157); color:white;" ReadOnly="true"/>
             <asp:TextBox ID="txtSQLwhere" runat="server" Width="600px" Height="500px" TextMode="MultiLine"/>
         </asp:Panel>
-        <asp:Panel ID="pnlSQLhistory" runat="server" BorderWidth="10px" BorderColor="White" Visible="false">
+        <b<asp:Panel ID="pnlSQLhistory" runat="server" BorderWidth="10px" BorderColor="White" Visible="false">
             Suchhistorie:<br />
             <asp:GridView ID="dgdHistory" runat="server" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333" GridLines="Horizontal" AutoGenerateColumns="false">
             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />

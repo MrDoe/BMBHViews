@@ -244,13 +244,17 @@ namespace BMBH_View
                 foreach (GridViewRow row in dgdSearch.Rows)
                 {
                     string sAttribute = row.Cells[1].Text;
-                    string sDatatype = row.Cells[4].Text;
+                    string sDatatype = row.Cells[5].Text;
+                    string sValue = row.Cells[3].Text;
 
-                    string sValue = "";
                     if (row.FindControl("lblValue") != null)
                         sValue = ((Label)row.FindControl("lblValue")).Text;
                     if (row.FindControl("txtValue") != null)
                         sValue = ((TextBox)row.FindControl("txtValue")).Text;
+                    if (row.FindControl("txtCalFrom") != null)
+                        sValue = ((TextBox)row.FindControl("txtCalFrom")).Text;
+                    if (row.FindControl("txtCalFrom") != null && ((TextBox)row.FindControl("txtCalTo")).Text != "")
+                        sValue = ((TextBox)row.FindControl("txtCalFrom")).Text + ',' + ((TextBox)row.FindControl("txtCalTo")).Text;
 
                     if (sValue.ToLower().Contains("select") || sValue.ToLower().Contains("delete") ||
                        sValue.ToLower().Contains("drop") || sValue.ToLower().Contains("truncate") ||
@@ -331,7 +335,7 @@ namespace BMBH_View
                                             string sDate1 = sValue.Substring(0, nSeperator);
                                             string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 2);
                                             sValue = sDate1 + " AND " + sDate2;
-                                            //ShowMsg(sValue);
+
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
                                         }
                                         else
@@ -342,14 +346,14 @@ namespace BMBH_View
                                         if (sOperator == "BETWEEN")
                                         {
                                             int nSeperator = sValue.IndexOf(',');
-                                            string sDate1 = sValue.Substring(0, nSeperator - 2) + ":00.00'";
-                                            string sDate2 = sValue.Substring(nSeperator + 2, sValue.Length - nSeperator - 3) + ":00.00'";
+                                            string sDate1 = "'" + sValue.Substring(0, nSeperator) + ":00.00'";
+                                            string sDate2 = "'" + sValue.Substring(nSeperator + 1, sValue.Length - nSeperator - 1) + ":00.00'";
                                             sValue = sDate1 + " AND " + sDate2;
-                                            ShowMsg(sValue);
+
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
                                         }
                                         else
-                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(datetime, " + sValue + ")";
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(datetime, '" + sValue + "')";
                                         break;
 
                                     default:
@@ -469,8 +473,8 @@ namespace BMBH_View
             TextBox txtCalTo = (TextBox)row.FindControl("txtCalTo");
             CheckBox chkSingleValue = (CheckBox)row.FindControl("chkSingleValue");
             string sOperator = cboOperator.SelectedValue;
-            string sDatatype = row.Cells[4].Text;
-                
+            string sDatatype = row.Cells[5].Text;
+
             if (cboValue.Visible)
                 txtValue.Text = cboValue.SelectedValue;
 
@@ -479,6 +483,7 @@ namespace BMBH_View
                 String sSelected = String.Join("','", chkValue.Items.OfType<ListItem>().Where(r => r.Selected).Select(r => r.Text));
                 txtValue.Text = "('" + sSelected + "')";
             }
+
 
             switch (sDatatype)
             {
