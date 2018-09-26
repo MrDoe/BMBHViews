@@ -11,7 +11,7 @@ namespace BMBH_View
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(Session["UserName"] != null && Page.FindControl("lblUserName") != null)
+            if(Session["UserName"] != null)
                 lblUserName.Text = (String)Session["UserName"];
 
             if ((Boolean)Session["IsAdmin"] == true)
