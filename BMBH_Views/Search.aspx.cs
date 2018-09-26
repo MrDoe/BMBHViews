@@ -246,8 +246,12 @@ namespace BMBH_View
                 foreach (GridViewRow row in dgdSearch.Rows)
                 {
                     string sAttribute = row.Cells[1].Text;
-                    string sDatatype = row.Cells[5].Text;
+                    string sOperator = row.Cells[2].Text;
                     string sValue = row.Cells[3].Text;
+                    string sDatatype = row.Cells[5].Text;
+
+                    if (row.FindControl("lblValue") != null)
+                        sValue = ((Label)row.FindControl("lblValue")).Text;
 
                     if (row.FindControl("cboControltype") != null) // only available for selected row
                     {
@@ -284,7 +288,6 @@ namespace BMBH_View
                     }
                     
                     // get value from drop down list
-                    string sOperator = "";
                     if (row.FindControl("lblOperator") != null)
                         sOperator = ((Label)row.FindControl("lblOperator")).Text;
                     if (row.FindControl("cboOperator") != null)
