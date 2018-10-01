@@ -8,7 +8,6 @@
 <asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderStyle="Solid" BorderWidth="5px" Width="99%" style="top:3px; position:relative">
     <asp:Button ID="btnSubmit" runat="server" Text="Absenden" CssClass="btn btn-default btn-small" Width="70px" OnClick="btnSubmit_Click" Font-Bold="False" />
     <asp:Button ID="btnNew" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" OnClick="btnNew_Click" Text="Neue Suche" Width="80px" />
-
     &nbsp;&nbsp; Gespeicherte Suche:&nbsp;<div style="float:right;position:relative;left:auto">
     </div>
     <div style="float:right;position:relative;left:auto;top:3px;margin-right:30px">
@@ -50,6 +49,12 @@
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" Width="50%" Height="10px" />
         <Columns>
             <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="True" InsertVisible="False" SortExpression="ID" ControlStyle-Width="0px" HeaderStyle-Width="0px" ItemStyle-Width="0px" ShowHeader="False" />
+  			<asp:Templatefield>
+                <ItemStyle Width="45px"></ItemStyle>
+			    <ItemTemplate>
+                    <asp:Button ID="btnBracket1" runat="server" CssClass="btn btn-default btn-small" Text="(" OnClick="btnBracket1_Click" />
+                </ItemTemplate>
+			</asp:Templatefield>
             <asp:BoundField DataField="Attribut" HeaderText="Attribut" SortExpression="Attribut" ReadOnly="True" />
             <asp:TemplateField HeaderText="Operator" ItemStyle-Width="10%">
                 <EditItemTemplate>
@@ -134,9 +139,10 @@
                 </ItemTemplate>
             </asp:TemplateField>
    			<asp:Templatefield>
-                <ItemStyle Width="60px"></ItemStyle>
+                <ItemStyle Width="90px"></ItemStyle>
 				<edititemtemplate>
 					<asp:Button ID="btnOK" runat="server" CssClass="btn btn-default btn-small" commandname="Update" Text="OK" OnClick="btnOK_Click" />
+					<asp:Button ID="btnCopyRow" runat="server" CssClass="btn btn-default btn-small" Text="Zeile kopieren" OnClick="btnCopyRow_Click" />
 				</edititemtemplate>
 			    <ItemTemplate>
                     <asp:Button ID="btnEdit" runat="server" CssClass="btn btn-default btn-small" commandname="Edit" Text="Ändern" OnClick="btnEdit_Click"/>
@@ -144,15 +150,18 @@
 			</asp:Templatefield>
    			<asp:Templatefield>
                 <ItemStyle Width="45px"></ItemStyle>
-<%--				<edititemtemplate>
-					<asp:Button ID="btnOK" runat="server" CssClass="btn btn-default btn-small" commandname="Update" Text="OK" OnClick="btnOK_Click" />
-				</edititemtemplate>--%>
 			    <ItemTemplate>
                     <asp:Button ID="btnUp" runat="server" CssClass="btn btn-default btn-small" style="padding-left:3px; padding-top:1px; width:16px; height:16px; font-size:6pt;" Text="▲" OnClick="btnUp_Click"/>
                     <asp:Button ID="btnDown" runat="server" CssClass="btn btn-default btn-small" style="padding-left:3px; padding-top:1px; width:16px; height:16px; font-size:6pt;" Text="▼" OnClick="btnDown_Click"/>
                 </ItemTemplate>
 			</asp:Templatefield>
             <asp:BoundField DataField="Sorter" SortExpression="Sorter" ReadOnly="True" />
+  			<asp:Templatefield>
+                <ItemStyle Width="45px"></ItemStyle>
+			    <ItemTemplate>
+                    <asp:Button ID="btnBracket2" runat="server" CssClass="btn btn-default btn-small" Text=")" OnClick="btnBracket2_Click" />
+                </ItemTemplate>
+			</asp:Templatefield>
         </Columns>
         <EditRowStyle BackColor="#C7D2DD" />
         <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -174,7 +183,7 @@
             <asp:TextBox ID="txtSQLselect" runat="server" Width="600px" style="box-shadow: 1px 1px 8px rgba(0,0,0,0.3); background-color:rgb(93, 123, 157); color:white;" ReadOnly="true"/>
             <asp:TextBox ID="txtSQLwhere" runat="server" Width="600px" Height="500px" TextMode="MultiLine"/>
         </asp:Panel>
-        <b<asp:Panel ID="pnlSQLhistory" runat="server" BorderWidth="10px" BorderColor="White" Visible="false">
+        <b<asp:Panel ID="pnlSQLhistory" runat="server" BorderWidth="10px" BorderColor="transparent" Visible="false">
             Suchhistorie:<br />
             <asp:GridView ID="dgdHistory" runat="server" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333" GridLines="Horizontal" AutoGenerateColumns="false">
             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />

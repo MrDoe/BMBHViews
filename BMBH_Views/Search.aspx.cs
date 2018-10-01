@@ -36,7 +36,13 @@ namespace BMBH_View
                 Session["ShowListDialog"] = null;
                 Session["PreviousIndex"] = null;
                 Session["MainTable"] = null;
-                
+
+                // hashtable for brackets
+                if(Session["htBracket1"] == null)
+                    Session["htBracket1"] = new Hashtable();
+                if (Session["htBracket2"] == null)
+                    Session["htBracket2"] = new Hashtable();
+
                 //if (Session["LastQuery"] == null)
                 ClearTempTable();
 
@@ -115,31 +121,8 @@ namespace BMBH_View
 
         private void ClearTempTable()
         {
-            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
-            SqlConnection con = new SqlConnection(sConnString);
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.Text;
-            string sUser = (string)Session["UserName"];
-            cmd.Parameters.Add("@UserId", SqlDbType.NVarChar).Value = sUser;
-            cmd.CommandText = " update " + Session["FormTable"] +
-                              " set Wert = null, Operator = '=', Logic = null where UserId = '" + sUser + "'";
-            cmd.Connection = con;
-            try
-            {
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Response.Redirect("Default.aspx");
-                throw ex;
-            }
-            finally
-            {
-                con.Close();
-                con.Dispose();
-                dgdSearch.DataBind();
-            }
+            SQLexecute("EXEC RecreateSearchTableForUser '" + Session["View"] + "','" + (String)Session["UserName"] + "'");
+            dgdSearch.DataBind();
         }
 
         private void SQLexecute(string sSQL)
@@ -245,17 +228,19 @@ namespace BMBH_View
 
                 foreach (GridViewRow row in dgdSearch.Rows)
                 {
-                    string sAttribute = row.Cells[1].Text;
-                    string sOperator = row.Cells[2].Text;
-                    string sValue = row.Cells[3].Text;
-                    string sDatatype = row.Cells[5].Text;
+                    string sAttribute = row.Cells[2].Text;
+                    string sOperator = row.Cells[3].Text;
+                    string sValue = row.Cells[4].Text;
+                    string sDatatype = row.Cells[6].Text;
+                    bool bLeadingBracket = row.Cells[1].BackColor == System.Drawing.Color.Aquamarine ? true : false;
+                    bool bEndingBracket = row.Cells[12].BackColor == System.Drawing.Color.Aquamarine ? true : false;
 
                     if (row.FindControl("lblValue") != null)
                         sValue = ((Label)row.FindControl("lblValue")).Text;
 
                     if (row.FindControl("cboControltype") != null) // only available for selected row
                     {
-                        string sControltype = ((DropDownList)row.Cells[7].FindControl("cboControltype")).SelectedValue;
+                        string sControltype = ((DropDownList)row.Cells[8].FindControl("cboControltype")).SelectedValue;
                         switch (sControltype)
                         {
                             case "TextBox":
@@ -306,6 +291,9 @@ namespace BMBH_View
                             bIsFirst = false;
                         }
 
+                        if (bLeadingBracket)
+                            sWhere += "(";
+
                         switch (sOperator)
                         {
                             case "IN":
@@ -329,6 +317,8 @@ namespace BMBH_View
                                 break;
 
                             default:
+                                sValue = sValue.Replace("'", "");
+
                                 switch (sDatatype)
                                 {
                                     case "int":
@@ -351,13 +341,13 @@ namespace BMBH_View
                                         {
                                             int nSeparator = sValue.IndexOf(',');
                                             string sDate1 = sValue.Substring(0, nSeparator);
-                                            string sDate2 = sValue.Substring(nSeparator + 2, sValue.Length - nSeparator - 2);
+                                            string sDate2 = sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 3);
                                             sValue = sDate1 + " AND " + sDate2;
 
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
                                         }
                                         else
-                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(date, " + sValue + ")";
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(date, '" + sValue + "')";
                                         break;
 
                                     case "datetime":
@@ -380,6 +370,10 @@ namespace BMBH_View
                                 }
                                 break;
                         }
+
+                        if (bEndingBracket)
+                            sWhere += ")";
+
                         sWhere += "\n" + sLogic + " ";
                     }
                 }
@@ -474,7 +468,8 @@ namespace BMBH_View
         // executed after hitting the "Edit" button, but before loading controls
         protected void dgdSearch_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            string sCurrentField = (string)dgdSearch.Rows[e.NewEditIndex].Cells[1].Text;
+            GridViewRow newRow = dgdSearch.Rows[e.NewEditIndex];
+            string sCurrentField = (string)newRow.Cells[2].Text;
             Session["CurrentField"] = sCurrentField;
         }
 
@@ -491,7 +486,7 @@ namespace BMBH_View
             TextBox txtCalTo = (TextBox)row.FindControl("txtCalTo");
             CheckBox chkSingleValue = (CheckBox)row.FindControl("chkSingleValue");
             string sOperator = cboOperator.SelectedValue;
-            string sDatatype = row.Cells[5].Text;
+            string sDatatype = row.Cells[6].Text;
 
             if (cboValue.Visible)
                 txtValue.Text = cboValue.SelectedValue;
@@ -573,7 +568,7 @@ namespace BMBH_View
             ImageButton btn = (ImageButton)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
             string sRow = row.RowIndex.ToString();
-            string sDatatype = row.Cells[4].Text;
+            string sDatatype = row.Cells[5].Text;
             GetFromClipboard("MainContent_dgdSearch_txtValue_" + sRow, sDatatype);
         }
 
@@ -638,7 +633,7 @@ namespace BMBH_View
             txtCalTo.Visible = false;
 
             // populate operators
-            string sDatatype = (string)row.Cells[5].Text;
+            string sDatatype = (string)row.Cells[6].Text;
 
             if (bLoadOperators) // Load Operator and Control Type Items
             {
@@ -719,7 +714,7 @@ namespace BMBH_View
             }
 
             // get cell values
-            string sCurrentField = (string)row.Cells[1].Text;
+            string sCurrentField = (string)row.Cells[2].Text;
             string sOperator = cboOperator.SelectedValue;
             string sControltype = cboControltype.SelectedValue;
             CalendarExtender calFrom = (CalendarExtender)row.FindControl("calFrom");
@@ -854,18 +849,33 @@ namespace BMBH_View
                     }
                     break;
             }
-            //DataRowView dr = e.Row.DataItem as DataRowView;
-            //cboValue.SelectedValue = dr["YourCOLName"].ToString();
         }
 
-        // called after hitting the "Edit" button
+        // called after hitting the "Edit" or "OK" button
         protected void dgdSearch_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                if ((e.Row.RowState & DataControlRowState.Edit) > 0)
-                {
+                if ((e.Row.RowState & DataControlRowState.Edit) > 0) // edit mode
                     EnableControls(e.Row, true);
+
+                // apply bracket colors
+                if (((Hashtable)Session["htBracket1"]).Count > 0)
+                {
+                    Hashtable htBracket1 = (Hashtable)Session["htBracket1"];
+                    if (Convert.ToBoolean(htBracket1[e.Row.RowIndex]) == true)
+                        e.Row.Cells[1].BackColor = System.Drawing.Color.Aquamarine;
+                    else
+                        e.Row.Cells[1].BackColor = System.Drawing.Color.Transparent;
+                }
+
+                if (((Hashtable)Session["htBracket2"]).Count > 0)
+                {
+                    Hashtable htBracket2 = (Hashtable)Session["htBracket2"];
+                    if (Convert.ToBoolean(htBracket2[e.Row.RowIndex]) == true)
+                        e.Row.Cells[12].BackColor = System.Drawing.Color.Aquamarine;
+                    else
+                        e.Row.Cells[12].BackColor = System.Drawing.Color.Transparent;
                 }
             }
             else // save date & datetime column names for correct excel export in results.aspx        
@@ -874,8 +884,8 @@ namespace BMBH_View
                 HashSet<string> DateTimeCols = new HashSet<string>();
                 foreach (GridViewRow row in dgdSearch.Rows)
                 {
-                    string sDatatype = row.Cells[4].Text;
-                    string sColumnName = row.Cells[1].Text;
+                    string sDatatype = row.Cells[5].Text;
+                    string sColumnName = row.Cells[2].Text;
 
                     if (sDatatype =="date")
                     {
@@ -992,7 +1002,6 @@ namespace BMBH_View
                 Session["JumpedBack"] = true;
                 lblRecursive.Text = "Rekursive Suche";
                 lblAdditive.Text = "Additive Suche";
-                //chkRecursive.Checked = true;
                 SQLexecute("delete from V_Recursive_Log where GUID = '" + Session["GUID"] + "' and Iteration > " + sIterationSelected);
                 dgdHistory.DataBind();
             }
@@ -1027,6 +1036,7 @@ namespace BMBH_View
                 cboLogic.SelectedValue = "AND";
         }
 
+        // called after hitting OK button
         protected void dgdSearch_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Edit")
@@ -1073,6 +1083,7 @@ namespace BMBH_View
                 pnlSQLeditor.Visible = false;
             }
             
+            // column visibility is set in dgdSearch_RowCreated() event
             dgdSearch.DataBind();
         }
 
@@ -1107,18 +1118,83 @@ namespace BMBH_View
         protected void dgdSearch_RowCreated(object sender, GridViewRowEventArgs e)
         {
             e.Row.Cells[0].Visible = false; // hide id column
-            e.Row.Cells[10].Visible = false; // hide sorter column
+            e.Row.Cells[11].Visible = false; // hide sorter column
 
             if (chkExpertMode.Checked)
+            { // show ...
+                if(e.Row.FindControl("btnCopyRow") != null)
+                    e.Row.FindControl("btnCopyRow").Visible = true;
+
+                e.Row.Cells[1].Visible = true; // leading bracket column
+                e.Row.Cells[5].Visible = true; // logic column
+                e.Row.Cells[6].Visible = true; // datatype column
+                e.Row.Cells[8].Visible = true; // control type column
+                e.Row.Cells[10].Visible = true; // sort buttons column
+                e.Row.Cells[12].Visible = true; // ending bracket column
+            }
+            else
+            { // hide ...
+                if (e.Row.FindControl("btnCopyRow") != null)
+                    e.Row.FindControl("btnCopyRow").Visible = false;
+
+                e.Row.Cells[1].Visible = false; // leading bracket column
+                e.Row.Cells[5].Visible = false; // logic column
+                e.Row.Cells[6].Visible = false; // datatype column
+                e.Row.Cells[8].Visible = false; // controltype column
+                e.Row.Cells[10].Visible = false; // sort buttons column
+                e.Row.Cells[12].Visible = false; // ending bracket column
+            }
+        }
+
+        protected void btnBracket1_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
+
+            if (Session["CellColor"] == null)
+                Session["CellColor"] = row.Cells[1].BackColor;
+
+            if (row.Cells[1].BackColor != System.Drawing.Color.Aquamarine)
             {
-                e.Row.Cells[5].Visible = true; // show datatype column
-                e.Row.Cells[7].Visible = true; // show control type column
+                row.Cells[1].BackColor = System.Drawing.Color.Aquamarine;
+
+                Hashtable htBracket1 = (Hashtable)Session["htBracket1"];
+                htBracket1.Add(row.RowIndex, true);
+                Session["htBracket1"] = htBracket1;
             }
             else
             {
-                e.Row.Cells[5].Visible = false; // hide datatype column
-                e.Row.Cells[7].Visible = false; // hide controltype column
+                row.Cells[1].BackColor = (System.Drawing.Color)Session["CellColor"];
+                ((Hashtable)Session["htBracket1"]).Remove(row.RowIndex);
             }
+        }
+
+        protected void btnBracket2_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
+
+            if (Session["CellColor"] == null)
+                Session["CellColor"] = row.Cells[12].BackColor;
+
+            if (row.Cells[12].BackColor != System.Drawing.Color.Aquamarine)
+            {
+                row.Cells[12].BackColor = System.Drawing.Color.Aquamarine;
+                ((Hashtable)Session["htBracket2"]).Add(row.RowIndex, true);
+            }
+            else
+            {
+                row.Cells[12].BackColor = (System.Drawing.Color)Session["CellColor"];
+                ((Hashtable)Session["htBracket2"]).Remove(row.RowIndex);
+            }
+        }
+
+        protected void btnCopyRow_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
+            string sID = row.Cells[0].Text;
+            string sSQL = "INSERT INTO [" + Session["FormTable"] + "] ([Attribut], [Operator], [Wert], [Datatype], [ControlType], [UserId], [Logic], [Sorter]) " +
+                          "select [Attribut], [Operator], NULL, [Datatype], [ControlType], [UserId], 'AND', [Sorter] from [" + Session["FormTable"] + "] where ID = " + sID;
+            SQLexecute(sSQL);
+            dgdSearch.DataBind();
         }
     }
 }
