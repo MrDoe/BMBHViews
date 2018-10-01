@@ -317,7 +317,7 @@ namespace BMBH_View
                                 break;
 
                             default:
-                                sValue = sValue.Replace("'", "");
+                                                                    sValue = sValue.Replace("'", "");
 
                                 switch (sDatatype)
                                 {
@@ -1157,15 +1157,14 @@ namespace BMBH_View
             {
                 row.Cells[1].BackColor = System.Drawing.Color.Aquamarine;
 
-                Hashtable htBracket1 = (Hashtable)Session["htBracket1"];
-                htBracket1.Add(row.RowIndex, true);
-                Session["htBracket1"] = htBracket1;
+                ((Hashtable)Session["htBracket1"]).Add(row.RowIndex, true);
             }
             else
             {
                 row.Cells[1].BackColor = (System.Drawing.Color)Session["CellColor"];
                 ((Hashtable)Session["htBracket1"]).Remove(row.RowIndex);
             }
+            GenerateSQL(false);
         }
 
         protected void btnBracket2_Click(object sender, EventArgs e)
@@ -1185,6 +1184,7 @@ namespace BMBH_View
                 row.Cells[12].BackColor = (System.Drawing.Color)Session["CellColor"];
                 ((Hashtable)Session["htBracket2"]).Remove(row.RowIndex);
             }
+            GenerateSQL(false);
         }
 
         protected void btnCopyRow_Click(object sender, EventArgs e)

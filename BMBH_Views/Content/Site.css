@@ -143,6 +143,7 @@ td {
     border-radius: 6px;
     left: 1px;
     display: inline-block;
+    padding: 2px;
 }
 
 .inlineBlock {
