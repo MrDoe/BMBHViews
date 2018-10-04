@@ -156,7 +156,7 @@ namespace BMBH_View
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sCaption = ((TextBox)row.FindControl("txtCaption")).Text;
             string sView = row.Cells[0].Text;
-            SQLexecute("update VIEW_SETTINGS set VIEW_CAPTION='" + sCaption + "' where VIEW_NAME = '" + sView + "'");
+            SQLexecute("EXEC AddViewToPanel '" + sView + "','" + sCaption + "'");
         }
 
         protected void cboPanel_SelectedIndexChanged(object sender, EventArgs e)
