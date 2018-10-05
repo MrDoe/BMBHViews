@@ -80,8 +80,8 @@ $(document).ready(function () {
 function SetScrollBars(e) {
     if (window.location.pathname == "/views/Results" ||
         window.location.pathname == "/Results") {
-        $("#MainContent_pnlGrid").height($(window).height() - 100);
-        $("#MainContent_pnlGrid").width($(window).width() - 20);
+        $("#MainContent_pnlGrid").height($(window).innerHeight() - 100);
+        $("#MainContent_pnlGrid").width($(window).innerWidth() - 20);
         $("body").css("overflow", "hidden");
     }
     else
