@@ -317,7 +317,7 @@ namespace BMBH_View
                                 break;
 
                             default:
-                                                                    sValue = sValue.Replace("'", "");
+                                sValue = sValue.Replace("'", "");
 
                                 switch (sDatatype)
                                 {
@@ -388,7 +388,7 @@ namespace BMBH_View
                         sWhere = sWhere.Substring(0, sWhere.Length - 4);
                 }
 
-                txtSQLwhere.Text = sWhere.Replace("WHERE", "");
+                txtSQLwhere.Text = sWhere.Replace("WHERE", "") + " order by ID";
             }
             else // submit search
             {
@@ -402,7 +402,7 @@ namespace BMBH_View
                 }
 
                 if(sWhere.Length > 6)
-                    sWhere = " WHERE " + sWhere;
+                    sWhere = " WHERE " + sWhere + " order by ID";
 
                 string sSQL = Server.HtmlDecode(sSelect + sFrom + sWhere);
                 Session["LastQuery"] = sSQL;
