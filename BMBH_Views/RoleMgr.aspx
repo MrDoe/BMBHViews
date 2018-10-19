@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Benutzerverwaltung" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoleMgr.aspx.cs" Inherits="BMBH_View.UserMan" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-<%--<script type="text/javascript" src="~/Scripts/highlight.pack.js">hljs.initHighlightingOnLoad();</script>--%>
+<h4>Rollenverwaltung</h4>
 <asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderWidth="3px" Font-Names="Verdana">
 &nbsp;Benutzerrolle:
 <asp:DropDownList ID="cboRole" runat="server" AutoPostBack="True" DataSourceID="SqlDataSource1" DataTextField="RoleName" DataValueField="RoleId" Font-Names="Verdana" Height="25px" Width="220px">

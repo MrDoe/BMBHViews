@@ -99,3 +99,8 @@ function DeptChange() {
         __doPostBack(value, 'PostFromDeptChange');
     }
 }
+
+function colorChanged(sender) {
+    sender.get_element().style.color = "#" + sender.get_selectedColor();
+    sender.get_element().value = "#" + sender.get_selectedColor();
+}

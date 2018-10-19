@@ -1,14 +1,14 @@
 ﻿<%@ Page Title="BMBH Views" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="BMBH_View._Default" %>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
 <asp:HiddenField ID="width" runat="server" />
 <asp:HiddenField ID="height" runat="server" />
 <div class="jumbotron" style="height: 217px">
     <img src="Images/bmbh_views2_550.png"/>
 </div>
 <div style="position:relative;top:-10px">
-
-<asp:Panel ID="pnlTBBmain" runat="server" BorderWidth="3px" BackColor="#FFF0E6" BorderColor="#FFFFFF" CssClass="inlineBlock" Visible="false">
+<asp:Panel ID="pnlContainer" runat="server"></asp:Panel>
+<%--<asp:Panel ID="pnlTBBmain" runat="server" BorderWidth="3px" BackColor="#FFF0E6" BorderColor="#FFFFFF" CssClass="inlineBlock" Visible="false">
     <h2>Gewebebank des NCT</h2>  
     <asp:Panel ID="pnlTBB" runat="server" BorderWidth="0px" BackColor="#FFF0E6" BorderColor="#FFFFFF" Visible="false">
     <p>Probenkollektive:</p>
@@ -16,15 +16,15 @@
     <asp:Panel ID="pnlTBB_Projekte" runat="server" BorderWidth="0px" BackColor="#FFF0E6" BorderColor="#FFFFFF" Visible="false">
         <p>Projektanträge & Dienstleistungen:</p>
     </asp:Panel>
-</asp:Panel>
+</asp:Panel>--%>
 
-<asp:Panel ID="pnlPatho" runat="server" BackColor="#E4EDFB" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
+<%--<asp:Panel ID="pnlPatho" runat="server" BackColor="#E4EDFB" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>Pathologisches Institut</h2>
     <p>Informationen aus dem Pathologiesystem Nexus und ISH.med:</p>
     <asp:Button ID="btnPatientSearch" runat="server" BackColor="#EDFDFE" BorderColor="#BBEEEE" BorderStyle="Outset" BorderWidth="1px" CssClass="btn btn-default" Height="34px" OnClick="btnPatientSearch_Click" Text="Patientensuche »" Width="170px" Visible="True" />
-</asp:Panel>
+</asp:Panel>--%>
 
-<asp:Panel ID="pnlLiquid" runat="server" BackColor="#E4FFE4" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
+<%--<asp:Panel ID="pnlLiquid" runat="server" BackColor="#E4FFE4" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>NCT-Liquidbank</h2>
     <p> Probenkollektive der Liquidbank des NCT:</p>
     <asp:Button ID="btnPatientSearchLiquid" runat="server" BackColor="#EDFDFE" BorderColor="#BBEEEE" BorderStyle="Outset" BorderWidth="1px" CssClass="btn btn-default" Height="34px" OnClick="btnPatientSearch_Click" Text="Patientensuche »" Width="170px" Visible="True" />
@@ -81,7 +81,7 @@
 <asp:Panel ID="pnlGBA" runat="server" BackColor="#EBFFE5" BorderColor="#FFFFFF" BorderWidth="3px" CssClass="inlineBlock" Visible="false">
     <h2>German Biobank Alliance</h2>
     <p>Daten im GBA-Brückenkopf</p>
-</asp:Panel>
+</asp:Panel>--%>
 
 </div>
 </asp:Content>

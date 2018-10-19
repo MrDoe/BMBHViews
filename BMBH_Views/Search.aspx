@@ -183,7 +183,7 @@
             <asp:TextBox ID="txtSQLselect" runat="server" Width="600px" style="box-shadow: 1px 1px 8px rgba(0,0,0,0.3); background-color:rgb(93, 123, 157); color:white;" ReadOnly="true"/>
             <asp:TextBox ID="txtSQLwhere" runat="server" Width="600px" Height="500px" TextMode="MultiLine"/>
         </asp:Panel>
-        <b<asp:Panel ID="pnlSQLhistory" runat="server" BorderWidth="10px" BorderColor="transparent" Visible="false">
+        <asp:Panel ID="pnlSQLhistory" runat="server" BorderWidth="10px" BorderColor="transparent" Visible="false">
             Suchhistorie:<br />
             <asp:GridView ID="dgdHistory" runat="server" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333" GridLines="Horizontal" AutoGenerateColumns="false">
             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />

@@ -45,17 +45,17 @@ namespace BMBH_View
         {
             Response.Write("<script>alert(\"" + message + "\");</script>");
         }
-        
+
         // Show dataset contents (for debugging reasons)
         private void ShowDataSet(DataSet ds)
         {
-            StringWriter sw = new StringWriter(); 
+            StringWriter sw = new StringWriter();
             ds.WriteXml(sw);
             ShowMsg("DataSet: " + sw.ToString());
         }
 
         // convert dataset to 2D string array
-        private string[][] StringArray(DataSet ds)
+        private string[][] StringArray3(DataSet ds)
         {
             int nRows = ds.Tables[0].Rows.Count;
             string[][] stringArray = new string[nRows][];
@@ -66,6 +66,30 @@ namespace BMBH_View
                                    { ds.Tables[0].Rows[row][0].ToString(),
                                      ds.Tables[0].Rows[row][1].ToString(),
                                      ds.Tables[0].Rows[row][2].ToString() };
+            }
+
+            return stringArray;
+        }
+
+        // convert dataset to 2D string array
+        private string[][] StringArray10(DataSet ds)
+        {
+            int nRows = ds.Tables[0].Rows.Count;
+            string[][] stringArray = new string[nRows][];
+
+            for (int row = 0; row < nRows; ++row)
+            {
+                stringArray[row] = new string[10]
+                                   { ds.Tables[0].Rows[row][0].ToString(),
+                                     ds.Tables[0].Rows[row][1].ToString(),
+                                     ds.Tables[0].Rows[row][2].ToString(),
+                                     ds.Tables[0].Rows[row][3].ToString(),
+                                     ds.Tables[0].Rows[row][4].ToString(),
+                                     ds.Tables[0].Rows[row][5].ToString(),
+                                     ds.Tables[0].Rows[row][6].ToString(),
+                                     ds.Tables[0].Rows[row][7].ToString(),
+                                     ds.Tables[0].Rows[row][8].ToString(),
+                                     ds.Tables[0].Rows[row][9].ToString() };
             }
 
             return stringArray;
@@ -86,10 +110,71 @@ namespace BMBH_View
                 da.Fill(ds);
 
                 if (ds.Tables[0].Rows.Count > 0)
-                    return StringArray(ds);
+                    return StringArray3(ds);
                 else
                     return null;
             }
+        }
+
+        public String[][] GetPanels()
+        {
+            DataSet ds = new DataSet("Panels");
+
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand("GetPanels", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlDataAdapter da = new SqlDataAdapter();
+                da.SelectCommand = cmd;
+                da.Fill(ds);
+
+                if (ds.Tables[0].Rows.Count > 0)
+                    return StringArray10(ds);
+                else
+                    return null;
+            }
+        }
+
+        protected Panel GeneratePanel(string sPanelId, String[][] aPanels)
+        {
+            for (int i = 0; i < aPanels.Length; ++i)
+            {
+                if(sPanelId == aPanels[i][0])
+                {
+                    Panel pnl = new Panel();
+                    pnl.ID = sPanelId;
+                    pnl.BackColor = System.Drawing.ColorTranslator.FromHtml(aPanels[i][3]);
+                    pnl.ForeColor = System.Drawing.ColorTranslator.FromHtml(aPanels[i][4]);
+                    pnl.BorderColor = System.Drawing.ColorTranslator.FromHtml(aPanels[i][5]);
+                    pnl.Height = Convert.ToInt32(aPanels[i][6]);
+                    pnl.Width = Convert.ToInt32(aPanels[i][7]);
+                    pnl.BorderWidth = 3;
+                    pnl.CssClass = "inlineBlock";
+                    Label lblHeading = new Label();
+                    Label lblSubHeading = new Label();
+                    lblHeading.Text = "<h2>" + aPanels[i][1] + "</h2>";
+                    pnl.Controls.Add(lblHeading);
+                    lblSubHeading.Text = "<p>" + aPanels[i][2] + "</p>";
+                    pnl.Controls.Add(lblSubHeading);
+
+                    if (aPanels[i][9] == "True") // show patient search button
+                    {
+                        Button btn = new Button();
+                        btn.ID = "btn_" + aPanels[i][0];
+                        btn.BackColor = System.Drawing.ColorTranslator.FromHtml("#EDFDFE");
+                        btn.CssClass = "btn btn-default";
+                        btn.Height = 34;
+                        btn.Width = 170;
+                        btn.Text = "Patientensuche »";
+                        btn.Click += new EventHandler(btnPatientSearch_Click);
+                        pnl.Controls.Add(btn);
+                    }
+
+                    pnlContainer.Controls.Add(pnl);
+                    return pnl;
+                }
+            }
+            return null;
         }
 
         protected void GenerateButton(string sView, string sCaption, Panel pnl)
@@ -104,12 +189,12 @@ namespace BMBH_View
             btnNew.ControlStyle.CssClass = "btn btn-default";
             btnNew.ToolTip = sView;
             btnNew.Click += new EventHandler(btnGeneric_Click);
-            if(btnNew.Text.Length < 25)
+            if (btnNew.Text.Length < 25)
                 btnNew.Width = 170;
             pnl.Controls.Add(btnNew);
         }
 
-        protected void GenerateButtons(String[][] aUserPerm)
+        protected void GenerateControls(String[][] aUserPerm, String[][] aPanels)
         {
             if (aUserPerm.Length > 0)
             {
@@ -118,9 +203,12 @@ namespace BMBH_View
                     if (aUserPerm[i][2].Length > 0)
                     {
                         Panel pnl = (Panel)Utils.FindAnyControl(Page, aUserPerm[i][2]);
-
+                        if(pnl == null)
+                            pnl = GeneratePanel(aUserPerm[i][2], aPanels);
                         if (pnl != null)
+                        {
                             GenerateButton(aUserPerm[i][0], aUserPerm[i][1], pnl);
+                        }
                     }
                 }
             }
@@ -205,7 +293,8 @@ namespace BMBH_View
             SetUser();
 
             String[][] aUserPerm = GetUserPermissions();
-            GenerateButtons(aUserPerm);
+            String[][] aPanels = GetPanels();
+            GenerateControls(aUserPerm, aPanels);
         }
 
         protected void btnDZIFupload_Click(object sender, EventArgs e)
@@ -228,14 +317,18 @@ namespace BMBH_View
 
         protected void btnPatientSearch_Click(object sender, EventArgs e)
         {
-            if (((Button)sender).ID == "btnPatientSearch")
+            if (((Button)sender).ID == "btn_pnlTBB")
                 Session["OE"] = "NCT-Gewebebank";
-            else if (((Button)sender).ID == "btnPatientSearchLiquid")
+            else if (((Button)sender).ID == "btn_pnlPraevOnk")
                 Session["OE"] = "Präv. Onkologie";
-            else if (((Button)sender).ID == "btnPatientSearchPanco")
+            else if (((Button)sender).ID == "btn_pnlLiquid")
+                Session["OE"] = "Präv. Onkologie";
+            else if (((Button)sender).ID == "btn_pnlPanco")
                 Session["OE"] = "PancoBank-EPZ";
-            else if (((Button)sender).ID == "btnPatientSearchMedV")
+            else if (((Button)sender).ID == "btn_pnlMedV")
                 Session["OE"] = "Med. Klinik V";
+            else if (((Button)sender).ID == "btn_pnlGyn")
+                Session["OE"] = "Frauenklinik";
             else
                 return;
 

@@ -2,6 +2,7 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+    <h4>Benutzerverwaltung</h4>
     <asp:Button ID="btnRoleMgr" runat="server" OnClick="btnRoleMgr_Click" Text="Rollenverwaltung" Width="142px" CssClass="btn btn-default btn-small" />
     <asp:Button ID="btnNewUser" runat="server" Text="Neuer Benutzer" CssClass="btn btn-default btn-small" />
     <AjaxControlToolkit:ModalPopupExtender ID="MPE_User" runat="server" TargetControlID="btnNewUser" PopupControlID="pnlNewUser" PopupDragHandleControlID="pnlNewUserHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
@@ -29,6 +30,7 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <asp:CheckBox ID="chkPatientSearch" runat="server" AutoPostBack="True" Checked='<%# Eval("AllowPatientSearch").ToString().Equals("Y") %>' CssClass="chkChoice" OnCheckedChanged="chkPatientSearch_CheckedChanged" Text="Patientensuche erlaubt" />
             </ItemTemplate>
+            <ControlStyle Width="190px" />
         </asp:TemplateField>
     </Columns>
     <EditRowStyle BackColor="#999999" />

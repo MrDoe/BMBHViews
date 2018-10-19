@@ -157,6 +157,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="Config.aspx" />
+    <Content Include="Content\jscolor\arrow.gif" />
+    <Content Include="Content\jscolor\cross.gif" />
+    <Content Include="Content\jscolor\hs.png" />
+    <Content Include="Content\jscolor\hv.png" />
     <Content Include="DiagramView.aspx" />
     <Content Include="Help.aspx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -174,6 +179,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\add_16x16.gif" />
     <Content Include="Images\BMBH-Logo-med_trans_220.png" />
     <Content Include="Images\bmbh_views.png" />
     <Content Include="Images\bmbh_views2.png" />
@@ -188,8 +194,31 @@
     <Content Include="Images\bmbh_views_logo3.png" />
     <Content Include="Images\bmbh_views__short_323.png" />
     <Content Include="Images\bmbh_views__short_42.png" />
+    <Content Include="Images\chart_100_100.png" />
+    <Content Include="Images\colored_panel.png" />
+    <Content Include="Images\database-table-icon.png" />
+    <Content Include="Images\database_field_%28add%29_16x16.gif" />
+    <Content Include="Images\database_field_%28delete%29_16x16.gif" />
+    <Content Include="Images\database_field_%28edit%29_16x16.gif" />
+    <Content Include="Images\database_field_16x16.gif" />
+    <Content Include="Images\database_form_%28add%29_16x16.gif" />
+    <Content Include="Images\database_form_%28delete%29_16x16.gif" />
+    <Content Include="Images\database_form_%28edit%29_16x16.gif" />
+    <Content Include="Images\database_form_16x16.gif" />
+    <Content Include="Images\database_import_16x16.gif" />
+    <Content Include="Images\database_table_%28add%29_16x16.gif" />
+    <Content Include="Images\database_table_%28delete%29_16x16.gif" />
+    <Content Include="Images\database_table_%28edit%29_16x16.gif" />
+    <Content Include="Images\database_table_16x16.gif" />
+    <Content Include="Images\db_server.png" />
+    <Content Include="Images\delete_16x16.gif" />
     <Content Include="Images\delete_field.gif" />
+    <Content Include="Images\error_16x16.gif" />
     <Content Include="Images\Excel-icon.png" />
+    <Content Include="Images\fragezeichen.png" />
+    <Content Include="Images\graph2_16x16.gif" />
+    <Content Include="Images\liste1.png" />
+    <Content Include="Images\liste2.png" />
     <Content Include="Images\loading7.gif" />
     <Content Include="Images\NavigateBackwards_6270.png" />
     <Content Include="Images\NavigateForward_6271.png" />
@@ -198,15 +227,37 @@
     <Content Include="Images\on.png" />
     <Content Include="Images\on16.png" />
     <Content Include="Images\paste_16x16.gif" />
+    <Content Include="Images\patDaten.png" />
+    <Content Include="Images\patienten.png" />
+    <Content Include="Images\question-icon.png" />
+    <Content Include="Images\right_16x16.gif" />
+    <Content Include="Images\save_16x16.gif" />
     <Content Include="Images\script_%28add%29_16x16.gif" />
     <Content Include="Images\script_%28add%29_16x16.png" />
     <Content Include="Images\script_%28add%29_32.png" />
     <Content Include="Images\script_16x16.gif" />
+    <Content Include="Images\starlims_pc.png" />
+    <Content Include="Images\studie.png" />
+    <Content Include="Images\Table-icon2.png" />
+    <Content Include="Images\table_%28add%29_16x16.gif" />
+    <Content Include="Images\table_%28delete%29_16x16.gif" />
+    <Content Include="Images\table_%28edit%29_16x16.gif" />
     <Content Include="Images\table_16x16.gif" />
+    <Content Include="Images\table_align_columns_16x16.gif" />
+    <Content Include="Images\table_align_rows_16x16.gif" />
+    <Content Include="Images\table_auto_format_16x16.gif" />
+    <Content Include="Images\table_borders_16x16.gif" />
+    <Content Include="Images\table_cell_alignment_16x16.gif" />
+    <Content Include="Images\table_merge_cells_16x16.gif" />
+    <Content Include="Images\table_split_cells_16x16.gif" />
+    <Content Include="Images\workstation-Vista-icon.png" />
     <Content Include="MultipleSearch.aspx" />
+    <Content Include="Panels.aspx" />
+    <Content Include="Scripts\jscolor.js" />
     <Content Include="UserMgr.aspx" />
     <Content Include="Search.aspx" />
     <Content Include="Results.aspx" />
+    <Content Include="Content\jscolor\Thumbs.db" />
     <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -257,6 +308,13 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Config.aspx.cs">
+      <DependentUpon>Config.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Config.aspx.designer.cs">
+      <DependentUpon>Config.aspx</DependentUpon>
+    </Compile>
     <Compile Include="DiagramView.aspx.cs">
       <DependentUpon>DiagramView.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -288,6 +346,13 @@
     </Compile>
     <Compile Include="MultipleSearch.aspx.designer.cs">
       <DependentUpon>MultipleSearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Panels.aspx.cs">
+      <DependentUpon>Panels.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Panels.aspx.designer.cs">
+      <DependentUpon>Panels.aspx</DependentUpon>
     </Compile>
     <Compile Include="UserMgr.aspx.cs">
       <DependentUpon>UserMgr.aspx</DependentUpon>

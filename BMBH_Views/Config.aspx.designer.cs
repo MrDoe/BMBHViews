@@ -10,33 +10,42 @@
 namespace BMBH_View {
     
     
-    public partial class _Default {
+    public partial class Config {
         
         /// <summary>
-        /// width-Steuerelement
+        /// Table1-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField width;
+        protected global::System.Web.UI.WebControls.Table Table1;
         
         /// <summary>
-        /// height-Steuerelement
+        /// btnUserConf-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField height;
+        protected global::System.Web.UI.WebControls.ImageButton btnUserConf;
         
         /// <summary>
-        /// pnlContainer-Steuerelement
+        /// btnPanelConf-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlContainer;
+        protected global::System.Web.UI.WebControls.ImageButton btnPanelConf;
+        
+        /// <summary>
+        /// btnDiagConf-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnDiagConf;
     }
 }
