@@ -41,22 +41,7 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Panel">
                 <ItemTemplate>
-                    <asp:DropDownList ID="cboPanel" runat="server" AutoPostBack="True" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="121px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged">
-                        <asp:ListItem></asp:ListItem>
-                        <asp:ListItem>pnlDZIF</asp:ListItem>
-                        <asp:ListItem>pnlTBB</asp:ListItem>
-                        <asp:ListItem>pnlTBB_Projekte</asp:ListItem>
-                        <asp:ListItem>pnlPatho</asp:ListItem>
-                        <asp:ListItem>pnlThorax</asp:ListItem>
-                        <asp:ListItem>pnlLiquid</asp:ListItem>
-                        <asp:ListItem>pnlPanco</asp:ListItem>
-                        <asp:ListItem>pnlPraevOnk</asp:ListItem>
-                        <asp:ListItem>pnlMedV</asp:ListItem>
-                        <asp:ListItem>pnlSTARLIMS</asp:ListItem>
-                        <asp:ListItem>pnlGyn</asp:ListItem>
-                        <asp:ListItem>pnlPubs</asp:ListItem>
-                        <asp:ListItem>pnlGBA</asp:ListItem>
-                        <%--add more panels here--%>
+                    <asp:DropDownList ID="cboPanel" runat="server" AutoPostBack="True" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="121px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged" DataSourceId="SqlDataSource3" DataValueField="PanelId" DataTextField="PanelId">
                     </asp:DropDownList>
                 </ItemTemplate>
             </asp:TemplateField>
@@ -84,6 +69,8 @@
 <SelectParameters>
     <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" />
 </SelectParameters>
+</asp:SqlDataSource>
+<asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select '' as PanelId union select PanelID from Panels">
 </asp:SqlDataSource>
 <asp:Panel ID="pnlEditView" runat="server" CssClass="modalPopupLarge modalPopup" align="center" style="display:none" TabIndex="0">
     <asp:Panel ID="pnlEditViewHeader" runat="server" CssClass="modalHeaderLarge modalHeader" HorizontalAlign="center" TabIndex="0">
