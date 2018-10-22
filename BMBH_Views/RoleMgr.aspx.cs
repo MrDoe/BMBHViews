@@ -18,7 +18,7 @@ namespace BMBH_View
         {
             if (!Page.IsPostBack)
             {
-                cboRole.SelectedValue = (string)Session["RoleId"];
+                cboRole.SelectedValue = (string)Session["RoleId"];    
             }
         }
 
@@ -146,7 +146,6 @@ namespace BMBH_View
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
             string sView = row.Cells[0].Text;
-            string sUser = cboRole.SelectedValue;
             SQLexecute("EXEC UPDATE_VALCOUNT '" + sView + "'");
             ShowMsg("Die Werte wurden neu berechnet!");
         }
