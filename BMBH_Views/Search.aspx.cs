@@ -92,15 +92,15 @@ namespace BMBH_View
 
             SetDataSource();
 
-            string parameter = Request["__EVENTARGUMENT"];
-            
-            if (parameter == "PostfromSave")
+            string parameter = this.Request["__EVENTARGUMENT"];
+
+            if (parameter == "PostFromSave")
             {
-                if (HiddenInputBox.Value != "")
+                if (txtSearchName.Text != "")
                 {
-                    SaveSearch(HiddenInputBox.Value);
+                    SaveSearch(txtSearchName.Text);
                     cboSaveSearch.DataBind();
-                    cboSaveSearch.SelectedValue = HiddenInputBox.Value;
+                    cboSaveSearch.SelectedValue = txtSearchName.Text;
                 }
             }
 
@@ -146,6 +146,21 @@ namespace BMBH_View
             {
                 con.Close();
                 con.Dispose();
+            }
+        }
+
+        private string SQLexecute_SingleResult(string sSQL)
+        {
+            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            SqlConnection con = new SqlConnection(sConnString);
+            using (var command = new SqlCommand(sSQL, con))
+            {
+                con.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    reader.Read();
+                    return reader.GetString(0);
+                }
             }
         }
 
@@ -951,12 +966,46 @@ namespace BMBH_View
                    " from " + Session["FormTable"] + " where UserId='" + (String)Session["UserName"] + "'";
 
             SQLexecute(Server.HtmlDecode(sSQL));
+
+            if (chkExpertMode.Checked)
+                SaveExtSearch(sSearchName);
+        }
+
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
+        private void SaveExtSearch(string sSearchName)
+        {
+            string sSQLwhere = Base64Encode(txtSQLwhere.Text);
+            
+            string sSQL = "insert into V_Save_Ext_Search (SQL, UserId, ViewName, SearchName) " +
+                          "values ('" + sSQLwhere + "','" + (String)Session["UserName"] + "','" + (String)Session["View"] + "','" + sSearchName + "')";
+
+            SQLexecute(Server.HtmlDecode(sSQL));
         }
 
         private void DeleteSearch(string sSearchName)
         {
 
             string sSQL = "delete from V_Save_Search where SearchName = '" + sSearchName + "'" +
+                                                   " and UserId = '" + (String)Session["UserName"] + "'" +
+                                                   " and ViewName = '" + (String)Session["View"] + "'";
+            SQLexecute(sSQL);
+        }
+
+        private void DeleteExtSearch(string sSearchName)
+        {
+
+            string sSQL = "delete from V_Save_Ext_Search where SearchName = '" + sSearchName + "'" +
                                                    " and UserId = '" + (String)Session["UserName"] + "'" +
                                                    " and ViewName = '" + (String)Session["View"] + "'";
             SQLexecute(sSQL);
@@ -973,9 +1022,18 @@ namespace BMBH_View
                    "(Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt)" +
                    " select Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt" +
                    " from V_Save_Search where UserId='" + (String)Session["UserName"] + "' and ViewName = '" + Session["View"] + "' and SearchName = '" + sSearchName + "'";
-            //ShowMsg(Server.HtmlDecode(sSQL));
+
             SQLexecute(Server.HtmlDecode(sSQL));
             dgdSearch.DataBind();
+
+            if (chkExpertMode.Checked)
+            { 
+                txtSQLselect.Text = "select v.* from [" + Session["View"] + "] v WHERE ";
+                txtSQLwhere.Text = Base64Decode(SQLexecute_SingleResult("select SQL from V_Save_Ext_Search" +
+                                                          " where UserId='" + (String)Session["UserName"] +
+                                                          "' and ViewName = '" + Session["View"] +
+                                                          "' and SearchName = '" + sSearchName + "'"));
+            }
         }
 
         protected void btnLoadSearch_Click(object sender, EventArgs e)
@@ -1195,6 +1253,11 @@ namespace BMBH_View
                           "select [Attribut], [Operator], NULL, [Datatype], [ControlType], [UserId], 'AND', [Sorter] from [" + Session["FormTable"] + "] where ID = " + sID;
             SQLexecute(sSQL);
             dgdSearch.DataBind();
+        }
+        
+        // don't remove!
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
         }
     }
 }

@@ -2,28 +2,8 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <script type="text/javascript">
-    function pageLoad() {
-        $find("MPE_ID").add_shown(onModalPopupShown);
-    }
-    function onModalPopupShown() {
-        document.getElementById("txtListName").focus();
-    }
-</script>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
-<asp:HiddenField ID="width" runat="server" />
-<asp:HiddenField ID="height" runat="server" />
-
-<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select USRNAM + ' - ' + FULLNAME as 'USER',USRNAM
-from V_STARLIMS_USERS
-where DEPTLIST LIKE '%' + @UserDept + '%'
-order by USRNAM">
-    <SelectParameters>
-        <asp:SessionParameter Name="UserDept" SessionField="UserDept" DefaultValue="None" />
-    </SelectParameters>
-    </asp:SqlDataSource>
-<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select DEPT from V_STARLIMS_DEPT"></asp:SqlDataSource>
-
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
+<h4>Suche in <%:Session["View"]%> </h4>
     <asp:Panel ID="pnlMain" runat="server" EnableViewState="False" Height="1000px" Width="100%" style="top:4px; position:relative" >
         <asp:Button ID="btnSearch" runat="server" Text="Suche" CssClass="btn btn-default btn-small" EnableViewState="False" OnClick="btnSearch_Click" style="left:0px; position:relative; top:-2px; height:24px; width:60px" TabIndex="999" UseSubmitBehavior="False"/>
         &nbsp;<asp:ImageButton ID="btnPrevPage" runat="server" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateBackwards_6270.png" OnClick="btnPrevPage_Click" ToolTip="Vorherige Seite" style="left: 1px; top: 5px" TabIndex="3" AutoPostBack="true" />
@@ -58,8 +38,6 @@ order by USRNAM">
         </asp:Panel>
     </asp:Panel>
 
-<%--<asp:UpdatePanel ID="up" runat="server">--%>
-<%--<ContentTemplate>--%>
 <asp:Panel ID="pnlList" runat="server" CssClass="modalPopup" align="center" style="display:none" TabIndex="0">
 <asp:Panel ID="pnlListHeader" runat="server" CssClass="modalHeader" HorizontalAlign="center" TabIndex="0">
     Suchergebnis als STARLIMS-Liste speichern <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnCancel.UniqueID%>', 'PostFromList_Cancel');" />
@@ -79,6 +57,27 @@ order by USRNAM">
     </div></div>
     <asp:Button ID="btnSendList" runat="server" Text="Liste anlegen & senden" CssClass="btn btn-default btn-small" style="padding:5px;" TabIndex="4" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnSendList.UniqueID%>', 'PostFromList_Send');"/>
 </asp:Panel>
-<%--</ContentTemplate>--%>
-<%--</asp:UpdatePanel>--%>
+
+<script type="text/javascript">
+function pageLoad() {
+    $find("MPE_ID").add_shown(onModalPopupShown);
+}
+function onModalPopupShown() {
+    document.getElementById("txtListName").focus();
+}
+</script>
+
+<asp:HiddenField ID="width" runat="server" />
+<asp:HiddenField ID="height" runat="server" />
+
+<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select USRNAM + ' - ' + FULLNAME as 'USER',USRNAM
+from V_STARLIMS_USERS
+where DEPTLIST LIKE '%' + @UserDept + '%'
+order by USRNAM">
+    <SelectParameters>
+        <asp:SessionParameter Name="UserDept" SessionField="UserDept" DefaultValue="None" />
+    </SelectParameters>
+    </asp:SqlDataSource>
+<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select DEPT from V_STARLIMS_DEPT"></asp:SqlDataSource>
+
 </asp:Content>

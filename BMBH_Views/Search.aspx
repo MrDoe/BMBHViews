@@ -4,7 +4,7 @@
     <asp:HiddenField ID="width" runat="server" />
 <asp:HiddenField ID="height" runat="server" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
-
+<h4>Suche in <%:Session["View"]%> </h4>
 <asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderStyle="Solid" BorderWidth="5px" Width="99%" style="top:3px; position:relative">
     <asp:Button ID="btnSubmit" runat="server" Text="Absenden" CssClass="btn btn-default btn-small" Width="70px" OnClick="btnSubmit_Click" Font-Bold="False" />
     <asp:Button ID="btnNew" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" OnClick="btnNew_Click" Text="Neue Suche" Width="80px" />
@@ -37,7 +37,8 @@
         </SelectParameters>
     </asp:SqlDataSource>
     &nbsp;<asp:Button ID="btnLoadSearch" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" Text="Laden" Width="57px" OnClick="btnLoadSearch_Click" />
-    &nbsp;<asp:Button ID="btnSaveSearch" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" ClientIDMode="Static" OnClientClick="InputBox('PostfromSave');" Text="Speichern" Width="68px" />
+    &nbsp;<asp:Button ID="btnSaveSearch" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" Text="Speichern" Width="68px" />
+    <ajaxToolkit:ModalPopupExtender ID="MPE_SaveSearch" runat="server" TargetControlID="btnSaveSearch" PopupControlID="pnlSaveSearch" PopupDragHandleControlID="pnlSaveSearchHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></ajaxToolkit:ModalPopupExtender>
     &nbsp;<asp:Button ID="btnDeleteSearch" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" ClientIDMode="Static" OnClientClick="DeleteSearch('PostfromDelete');" Text="Löschen" Width="68px" />
     &nbsp;<asp:CheckBox ID="chkExpertMode" runat="server" AutoPostBack="True" OnCheckedChanged="chkExpertMode_CheckedChanged" Text="Expertenmodus" CssClass="chkChoice"/>
 </asp:Panel>
@@ -177,7 +178,7 @@
     </div>
         </asp:TableCell>
         <asp:TableCell>
-    <div style="position:absolute; top:71px;">
+    <div style="position:absolute; top:110px;">
         <asp:Panel ID="pnlSQLeditor" runat="server" Visible="false">
             SQL-Abfrageeditor:<br />
             <asp:TextBox ID="txtSQLselect" runat="server" Width="600px" style="box-shadow: 1px 1px 8px rgba(0,0,0,0.3); background-color:rgb(93, 123, 157); color:white;" ReadOnly="true"/>
@@ -240,4 +241,12 @@
             <asp:SessionParameter Name="GUID" SessionField="GUID" />
         </SelectParameters>
     </asp:SqlDataSource>
+
+<asp:Panel ID="pnlSaveSearch" runat="server" CssClass="modalPopup" align="center" style="display:none" TabIndex="0" Height="100">
+<asp:Panel ID="pnlSaveSearchHeader" runat="server" CssClass="modalHeader" HorizontalAlign="center" TabIndex="0">
+    Suchmaske speichern: <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnCancel.UniqueID%>', 'PostFromCancel');" />
+</asp:Panel>
+    Name der Suchmaske:&nbsp;<asp:TextBox ID="txtSearchName" runat="server" TabIndex="0" ClientIDMode="Static" /> <br /><br />
+    <asp:Button ID="btnOK" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="left:405px;padding:5px;" TabIndex="4" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnOK.UniqueID%>', 'PostFromSave');"/>
+</asp:Panel>
 </asp:Content>
