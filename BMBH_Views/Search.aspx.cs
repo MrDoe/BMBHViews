@@ -388,7 +388,7 @@ namespace BMBH_View
                         sWhere = sWhere.Substring(0, sWhere.Length - 4);
                 }
 
-                txtSQLwhere.Text = sWhere.Replace("WHERE", "") + " order by ID";
+                txtSQLwhere.Text = sWhere.Replace("WHERE", "") + " order by v.ID";
             }
             else // submit search
             {
@@ -402,7 +402,7 @@ namespace BMBH_View
                 }
 
                 if(sWhere.Length > 6)
-                    sWhere = " WHERE " + sWhere + " order by ID";
+                    sWhere = " WHERE " + sWhere;
 
                 string sSQL = Server.HtmlDecode(sSelect + sFrom + sWhere);
                 Session["LastQuery"] = sSQL;
