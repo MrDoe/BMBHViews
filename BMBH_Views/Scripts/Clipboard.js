@@ -66,21 +66,10 @@ function DeleteSearch(params) {
     __doPostBack('<%= btnDeleteSearch.UniqueID%>', params);
 }
 
-$(document).ready(function () {
-    if (window.location.pathname == "/views/Results" ||
-        window.location.pathname == "/Results") {
-        $("#MainContent_pnlGrid").height($(window).height() - 100);
-        $("#MainContent_pnlGrid").width($(window).width() - 20);
-        $("body").css("overflow", "hidden");
-    }
-    else
-        $("body").css("overflow", "visible");
-});
-
 function SetScrollBars(e) {
     if (window.location.pathname == "/views/Results" ||
         window.location.pathname == "/Results") {
-        $("#MainContent_pnlGrid").height($(window).innerHeight() - 100);
+        $("#MainContent_pnlGrid").height($(window).innerHeight() - 137);
         $("#MainContent_pnlGrid").width($(window).innerWidth() - 20);
         $("body").css("overflow", "hidden");
     }
@@ -88,6 +77,10 @@ function SetScrollBars(e) {
         $("body").css("overflow", "visible");
 
 };
+
+$(document).ready(function () {
+    SetScrollBars();
+});
 
 $(document).load($(window).bind("resize", SetScrollBars));
 
