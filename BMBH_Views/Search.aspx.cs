@@ -370,8 +370,8 @@ namespace BMBH_View
                                         if (sOperator == "ZWISCHEN")
                                         {
                                             int nSeparator = sValue.IndexOf(',');
-                                            string sDate1 = sValue.Substring(0, nSeparator);
-                                            string sDate2 = sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 3);
+                                            string sDate1 = "'" + sValue.Substring(0, nSeparator) + "'";
+                                            string sDate2 = "'" + sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 1) + "'";
                                             sValue = sDate1 + " AND " + sDate2;
 
                                             sWhere += "v.[" + sAttribute + "] BETWEEN " + sValue;
