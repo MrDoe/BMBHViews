@@ -68,6 +68,7 @@ function DeleteSearch(params) {
 
 function SetScrollBars(e) {
     if (window.location.pathname == "/views/Results" ||
+        window.location.pathname == "/Views/Results" ||
         window.location.pathname == "/Results") {
         $("#MainContent_pnlGrid").height($(window).innerHeight() - 137);
         $("#MainContent_pnlGrid").width($(window).innerWidth() - 20);
@@ -79,7 +80,7 @@ function SetScrollBars(e) {
 };
 
 $(document).ready(function () {
-    SetScrollBars();
+    SetScrollBars(null);
 });
 
 $(document).load($(window).bind("resize", SetScrollBars));
