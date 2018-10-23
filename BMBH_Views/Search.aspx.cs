@@ -972,14 +972,13 @@ namespace BMBH_View
 
             // save new search
             string sSQL = "insert into V_Save_Search " +
-                   "(ID, Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, ViewName, SearchName)" +
-                   " select ID, Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, '" + (String)Session["View"] + "', '" + sSearchName + "'" +
+                   "(ID, Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, ViewName, SearchName, Logic, Sorter)" +
+                   " select ID, Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, '" + (String)Session["View"] + "', '" + sSearchName + "', Logic, Sorter" +
                    " from " + Session["FormTable"] + " where UserId='" + (String)Session["UserName"] + "'";
 
             SQLexecute(Server.HtmlDecode(sSQL));
 
-            if (chkExpertMode.Checked)
-                SaveExtSearch(sSearchName);
+            SaveExtSearch(sSearchName);
         }
 
         public static string Base64Encode(string plainText)
@@ -1012,8 +1011,7 @@ namespace BMBH_View
                                                    " and ViewName = '" + (String)Session["View"] + "'";
             SQLexecute(sSQL);
 
-            if(chkExpertMode.Checked)
-                DeleteExtSearch(sSearchName);
+            DeleteExtSearch(sSearchName);
         }
 
         private void DeleteExtSearch(string sSearchName)
@@ -1031,23 +1029,21 @@ namespace BMBH_View
             string sSQL = "delete from [" + Session["FormTable"] + "] where UserId = '" + (String)Session["UserName"] + "'";
             SQLexecute(sSQL);
 
-            // save new search
+            // pull new search into search table
             sSQL = "insert into [" + Session["FormTable"] + "] " +
-                   "(Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt)" +
-                   " select Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt" +
+                   "(Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, Logic, Sorter)" +
+                   " select Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, Logic, Sorter" +
                    " from V_Save_Search where UserId='" + (String)Session["UserName"] + "' and ViewName = '" + Session["View"] + "' and SearchName = '" + sSearchName + "'";
 
             SQLexecute(Server.HtmlDecode(sSQL));
             dgdSearch.DataBind();
-
-            if (chkExpertMode.Checked)
-            { 
-                txtSQLselect.Text = "select v.* from [" + Session["View"] + "] v WHERE ";
-                txtSQLwhere.Text = Base64Decode(SQLexecute_SingleResult("select SQL from V_Save_Ext_Search" +
-                                                          " where UserId='" + (String)Session["UserName"] +
-                                                          "' and ViewName = '" + Session["View"] +
-                                                          "' and SearchName = '" + sSearchName + "'"));
-            }
+            
+            // load sql string from V_Save_Ext_Search
+            txtSQLselect.Text = "select v.* from [" + Session["View"] + "] v WHERE ";
+            txtSQLwhere.Text = Base64Decode(SQLexecute_SingleResult("select SQL from V_Save_Ext_Search" +
+                                                        " where UserId='" + (String)Session["UserName"] +
+                                                        "' and ViewName = '" + Session["View"] +
+                                                        "' and SearchName = '" + sSearchName + "'"));
         }
 
         protected void btnLoadSearch_Click(object sender, EventArgs e)
