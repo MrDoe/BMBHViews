@@ -782,11 +782,15 @@ var jscolor = {
                 case 0: var padImg = 'hs.png'; break;
                 case 1: var padImg = 'hv.png'; break;
             }
-            p.padM.style.backgroundImage = "url('/Content/jscolor/cross.gif')";
+
+            if (window.location.host.toLowerCase() == "pat03")
+                var prefix = "/views";
+
+            p.padM.style.backgroundImage = "url('" + prefix + "/Content/jscolor/cross.gif')";
             p.padM.style.backgroundRepeat = "no-repeat";
-            p.sldM.style.backgroundImage = "url('/Content/jscolor/arrow.gif')";
+            p.sldM.style.backgroundImage = "url('" + prefix + "/Content/jscolor/arrow.gif')";
             p.sldM.style.backgroundRepeat = "no-repeat";
-            p.pad.style.backgroundImage = "url('/Content/jscolor/" + padImg + "')";
+            p.pad.style.backgroundImage = "url('" + prefix + "/Content/jscolor/" + padImg + "')";
             p.pad.style.backgroundRepeat = "no-repeat";
             p.pad.style.backgroundPosition = "0 0";
 
@@ -982,11 +986,11 @@ var jscolor = {
 
         // require images
         switch (modeID) {
-            case 0: jscolor.requireImage('../Content/jscolor/hs.png'); break;
-            case 1: jscolor.requireImage('../Content/jscolor/hv.png'); break;
+            case 0: jscolor.requireImage('/Content/jscolor/hs.png'); break;
+            case 1: jscolor.requireImage('/Content/jscolor/hv.png'); break;
         }
-        jscolor.requireImage('../Content/jscolor/cross.gif');
-        jscolor.requireImage('../Content/jscolor/arrow.gif');
+        jscolor.requireImage('/Content/jscolor/cross.gif');
+        jscolor.requireImage('/Content/jscolor/arrow.gif');
 
         this.importColor();
     }
