@@ -186,6 +186,7 @@ namespace BMBH_View
             txtSQLwhere.Text = "";
         }
 
+        // escape SQL string for saving query in history
         protected string EscapeSQL(string SQL)
         {
             SQL = SQL.Replace("'", "''")
@@ -194,7 +195,7 @@ namespace BMBH_View
                       .Replace("=", " = ")
                       .Replace("WHERE v.", "")
                       .Replace("AND", "UND")
-                      .Replace("OR", "ODER")
+                      .Replace("OR", "[ODER]")
                       .Replace("LIKE", "ENTHÄLT")
                       .Replace("NOT LIKE", "ENTHÄLT NICHT")
                       .Replace("IS NULL", "IST LEER")
@@ -206,6 +207,20 @@ namespace BMBH_View
             int nLastIndex = SQL.IndexOf("union") > 0 ? SQL.IndexOf("union")-1 : SQL.Length;
             SQL = SQL.Substring(0, nLastIndex);
             return Server.HtmlDecode(SQL);
+        }
+
+        // translate SQL string from german notation to English
+        protected string TranslateSQL(string sSQL)
+        {
+            sSQL = sSQL.Replace("[UND]", "AND")
+                     .Replace("[ODER]", "OR")
+                     .Replace("ENTHÄLT", "LIKE")
+                     .Replace("ENTHÄLT NICHT", "NOT LIKE")
+                     .Replace("IST LEER", "IS NULL")
+                     .Replace("IST NICHT LEER", "[IS NOT NULL]")
+                     .Replace("ZWISCHEN", "BETWEEN")
+                     .Replace("[IN]", "IN");
+            return Server.HtmlDecode(sSQL);
         }
 
         protected void GenerateSQL(bool bSubmit)
@@ -265,6 +280,8 @@ namespace BMBH_View
                             case "DropDownList":
                                 if (row.FindControl("cboValue") != null)
                                     sValue = ((DropDownList)row.FindControl("cboValue")).SelectedValue;
+                                if (row.FindControl("txtValue") != null)
+                                    sValue = ((TextBox)row.FindControl("txtValue")).Text;
                                 break;
                             case "Calendar":
                                 if (row.FindControl("txtCalFrom") != null)
@@ -293,7 +310,7 @@ namespace BMBH_View
                     if (row.FindControl("cboOperator") != null)
                         sOperator = ((DropDownList)row.FindControl("cboOperator")).SelectedValue;
 
-                    if (sValue != "" || sOperator.Contains("NULL"))
+                    if (sValue != "" || sOperator.Contains("LEER"))
                     { 
                         if (row.FindControl("lblLogic") != null)
                             sLogic = ((Label)row.FindControl("lblLogic")).Text;
@@ -315,19 +332,19 @@ namespace BMBH_View
                                 sWhere += "v.[" + sAttribute + "] IN " + sValue;
                                 break;
 
-                            case "LIKE":
+                            case "ENTHÄLT":
                                 sWhere += "v.[" + sAttribute + "] LIKE '%" + sValue + "%'";
                                 break;
 
-                            case "NOT LIKE":
+                            case "ENTHÄLT NICHT":
                                 sWhere += "v.[" + sAttribute + "] NOT LIKE '%" + sValue + "%'";
                                 break;
 
-                            case "IS NULL":
+                            case "IST LEER":
                                 sWhere += "v.[" + sAttribute + "] IS NULL";
                                 break;
 
-                            case "IS NOT NULL":
+                            case "IST NICHT LEER":
                                 sWhere += "v.[" + sAttribute + "] IS NOT NULL";
                                 break;
 
@@ -340,40 +357,40 @@ namespace BMBH_View
                                     case "bigint":
                                     case "float":
                                     case "bit":
-                                        if (sOperator == "BETWEEN")
+                                        if (sOperator == "ZWISCHEN")
                                         {
                                             int nSeparator = sValue.IndexOf(',');
                                             string sValue1 = sValue.Substring(0, nSeparator);
                                             string sValue2 = sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 1);
                                             sValue = sValue1 + " AND " + sValue2;
-                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                            sWhere += "v.[" + sAttribute + "] BETWEEN " + sValue;
                                         }
                                         else
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
                                         break;
                                     case "date":
-                                        if (sOperator == "BETWEEN")
+                                        if (sOperator == "ZWISCHEN")
                                         {
                                             int nSeparator = sValue.IndexOf(',');
                                             string sDate1 = sValue.Substring(0, nSeparator);
                                             string sDate2 = sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 3);
                                             sValue = sDate1 + " AND " + sDate2;
 
-                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                            sWhere += "v.[" + sAttribute + "] BETWEEN " + sValue;
                                         }
                                         else
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(date, '" + sValue + "')";
                                         break;
 
                                     case "datetime":
-                                        if (sOperator == "BETWEEN")
+                                        if (sOperator == "ZWISCHEN")
                                         {
                                             int nSeparator = sValue.IndexOf(',');
                                             string sDate1 = "'" + sValue.Substring(0, nSeparator) + ":00.00'";
                                             string sDate2 = "'" + sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 1) + ":00.00'";
                                             sValue = sDate1 + " AND " + sDate2;
 
-                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                            sWhere += "v.[" + sAttribute + "] BETWEEN " + sValue;
                                         }
                                         else
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(datetime, '" + sValue + "')";
@@ -389,21 +406,21 @@ namespace BMBH_View
                         if (bEndingBracket)
                             sWhere += ")";
 
-                        sWhere += "\n" + sLogic + " ";
+                        sWhere += "\n" + sLogic.Replace("UND", "AND").Replace("ODER", "OR") + " ";
                     }
                 }
 
                 if (sWhere.Length > 6)
                 {
                     // cut last AND
-                    if (sLogic == "AND")
+                    if (sLogic == "UND")
                         sWhere = sWhere.Substring(0, sWhere.Length - 5);
                     // cut last OR
-                    if (sLogic == "OR")
+                    if (sLogic == "ODER")
                         sWhere = sWhere.Substring(0, sWhere.Length - 4);
                 }
 
-                txtSQLwhere.Text = sWhere.Replace("WHERE", "") + " order by v.ID";
+                txtSQLwhere.Text = TranslateSQL(sWhere.Replace("WHERE", "")) + " ORDER BY v.ID";
             }
             else // submit search
             {
@@ -517,7 +534,7 @@ namespace BMBH_View
             {
                 case "datetime":
                 case "date":
-                if (sOperator == "BETWEEN")
+                if (sOperator == "ZWISCHEN")
                 {
                     if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
                         txtValue.Text = "'" + txtCalFrom.Text + "', '" + txtCalTo.Text + "'";
@@ -533,11 +550,12 @@ namespace BMBH_View
                 }
                 break;
 
+                case "smallint":
                 case "int":
                 case "bigint":
                 case "float":
                 case "numeric":
-                if (sOperator == "BETWEEN")
+                if (sOperator == "ZWISCHEN")
                 {
                     if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
                         txtValue.Text = txtCalFrom.Text + "," + txtCalTo.Text;
@@ -547,7 +565,7 @@ namespace BMBH_View
                 break;
 
                 case "bit":
-                    if (txtValue.Text != "NULL")
+                    if (txtValue.Text != " ")
                         txtValue.Text = chkSingleValue.Checked == true ? "1" : "0";
                     else
                         txtValue.Text = "";
@@ -560,7 +578,6 @@ namespace BMBH_View
             btnSaveSearch.Enabled = true;
             btnDeleteSearch.Enabled = true;
             cboSaveSearch.Enabled = true;
-            //EnableDisableButtons(true);
 
             GenerateSQL(false);
         }
@@ -600,7 +617,7 @@ namespace BMBH_View
         public DataTable GetCboData(string sCurrentField)
         {
             string sSQL;
-            sSQL = "exec('select null as TEXT union select distinct [" + sCurrentField + "] as TEXT from " + Session["View"] + " order by TEXT')";
+            sSQL = "exec('select null as TEXT union select distinct [" + sCurrentField + "] as TEXT from " + Session["View"] + " ORDER BY TEXT')";
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             using (var cmd = new SqlCommand(sSQL, conn))
             using (var adapter = new SqlDataAdapter(cmd))
@@ -631,7 +648,7 @@ namespace BMBH_View
             DropDownList cboOperator = ((DropDownList)row.FindControl("cboOperator"));
             DropDownList cboLogic = (DropDownList)row.FindControl("cboLogic");
             if(cboLogic.SelectedValue == "")
-                cboLogic.SelectedValue = "AND";
+                cboLogic.SelectedValue = "UND";
 
             // hide all controls
             cboValue.Visible = false;
@@ -666,9 +683,9 @@ namespace BMBH_View
                     case "datetime":
                         cboOperator.Items.Add(new ListItem("<"));
                         cboOperator.Items.Add(new ListItem(">"));
-                        cboOperator.Items.Add(new ListItem("ZWISCHEN", "BETWEEN"));
-                        cboOperator.Items.Add(new ListItem("IST LEER", "IS NULL"));
-                        cboOperator.Items.Add(new ListItem("IST NICHT LEER", "IS NOT NULL"));
+                        cboOperator.Items.Add(new ListItem("ZWISCHEN"));
+                        cboOperator.Items.Add(new ListItem("IST LEER"));
+                        cboOperator.Items.Add(new ListItem("IST NICHT LEER"));
                         cboOperator.SelectedValue = sSelectedOperator;
                         
                         // calendar only
@@ -681,12 +698,12 @@ namespace BMBH_View
                     case "numeric":
                         cboOperator.Items.Add(new ListItem("<"));
                         cboOperator.Items.Add(new ListItem(">"));
-                        cboOperator.Items.Add(new ListItem("ZWISCHEN", "BETWEEN"));
-                        cboOperator.Items.Add(new ListItem("ENTHÄLT", "LIKE"));
-                        cboOperator.Items.Add(new ListItem("ENTHÄLT NICHT", "NOT LIKE"));
+                        cboOperator.Items.Add(new ListItem("ZWISCHEN"));
+                        cboOperator.Items.Add(new ListItem("ENTHÄLT"));
+                        cboOperator.Items.Add(new ListItem("ENTHÄLT NICHT"));
                         cboOperator.Items.Add(new ListItem("IN"));
-                        cboOperator.Items.Add(new ListItem("IST LEER", "IS NULL"));
-                        cboOperator.Items.Add(new ListItem("IST NICHT LEER", "IS NOT NULL"));
+                        cboOperator.Items.Add(new ListItem("IST LEER"));
+                        cboOperator.Items.Add(new ListItem("IST NICHT LEER"));
                         cboOperator.SelectedValue = sSelectedOperator;
 
                         // user can choose between TextBox and DropDown
@@ -697,16 +714,16 @@ namespace BMBH_View
                     case "nvarchar":
                     case "char":
                     case "varchar":
-                        cboOperator.Items.Add(new ListItem("ENTHÄLT", "LIKE"));
-                        cboOperator.Items.Add(new ListItem("ENTHÄLT NICHT", "NOT LIKE"));
+                        cboOperator.Items.Add(new ListItem("ENTHÄLT"));
+                        cboOperator.Items.Add(new ListItem("ENTHÄLT NICHT"));
                         cboOperator.Items.Add(new ListItem("IN"));
-                        cboOperator.Items.Add(new ListItem("IST LEER", "IS NULL"));
-                        cboOperator.Items.Add(new ListItem("IST NICHT LEER", "IS NOT NULL"));
+                        cboOperator.Items.Add(new ListItem("IST LEER"));
+                        cboOperator.Items.Add(new ListItem("IST NICHT LEER"));
 
                         if (cboOperator.SelectedValue == "<" ||
                             cboOperator.SelectedValue == ">" ||
                             cboOperator.SelectedValue == "<>" ||
-                            cboOperator.SelectedValue == "BETWEEN")
+                            cboOperator.SelectedValue == "ZWISCHEN")
                             cboOperator.SelectedValue = "=";
                         else
                             cboOperator.SelectedValue = sSelectedOperator;
@@ -717,8 +734,8 @@ namespace BMBH_View
                         break;
 
                     case "bit":
-                        cboOperator.Items.Add(new ListItem("IST LEER", "IS NULL"));
-                        cboOperator.Items.Add(new ListItem("IST NICHT LEER", "IS NOT NULL"));
+                        cboOperator.Items.Add(new ListItem("IST LEER"));
+                        cboOperator.Items.Add(new ListItem("IST NICHT LEER"));
                         cboOperator.SelectedValue = sSelectedOperator;
 
                         // checkbox only
@@ -750,15 +767,13 @@ namespace BMBH_View
                             chkValue.DataBind();
                             break;
 
-                        case "LIKE":
-                        case "NOT LIKE":
+                        case "ENTHÄLT":
+                        case "ENTHÄLT NICHT":
                             txtValue.Visible = true;
                             break;
 
-                        case "IS NULL":
-                            break;
-
-                        case "IS NOT NULL":
+                        case "IST LEER":
+                        case "IST NICHT LEER":
                             break;
                         
                         default:
@@ -790,7 +805,7 @@ namespace BMBH_View
                                 btnInSelect.Visible = true;
                                 break;
 
-                            case "BETWEEN":
+                            case "ZWISCHEN":
                                 calFrom.Enabled = false;
                                 calTo.Enabled = false;
                                 txtCalFrom.Visible = true;
@@ -801,10 +816,8 @@ namespace BMBH_View
                                 txtCalTo.Visible = true;
                                 break;
 
-                            case "IS NULL":
-                                break;
-
-                            case "IS NOT NULL":
+                            case "IST LEER":
+                            case "IST NICHT LEER":
                                 break;
 
                             default:
@@ -834,7 +847,7 @@ namespace BMBH_View
 
                     switch(sOperator)
                     {
-                        case "BETWEEN":
+                        case "ZWISCHEN":
                             string sDate = txtValue.Text;
                             int nSplitPos = sDate.IndexOf(",");
 
@@ -851,10 +864,8 @@ namespace BMBH_View
                             txtCalTo.Visible = true;
                         break;
 
-                        case "IS NULL":
-                            break;
-
-                        case "IS NOT NULL":
+                        case "IST LEER":
+                        case "IST NICHT LEER":
                             break;
 
                         default:
@@ -1094,7 +1105,7 @@ namespace BMBH_View
             GridViewRow row = (GridViewRow)((TextBox)sender).NamingContainer;
             DropDownList cboLogic = (DropDownList)row.FindControl("cboLogic");
             if(cboLogic.SelectedValue == "")
-                cboLogic.SelectedValue = "AND";
+                cboLogic.SelectedValue = "UND";
         }
 
         // called after hitting OK button

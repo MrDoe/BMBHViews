@@ -62,14 +62,14 @@
                     <asp:DropDownList ID="cboOperator" runat="server" SelectedValue='<%# Bind("Operator") %>' AutoPostBack="True" OnSelectedIndexChanged="cboOperator_SelectedIndexChanged">
                         <asp:ListItem>=</asp:ListItem>
                         <asp:ListItem Value="&lt;&gt;"></asp:ListItem>
-                        <asp:ListItem Value="LIKE">ENTHÄLT</asp:ListItem>
-                        <asp:ListItem Value="NOT LIKE">ENTHÄLT NICHT</asp:ListItem>
-                        <asp:ListItem Value="IN"></asp:ListItem>
+                        <asp:ListItem>ENTHÄLT</asp:ListItem>
+                        <asp:ListItem>ENTHÄLT NICHT</asp:ListItem>
+                        <asp:ListItem>IN</asp:ListItem>
                         <asp:ListItem Value="&lt;"></asp:ListItem>
                         <asp:ListItem Value="&gt;"></asp:ListItem>
-                        <asp:ListItem Value="BETWEEN">ZWISCHEN</asp:ListItem>
-                        <asp:ListItem Value="IS NULL">IST LEER</asp:ListItem>
-                        <asp:ListItem Value="IS NOT NULL">IST NICHT LEER</asp:ListItem>
+                        <asp:ListItem>ZWISCHEN</asp:ListItem>
+                        <asp:ListItem>IST LEER</asp:ListItem>
+                        <asp:ListItem>IST NICHT LEER</asp:ListItem>
                     </asp:DropDownList>
                 </EditItemTemplate>
                 <ItemTemplate>
@@ -117,8 +117,8 @@
                 <EditItemTemplate>
                     <asp:DropDownList ID="cboLogic" runat="server" SelectedValue='<%# Bind("Logic") %>' AutoPostBack="True" >
                         <asp:ListItem></asp:ListItem>
-                        <asp:ListItem Value="AND">UND</asp:ListItem>
-                        <asp:ListItem Value="OR">ODER</asp:ListItem>
+                        <asp:ListItem>UND</asp:ListItem>
+                        <asp:ListItem>ODER</asp:ListItem>
                     </asp:DropDownList>
                 </EditItemTemplate>
                 <ItemTemplate>
