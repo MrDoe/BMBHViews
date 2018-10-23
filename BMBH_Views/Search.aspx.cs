@@ -1000,6 +1000,9 @@ namespace BMBH_View
                                                    " and UserId = '" + (String)Session["UserName"] + "'" +
                                                    " and ViewName = '" + (String)Session["View"] + "'";
             SQLexecute(sSQL);
+
+            if(chkExpertMode.Checked)
+                DeleteExtSearch(sSearchName);
         }
 
         private void DeleteExtSearch(string sSearchName)
