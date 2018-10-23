@@ -54,6 +54,7 @@
     <asp:Button ID="btnAddNewUser" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="left:405px;padding:5px;" TabIndex="4" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnAddNewUser.UniqueID%>', 'PostFromNew_Send');"/>
 </asp:Panel>
 
+<%--set focus on textfield--%>
 <script type="text/javascript">
 function pageLoad() {
     $find("MPE_ID").add_shown(onModalPopupShown);
