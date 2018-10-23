@@ -194,8 +194,6 @@ namespace BMBH_View
                       .Replace("]", "")
                       .Replace("=", " = ")
                       .Replace("WHERE v.", "")
-                      .Replace("AND", "UND")
-                      .Replace("OR", "[ODER]")
                       .Replace("LIKE", "ENTHÄLT")
                       .Replace("NOT LIKE", "ENTHÄLT NICHT")
                       .Replace("IS NULL", "IST LEER")
@@ -209,19 +207,18 @@ namespace BMBH_View
             return Server.HtmlDecode(SQL);
         }
 
-        // translate SQL string from german notation to English
-        protected string TranslateSQL(string sSQL)
-        {
-            sSQL = sSQL.Replace("[UND]", "AND")
-                     .Replace("[ODER]", "OR")
-                     .Replace("ENTHÄLT", "LIKE")
-                     .Replace("ENTHÄLT NICHT", "NOT LIKE")
-                     .Replace("IST LEER", "IS NULL")
-                     .Replace("IST NICHT LEER", "[IS NOT NULL]")
-                     .Replace("ZWISCHEN", "BETWEEN")
-                     .Replace("[IN]", "IN");
-            return Server.HtmlDecode(sSQL);
-        }
+        //// translate SQL string from german notation to English
+        //protected string TranslateSQL(string sSQL)
+        //{
+        //    sSQL = sSQL.Replace("UND", "AND")
+        //             .Replace("ODER", "OR")
+        //             .Replace("ENTHÄLT", "LIKE")
+        //             .Replace("ENTHÄLT NICHT", "NOT LIKE")
+        //             .Replace("IST LEER", "IS NULL")
+        //             .Replace("IST NICHT LEER", "IS NOT NULL")
+        //             .Replace("ZWISCHEN", "BETWEEN");
+        //    return Server.HtmlDecode(sSQL);
+        //}
 
         protected void GenerateSQL(bool bSubmit)
         {
@@ -349,7 +346,8 @@ namespace BMBH_View
                                 break;
 
                             default:
-                                sValue = sValue.Replace("'", "");
+                                if(sOperator != "ZWISCHEN")
+                                    sValue = sValue.Replace("'", "");
 
                                 switch (sDatatype)
                                 {
@@ -379,7 +377,7 @@ namespace BMBH_View
                                             sWhere += "v.[" + sAttribute + "] BETWEEN " + sValue;
                                         }
                                         else
-                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(date, '" + sValue + "')";
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(date, '" + sValue + "', 104)";
                                         break;
 
                                     case "datetime":
@@ -393,7 +391,7 @@ namespace BMBH_View
                                             sWhere += "v.[" + sAttribute + "] BETWEEN " + sValue;
                                         }
                                         else
-                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(datetime, '" + sValue + "')";
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(datetime, '" + sValue + "', 104)";
                                         break;
 
                                     default:
@@ -420,7 +418,7 @@ namespace BMBH_View
                         sWhere = sWhere.Substring(0, sWhere.Length - 4);
                 }
 
-                txtSQLwhere.Text = TranslateSQL(sWhere.Replace("WHERE", "")) + " ORDER BY v.ID";
+                txtSQLwhere.Text = sWhere.Replace("WHERE", "") + " ORDER BY v.ID";
             }
             else // submit search
             {
