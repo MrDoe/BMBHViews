@@ -249,4 +249,15 @@
     Name der Suchmaske:&nbsp;<asp:TextBox ID="txtSearchName" runat="server" TabIndex="0" ClientIDMode="Static" /> <br /><br />
     <asp:Button ID="btnOK" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="left:405px;padding:5px;" TabIndex="4" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnOK.UniqueID%>', 'PostFromSave');"/>
 </asp:Panel>
+
+<%--set focus on textfield--%>
+<script type="text/javascript">
+function pageLoad() {
+    $find("MPE_ID").add_shown(onModalPopupShown);
+}
+function onModalPopupShown() {
+    $get("<%=txtSearchName.ClientID%>").focus();
+}
+</script>
+
 </asp:Content>
