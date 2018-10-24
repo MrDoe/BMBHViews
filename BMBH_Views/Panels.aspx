@@ -2,10 +2,10 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <h4>Panel-Konfiguration</h4>
-    <asp:GridView ID="GridView1" runat="server" AllowSorting="True" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="PanelID" DataSourceID="SqlDataSource1" ForeColor="#333333">
+    <asp:GridView ID="dgdPanels" runat="server" AllowSorting="True" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="PanelID" DataSourceID="SqlDataSource1" ForeColor="#333333" OnRowDataBound="dgdPanels_RowDataBound">
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
         <Columns>
-            <asp:CommandField ButtonType="Image" CancelImageUrl="~/Images/error_16x16.gif" DeleteImageUrl="~/Images/delete_field.gif" EditImageUrl="~/Images/table_(edit)_16x16.gif" SelectImageUrl="~/Images/right_16x16.gif" ShowDeleteButton="True" ShowEditButton="True" UpdateImageUrl="~/Images/save_16x16.gif" />
+            <asp:CommandField ButtonType="Image" CancelImageUrl="~/Images/error_16x16.gif" EditImageUrl="~/Images/table_(edit)_16x16.gif" SelectImageUrl="~/Images/right_16x16.gif" ShowEditButton="True" UpdateImageUrl="~/Images/save_16x16.gif" />
             <asp:BoundField DataField="PanelID" HeaderText="PanelID" ReadOnly="True" SortExpression="PanelID" />
             <asp:BoundField DataField="Heading" HeaderText="Heading" SortExpression="Caption" />
             <asp:BoundField DataField="SubHeading" HeaderText="SubHeading" SortExpression="SubHeading" />
@@ -14,7 +14,7 @@
                     <asp:TextBox ID="txtBackColor" runat="server" Text='<%# Bind("Backcolor") %>' class="color {hash:true}"></asp:TextBox>
                 </EditItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Bind("Backcolor") %>'></asp:Label>
+                    <asp:Label ID="lblBackColor" runat="server" Text='<%# Bind("Backcolor") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Textcolor" SortExpression="Textcolor">
@@ -22,7 +22,7 @@
                     <asp:TextBox ID="txtTextColor" runat="server" Text='<%# Bind("Textcolor") %>' class="color {hash:true}"></asp:TextBox>
                 </EditItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label2" runat="server" Text='<%# Bind("Textcolor") %>'></asp:Label>
+                    <asp:Label ID="lblTextColor" runat="server" Text='<%# Bind("Textcolor") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Bordercolor" SortExpression="Bordercolor">
@@ -30,7 +30,7 @@
                     <asp:TextBox ID="txtBorderColor" runat="server" Text='<%# Bind("Bordercolor") %>' class="color {hash:true}"></asp:TextBox>
                 </EditItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label3" runat="server" Text='<%# Bind("Bordercolor") %>'></asp:Label>
+                    <asp:Label ID="lblBorderColor" runat="server" Text='<%# Bind("Bordercolor") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:BoundField DataField="Height" HeaderText="Height" SortExpression="Height" />
@@ -44,6 +44,13 @@
                     <asp:CheckBox ID="chkPatSearch" runat="server" Checked='<%# Bind("ShowPatientSearch") %>' CssClass="chkChoice" Enabled="false"/>
                 </ItemTemplate>
             </asp:TemplateField>
+            <asp:TemplateField ShowHeader="False">
+            <ItemTemplate>
+            <asp:ImageButton ID="btnDeletePanel" runat="server" ImageUrl="~/Images/delete_field.gif" ToolTip="Panel löschen"
+                    CommandName="Delete" OnClientClick="return confirm('Eintrag wirklich löschen?');"
+                    AlternateText="DeletePanel" />               
+            </ItemTemplate>
+</asp:TemplateField>  
         </Columns>
         <EditRowStyle BackColor="#999999" />
         <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />

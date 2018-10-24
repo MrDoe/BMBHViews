@@ -13,13 +13,13 @@ namespace BMBH_View {
     public partial class Panels {
         
         /// <summary>
-        /// GridView1-Steuerelement
+        /// dgdPanels-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridView1;
+        protected global::System.Web.UI.WebControls.GridView dgdPanels;
         
         /// <summary>
         /// btnNew-Steuerelement

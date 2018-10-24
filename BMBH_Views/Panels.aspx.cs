@@ -12,6 +12,11 @@ namespace BMBH_View
 {
     public partial class Panels : System.Web.UI.Page
     {
+        private void ShowMsg(string message)
+        {
+            Response.Write("<script>alert(\"" + message + "\");</script>");
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (this.Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new panel
@@ -51,5 +56,29 @@ namespace BMBH_View
             }
         }
 
+        protected void dgdPanels_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            Label lblBackColor = (Label)e.Row.FindControl("lblBackColor");
+            Label lblTextColor = (Label)e.Row.FindControl("lblTextColor");
+            Label lblBorderColor = (Label)e.Row.FindControl("lblBorderColor");
+
+            if (lblBackColor != null)
+            {
+                lblBackColor.BackColor = System.Drawing.ColorTranslator.FromHtml(lblBackColor.Text);
+                e.Row.Cells[4].BackColor = System.Drawing.ColorTranslator.FromHtml(lblBackColor.Text);
+            }
+            if (lblTextColor != null)
+            {
+                lblTextColor.ForeColor = System.Drawing.ColorTranslator.FromHtml(lblTextColor.Text);
+                e.Row.Cells[5].ForeColor = System.Drawing.ColorTranslator.FromHtml(lblTextColor.Text);
+                lblTextColor.BackColor = System.Drawing.ColorTranslator.FromHtml(lblBackColor.Text);
+                e.Row.Cells[5].BackColor = System.Drawing.ColorTranslator.FromHtml(lblBackColor.Text);
+            }
+            if (lblBorderColor != null)
+            {
+                lblBorderColor.BackColor = System.Drawing.ColorTranslator.FromHtml(lblBorderColor.Text);
+                e.Row.Cells[6].BackColor = System.Drawing.ColorTranslator.FromHtml(lblBorderColor.Text);
+            }
+        }
     }
 }

@@ -783,8 +783,11 @@ var jscolor = {
                 case 1: var padImg = 'hv.png'; break;
             }
 
-            if (window.location.host.toLowerCase() == "pat03")
-                var prefix = "/views";
+            // set prefix for PAT03 server only
+            var prefix = "";
+            if (window.location.host.toLowerCase() == "pat03") {
+                prefix = "/views";
+            }
 
             p.padM.style.backgroundImage = "url('" + prefix + "/Content/jscolor/cross.gif')";
             p.padM.style.backgroundRepeat = "no-repeat";
