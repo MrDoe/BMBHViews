@@ -31,6 +31,24 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.DropDownList cboRole;
         
         /// <summary>
+        /// btnAddRole-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAddRole;
+        
+        /// <summary>
+        /// MPE_Role-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::AjaxControlToolkit.ModalPopupExtender MPE_Role;
+        
+        /// <summary>
         /// btnUpdateViews-Steuerelement
         /// </summary>
         /// <remarks>
@@ -74,6 +92,24 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource3;
+        
+        /// <summary>
+        /// lnkDummy-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkDummy;
+        
+        /// <summary>
+        /// MPE_EditView-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::AjaxControlToolkit.ModalPopupExtender MPE_EditView;
         
         /// <summary>
         /// pnlEditView-Steuerelement
@@ -121,21 +157,48 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Button btnConfirmEditView;
         
         /// <summary>
-        /// lnkFake-Steuerelement
+        /// pnlAddRole-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkFake;
+        protected global::System.Web.UI.WebControls.Panel pnlAddRole;
         
         /// <summary>
-        /// MPE-Steuerelement
+        /// pnlAddRoleHeader-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::AjaxControlToolkit.ModalPopupExtender MPE;
+        protected global::System.Web.UI.WebControls.Panel pnlAddRoleHeader;
+        
+        /// <summary>
+        /// btnCancel2-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancel2;
+        
+        /// <summary>
+        /// txtRoleName-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRoleName;
+        
+        /// <summary>
+        /// btnAddNewRole-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAddNewRole;
     }
 }

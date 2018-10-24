@@ -13,15 +13,6 @@ namespace BMBH_View {
     public partial class RoleMan {
         
         /// <summary>
-        /// btnRoleMgr-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnRoleMgr;
-        
-        /// <summary>
         /// btnNewUser-Steuerelement
         /// </summary>
         /// <remarks>
@@ -38,6 +29,15 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::AjaxControlToolkit.ModalPopupExtender MPE_User;
+        
+        /// <summary>
+        /// btnRoleMgr-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRoleMgr;
         
         /// <summary>
         /// dgdUsers-Steuerelement

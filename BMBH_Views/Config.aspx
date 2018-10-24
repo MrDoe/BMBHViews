@@ -5,7 +5,7 @@
             <asp:TableRow runat="server">
                 <asp:TableCell runat="server">
                     <asp:ImageButton ID="btnUserConf" runat="server" AlternateText="UserConf" BorderColor="#EEEEEE" BorderStyle="Outset" BorderWidth="1px" Height="100px" ImageUrl="~/images/patienten.png" ToolTip="Benuterkonfiguration" OnClick="btnUserConf_Click"/>
-                    Benutzerverwaltung   
+                    Benutzer- und Rollenverwaltung   
                 </asp:TableCell>                
                 <asp:TableCell runat="server">
                     <asp:ImageButton ID="btnPanelConf" runat="server" AlternateText="PanelConf" BorderColor="#EEEEEE" BorderStyle="Outset" BorderWidth="1px" Height="100px" ImageUrl="~/images/colored_panel.png" ToolTip="Panel-Konfiguration" OnClick="btnPanelConf_Click"/>

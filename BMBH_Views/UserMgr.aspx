@@ -3,9 +3,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <h4>Benutzerverwaltung</h4>
-    <asp:Button ID="btnRoleMgr" runat="server" OnClick="btnRoleMgr_Click" Text="Rollenverwaltung" Width="142px" CssClass="btn btn-default btn-small" />
     <asp:Button ID="btnNewUser" runat="server" Text="Neuer Benutzer" CssClass="btn btn-default btn-small" />
     <AjaxControlToolkit:ModalPopupExtender ID="MPE_User" runat="server" TargetControlID="btnNewUser" PopupControlID="pnlNewUser" PopupDragHandleControlID="pnlNewUserHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
+    <asp:Button ID="btnRoleMgr" runat="server" OnClick="btnRoleMgr_Click" Text="Rollenverwaltung" Width="142px" CssClass="btn btn-default btn-small" />
     <asp:GridView ID="dgdUsers" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" DataSourceID="SqlDataSource1">
     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     <Columns>

@@ -16,10 +16,17 @@ namespace BMBH_View
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
+            if (!Page.IsPostBack) // on first load
             {
-                cboRole.SelectedValue = (string)Session["RoleId"];    
+                cboRole.SelectedValue = (string)Session["RoleId"];
             }
+
+            if (this.Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new user
+            {
+                SQLexecute("insert into Roles (RoleName) VALUES ('" + txtRoleName.Text.Trim() + "')");
+                Response.Redirect("RoleMgr.aspx");
+            }
+
         }
 
         private void SQLexecute_async(string sSQL)
@@ -198,14 +205,19 @@ namespace BMBH_View
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sView = row.Cells[0].Text;
             string sSQL = "SELECT OBJECT_DEFINITION (OBJECT_ID(N'" + sView + "'))";
-            string sResult = SQLexecute_SingleResult(sSQL).Replace("\r\nCREATE", "ALTER").Replace("CREATE", "ALTER");
+            string sResult = SQLexecute_SingleResult(sSQL).Replace("\r\nCREATE", "ALTER").Replace("CREATE", "ALTER").Replace("Create", "ALTER");
             txtViewDefinition.Text = sResult;
-            MPE.Show();
+            MPE_EditView.Show();
         }
 
         protected void btnConfirmEditView_Click(object sender, EventArgs e)
         {
             SQLexecute(txtViewDefinition.Text);
+        }
+
+        protected void btnAddRole_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
