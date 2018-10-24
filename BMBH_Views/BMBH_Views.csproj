@@ -177,9 +177,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="ApplicationInsights.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Images\add_16x16.gif" />
     <Content Include="Images\BMBH-Logo-med_trans_220.png" />
     <Content Include="Images\bmbh_views.png" />

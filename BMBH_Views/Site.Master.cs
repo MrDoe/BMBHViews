@@ -11,8 +11,10 @@ namespace BMBH_View
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(Session["UserName"] != null)
+            if (Session["UserName"] != null)
                 lblUserName.Text = (String)Session["UserName"];
+            else
+                Response.Redirect("default.aspx");
 
             if ((Boolean)Session["IsAdmin"] == true)
                 lnkUserMan.Visible = true;
