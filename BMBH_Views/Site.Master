@@ -4,14 +4,14 @@
 <html lang="de">
 <head runat="server">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8"/>
-<link rel="shortcut icon" type="image/x-icon" href="Images/bmbh_views_logo3.ico" />
+<link rel="shortcut icon" type="image/x-icon" href="Images/bmbh_views_logo.ico" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>BMBH-Views</title>
 <asp:PlaceHolder runat="server">
     <%: Scripts.Render("~/bundles/modernizr") %>
 </asp:PlaceHolder>
 <webopt:bundlereference runat="server" path="~/Content/css" />
-<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="Images/bmbh_views_logo.ico" rel="shortcut icon" type="image/x-icon" />
 </head>
 <body>
     <form runat="server">
