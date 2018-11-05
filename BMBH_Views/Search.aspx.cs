@@ -1258,7 +1258,7 @@ namespace BMBH_View
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sID = row.Cells[0].Text;
             string sSQL = "INSERT INTO [" + Session["FormTable"] + "] ([Attribut], [Operator], [Wert], [Datatype], [ControlType], [UserId], [Logic], [Sorter]) " +
-                          "select [Attribut], [Operator], NULL, [Datatype], [ControlType], [UserId], 'AND', [Sorter] from [" + Session["FormTable"] + "] where ID = " + sID;
+                          "select [Attribut], [Operator], NULL, [Datatype], [ControlType], [UserId], 'UND', [Sorter] from [" + Session["FormTable"] + "] where ID = " + sID;
             SQLexecute(sSQL);
             dgdSearch.DataBind();
         }
