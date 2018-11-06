@@ -1,6 +1,24 @@
 ﻿<%@ Page Title="Benutzerverwaltung" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoleMgr.aspx.cs" Inherits="BMBH_View.UserMan" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+<%-- javascript section --%>
+<script type="text/javascript">
+// set cursor to end of txtSearch
+window.onload = function () {
+    var oInput = document.getElementById("<%=txtSearch.ClientID%>");
+    oInput.focus();    
+    oInput.value += "";
+    };
+
+    function pageLoad() {
+    $find("MPE_ID").add_shown(setFocus);
+}
+
+function setFocus() {
+    $get("<%=txtRoleName.ClientID%>").focus();
+}
+</script>
+
 <h4>Rollenverwaltung</h4>
 <asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderWidth="3px" Font-Names="Verdana">
 &nbsp;Benutzerrolle:
@@ -8,7 +26,10 @@
 </asp:DropDownList> &nbsp;
 <asp:Button ID="btnAddRole" runat="server" CssClass="btn btn-default btn-small" OnClick="btnAddRole_Click" Text="Neue Rolle" />
 <AjaxControlToolkit:ModalPopupExtender ID="MPE_Role" runat="server" TargetControlID="btnAddRole" PopupControlID="pnlAddRole" PopupDragHandleControlID="pnlAddRoleHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
-<asp:Button ID="btnUpdateViews" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateViews_Click" Text="Views aktualisieren" />
+<asp:Button ID="btnUpdateViews" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateViews_Click" Text="Views aktualisieren" /><br />
+<div style="padding:5px;">
+Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="PostFromSearch(this)" ClientIDMode="Static" AutoCompleteType="Disabled" CssClass="SearchBox"></asp:TextBox>
+</div>
 </asp:Panel>
 <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
     <asp:GridView ID="dgdViewPermissions" runat="server" AutoGenerateColumns="False" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333">
@@ -92,16 +113,5 @@
     Benutzerrolle:&nbsp;<asp:TextBox ID="txtRoleName" runat="server" TabIndex="0" ClientIDMode="Static" /> <br /><br />
     <asp:Button ID="btnAddNewRole" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="left:405px;padding:5px;" TabIndex="4" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnAddNewRole.UniqueID%>', 'PostFromNew_Send');"/>
 </asp:Panel>
-
-<%-- javascript for popups --%>
-<script type="text/javascript">
-function pageLoad() {
-    $find("MPE_ID").add_shown(setFocus);
-}
-
-function setFocus() {
-    $get("<%=txtRoleName.ClientID%>").focus();
-}
-</script>
 
 </asp:Content>

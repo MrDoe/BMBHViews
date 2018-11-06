@@ -27,6 +27,16 @@ namespace BMBH_View
                 Response.Redirect("RoleMgr.aspx");
             }
 
+            if (this.Request["__EVENTARGUMENT"] == "PostFromSearch") // add new user
+            {
+                if (txtSearch.Text.Length > 0)
+                    SqlDataSource2.SelectCommand = "select r.ViewName, Permission, s.VIEW_CAPTION, s.PANEL_NAME from RoleViews r LEFT JOIN VIEW_SETTINGS s on s.VIEW_NAME = r.ViewName where r.RoleId = @RoleId and r.ViewName LIKE '%" + txtSearch.Text + "%'";
+                else
+                    SqlDataSource2.SelectCommand = "EXEC GetPermittedViewsByRole @RoleId";
+
+                dgdViewPermissions.DataBind();
+                txtSearch.Focus();
+            }
         }
 
         private void SQLexecute_async(string sSQL)

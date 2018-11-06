@@ -2,10 +2,31 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+    <script type="text/javascript">
+    // set cursor to end of txtSearch
+    window.onload = function () {
+        var oInput = document.getElementById("<%=txtSearch.ClientID%>");
+        oInput.focus();    
+        oInput.value += "";
+        };
+
+    function pageLoad() {
+        $find("MPE_ID").add_shown(onModalPopupShown);
+    }
+
+    // set focus on textfield
+    function onModalPopupShown() {
+        $get("<%=txtUserName.ClientID%>").focus();
+    }
+    </script>
+
     <h4>Benutzerverwaltung</h4>
     <asp:Button ID="btnNewUser" runat="server" Text="Neuer Benutzer" CssClass="btn btn-default btn-small" />
     <AjaxControlToolkit:ModalPopupExtender ID="MPE_User" runat="server" TargetControlID="btnNewUser" PopupControlID="pnlNewUser" PopupDragHandleControlID="pnlNewUserHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
-    <asp:Button ID="btnRoleMgr" runat="server" OnClick="btnRoleMgr_Click" Text="Rollenverwaltung" Width="142px" CssClass="btn btn-default btn-small" />
+    <asp:Button ID="btnRoleMgr" runat="server" OnClick="btnRoleMgr_Click" Text="Rollenverwaltung" Width="142px" CssClass="btn btn-default btn-small" /> <br />
+    <div style="padding:5px;">
+    Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="PostFromSearch(this)" ClientIDMode="Static" AutoCompleteType="Disabled" CssClass="SearchBox"></asp:TextBox>
+    </div>
     <asp:GridView ID="dgdUsers" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" DataSourceID="SqlDataSource1">
     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     <Columns>
@@ -53,15 +74,4 @@
     Benutzername:&nbsp;<asp:TextBox ID="txtUserName" runat="server" TabIndex="0" ClientIDMode="Static" /> <br /><br />
     <asp:Button ID="btnAddNewUser" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="left:405px;padding:5px;" TabIndex="4" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnAddNewUser.UniqueID%>', 'PostFromNew_Send');"/>
 </asp:Panel>
-
-<%--set focus on textfield--%>
-<script type="text/javascript">
-function pageLoad() {
-    $find("MPE_ID").add_shown(onModalPopupShown);
-}
-function onModalPopupShown() {
-    $get("<%=txtUserName.ClientID%>").focus();
-}
-</script>
-
 </asp:Content>

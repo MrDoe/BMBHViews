@@ -98,3 +98,7 @@ function colorChanged(sender) {
     sender.get_element().style.color = "#" + sender.get_selectedColor();
     sender.get_element().value = "#" + sender.get_selectedColor();
 }
+
+function PostFromSearch(obj) {
+   __doPostBack(obj.value, 'PostFromSearch');
+}

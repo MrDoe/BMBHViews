@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -21,6 +22,16 @@ namespace BMBH_View
             {
                 SQLexecute("EXEC AddNewUser '" + txtUserName.Text.Trim() + "'");
                 Response.Redirect("UserMgr.aspx");
+            }
+            if (this.Request["__EVENTARGUMENT"] == "PostFromSearch") // add new user
+            {
+                if (txtSearch.Text.Length > 0)
+                    SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles] where UserId LIKE '%" + txtSearch.Text + "%'";
+                else
+                    SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles]";
+
+                dgdUsers.DataBind();
+                txtSearch.Focus();
             }
         }
 

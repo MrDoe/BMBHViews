@@ -372,3 +372,16 @@ td {
     height: 34px;
     -webkit-appearance: none;
 }
+
+/* IE10+ */
+.SearchBox::-ms-clear {
+    display: none;
+}
+
+/* Chrome */
+.SearchBox::-webkit-search-decoration,
+.SearchBox::-webkit-search-cancel-button,
+.SearchBox::-webkit-search-results-button,
+.SearchBox::-webkit-search-results-decoration {
+    display: none;
+}

@@ -40,6 +40,15 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Button btnRoleMgr;
         
         /// <summary>
+        /// txtSearch-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+        
+        /// <summary>
         /// dgdUsers-Steuerelement
         /// </summary>
         /// <remarks>
