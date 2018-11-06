@@ -1,37 +1,48 @@
 ﻿<%@ Page Title="Benutzerverwaltung" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoleMgr.aspx.cs" Inherits="BMBH_View.UserMan" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-<%-- javascript section --%>
-<script type="text/javascript">
-// set cursor to end of txtSearch
-window.onload = function () {
-    var oInput = document.getElementById("<%=txtSearch.ClientID%>");
-    oInput.focus();    
-    oInput.value += "";
-    };
-
+    <script type="text/javascript">
     function pageLoad() {
-    $find("MPE_ID").add_shown(setFocus);
-}
+        var oInput = document.getElementById("<%=txtSearch.ClientID%>");
+        var inputLen = oInput.value.length;
 
-function setFocus() {
-    $get("<%=txtRoleName.ClientID%>").focus();
-}
-</script>
+        // set cursor to end of txtSearch
+        oInput.focus();
+        oInput.setSelectionRange(inputLen, inputLen);
+
+        // set focus for modal popup
+        $find("MPE_ID").add_shown(setFocus);
+    }
+
+    // set focus for modal popup textfield
+    function setFocus() {
+        $get("<%=txtRoleName.ClientID%>").focus();
+    }
+    
+    // reload update panel
+    function ReloadUpdPanel(sArgument) {
+        var UpdatePanel = '<%=updViews.ClientID%>';
+
+        if (UpdatePanel != null) 
+            __doPostBack(UpdatePanel, sArgument);
+    }
+    </script>
 
 <h4>Rollenverwaltung</h4>
-<asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderWidth="3px" Font-Names="Verdana">
+<asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderWidth="3px">
 &nbsp;Benutzerrolle:
-<asp:DropDownList ID="cboRole" runat="server" AutoPostBack="True" DataSourceID="SqlDataSource1" DataTextField="RoleName" DataValueField="RoleId" Font-Names="Verdana" Height="25px" Width="220px">
+<asp:DropDownList ID="cboRole" runat="server" AutoPostBack="True" DataSourceID="SqlDataSource1" DataTextField="RoleName" DataValueField="RoleId" Height="25px" Width="220px">
 </asp:DropDownList> &nbsp;
 <asp:Button ID="btnAddRole" runat="server" CssClass="btn btn-default btn-small" OnClick="btnAddRole_Click" Text="Neue Rolle" />
 <AjaxControlToolkit:ModalPopupExtender ID="MPE_Role" runat="server" TargetControlID="btnAddRole" PopupControlID="pnlAddRole" PopupDragHandleControlID="pnlAddRoleHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
 <asp:Button ID="btnUpdateViews" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateViews_Click" Text="Views aktualisieren" /><br />
 <div style="padding:5px;">
-Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="PostFromSearch(this)" ClientIDMode="Static" AutoCompleteType="Disabled" CssClass="SearchBox"></asp:TextBox>
+Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.value)" ClientIDMode="Static" AutoCompleteType="Disabled" CssClass="SearchBox"></asp:TextBox>
 </div>
 </asp:Panel>
 <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
+<asp:UpdatePanel ID="updViews" runat="server" ClientIDMode="Static">
+<ContentTemplate>
     <asp:GridView ID="dgdViewPermissions" runat="server" AutoGenerateColumns="False" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333">
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
         <Columns>
@@ -85,6 +96,9 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="PostFromSearch(this)"
         <SortedDescendingCellStyle BackColor="#FFFDF8" />
         <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
     </asp:GridView>
+</ContentTemplate>
+</asp:UpdatePanel>
+
 <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetPermittedViewsByRole @RoleId">
 <SelectParameters>
     <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" />

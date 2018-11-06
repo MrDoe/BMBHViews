@@ -100,5 +100,5 @@ function colorChanged(sender) {
 }
 
 function PostFromSearch(obj) {
-   __doPostBack(obj.value, 'PostFromSearch');
+        __doPostBack('btnSearch', obj.value);
 }

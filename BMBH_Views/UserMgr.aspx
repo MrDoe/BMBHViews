@@ -3,20 +3,29 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
-    // set cursor to end of txtSearch
-    window.onload = function () {
-        var oInput = document.getElementById("<%=txtSearch.ClientID%>");
-        oInput.focus();    
-        oInput.value += "";
-        };
-
-    function pageLoad() {
+        function pageLoad() {
+        // set focus for modalpopup dialog
         $find("MPE_ID").add_shown(onModalPopupShown);
+
+        var oInput = document.getElementById("<%=txtSearch.ClientID%>");
+        var inputLen = oInput.value.length;
+
+        // set cursor to end of txtSearch
+        oInput.focus();
+        oInput.setSelectionRange(inputLen, inputLen);
     }
 
-    // set focus on textfield
+    // set focus on modal popup textfield
     function onModalPopupShown() {
         $get("<%=txtUserName.ClientID%>").focus();
+    }
+
+    // reload update panel
+    function ReloadUpdPanel(sArgument) {
+        var UpdatePanel = '<%=updUsers.ClientID%>';
+
+        if (UpdatePanel != null) 
+            __doPostBack(UpdatePanel, sArgument);
     }
     </script>
 
@@ -25,8 +34,10 @@
     <AjaxControlToolkit:ModalPopupExtender ID="MPE_User" runat="server" TargetControlID="btnNewUser" PopupControlID="pnlNewUser" PopupDragHandleControlID="pnlNewUserHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
     <asp:Button ID="btnRoleMgr" runat="server" OnClick="btnRoleMgr_Click" Text="Rollenverwaltung" Width="142px" CssClass="btn btn-default btn-small" /> <br />
     <div style="padding:5px;">
-    Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="PostFromSearch(this)" ClientIDMode="Static" AutoCompleteType="Disabled" CssClass="SearchBox"></asp:TextBox>
+    Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.value)" ClientIDMode="Static" AutoCompleteType="Disabled" CssClass="SearchBox"></asp:TextBox>
     </div>
+    <asp:UpdatePanel ID="updUsers" runat="server" ClientIDMode="Static">
+    <ContentTemplate>
     <asp:GridView ID="dgdUsers" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" DataSourceID="SqlDataSource1">
     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     <Columns>
@@ -65,7 +76,9 @@
     <SortedDescendingCellStyle BackColor="#FFFDF8" />
     <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
 </asp:GridView>
-    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="SELECT * FROM [UserRoles]"></asp:SqlDataSource>
+</ContentTemplate>
+</asp:UpdatePanel>
+<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="SELECT * FROM [UserRoles]"></asp:SqlDataSource>
 
 <asp:Panel ID="pnlNewUser" runat="server" CssClass="modalPopup" align="center" style="display:none" TabIndex="0" Height="100">
 <asp:Panel ID="pnlNewUserHeader" runat="server" CssClass="modalHeader" HorizontalAlign="center" TabIndex="0">

@@ -23,15 +23,16 @@ namespace BMBH_View
                 SQLexecute("EXEC AddNewUser '" + txtUserName.Text.Trim() + "'");
                 Response.Redirect("UserMgr.aspx");
             }
-            if (this.Request["__EVENTARGUMENT"] == "PostFromSearch") // add new user
+            if (this.Request["__EVENTTARGET"] == updUsers.ClientID) // add new user
             {
-                if (txtSearch.Text.Length > 0)
-                    SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles] where UserId LIKE '%" + txtSearch.Text + "%'";
+                string value = this.Request["__EVENTARGUMENT"];
+
+                if (value.Length > 0)
+                    SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles] where UserId LIKE '%" + value + "%'";
                 else
                     SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles]";
 
                 dgdUsers.DataBind();
-                txtSearch.Focus();
             }
         }
 
