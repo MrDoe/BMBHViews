@@ -7,9 +7,10 @@
         var inputLen = oInput.value.length;
 
         // set cursor to end of txtSearch
-        oInput.focus();
-        oInput.setSelectionRange(inputLen, inputLen);
-
+        if (oInput) {
+            oInput.focus();
+            oInput.setSelectionRange(inputLen, inputLen);
+        }
         // set focus for modal popup
         $find("MPE_ID").add_shown(setFocus);
     }
@@ -41,7 +42,7 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
 </div>
 </asp:Panel>
 <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
-<asp:UpdatePanel ID="updViews" runat="server" ClientIDMode="Static">
+<asp:UpdatePanel ID="updViews" runat="server" ClientIDMode="Static" ChildrenAsTriggers="true" UpdateMode="Always">
 <ContentTemplate>
     <asp:GridView ID="dgdViewPermissions" runat="server" AutoGenerateColumns="False" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333">
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
@@ -74,7 +75,7 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Panel">
                 <ItemTemplate>
-                    <asp:DropDownList ID="cboPanel" runat="server" AutoPostBack="True" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="121px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged" DataSourceId="SqlDataSource3" DataValueField="PanelId" DataTextField="PanelId">
+                    <asp:DropDownList ID="cboPanel" runat="server" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="121px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged" DataSourceId="SqlDataSource3" DataValueField="PanelId" DataTextField="PanelId">
                     </asp:DropDownList>
                     <asp:Button ID="btnOK" runat="server" CssClass="btn btn-default btn-small" OnClick="btnOK_Click" Text="OK" />
                 </ItemTemplate>

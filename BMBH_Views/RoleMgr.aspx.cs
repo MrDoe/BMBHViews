@@ -27,7 +27,7 @@ namespace BMBH_View
                 Response.Redirect("RoleMgr.aspx");
             }
 
-            if (this.Request["__EVENTTARGET"] == updViews.ClientID) // search views
+            if (this.Request["__EVENTTARGET"] == updViews.ClientID && this.Request["__EVENTARGUMENT"].Length > 0) // search views
             {
                 string value = this.Request["__EVENTARGUMENT"];
                 if (value.Length > 0)
@@ -113,7 +113,9 @@ namespace BMBH_View
 
         private void ShowMsg(string message)
         {
-            Response.Write("<script>alert(\"" + message + "\");</script>");
+            //Response.Write("<script>alert(\"" + message + "\");</script>");
+            message = "alert('" + message + "')";
+            ScriptManager.RegisterClientScriptBlock((Page as Control), this.GetType(), "alert", message, true);
         }
 
         protected void chkPermission_CheckedChanged(object sender, EventArgs e)
@@ -155,7 +157,7 @@ namespace BMBH_View
             string sView = row.Cells[0].Text;
             string sRoleId = cboRole.SelectedValue;
             SQLexecute("EXEC RecreateSearchTable '" + sView + "'," + sRoleId);
-            //ShowMsg("Die Suchtabelle wurde neu erstellt!");
+            ShowMsg("Die Suchtabelle wurde neu erstellt!");
         }
 
         protected void btnValueCnt_Click(object sender, EventArgs e)
