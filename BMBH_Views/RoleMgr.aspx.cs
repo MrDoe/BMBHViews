@@ -27,7 +27,7 @@ namespace BMBH_View
                 Response.Redirect("RoleMgr.aspx");
             }
 
-            if (this.Request["__EVENTTARGET"] == updViews.ClientID && this.Request["__EVENTARGUMENT"].Length > 0) // search views
+            if (this.Request["__EVENTTARGET"] == updViews.ClientID) // search views
             {
                 string value = this.Request["__EVENTARGUMENT"];
                 if (value.Length > 0)
@@ -230,7 +230,6 @@ namespace BMBH_View
 
         protected void btnAddRole_Click(object sender, EventArgs e)
         {
-
         }
     }
 }
