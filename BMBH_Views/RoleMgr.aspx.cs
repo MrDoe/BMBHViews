@@ -219,6 +219,7 @@ namespace BMBH_View
             string sSQL = "SELECT OBJECT_DEFINITION (OBJECT_ID(N'" + sView + "'))";
             string sResult = SQLexecute_SingleResult(sSQL).Replace("\r\nCREATE", "ALTER").Replace("CREATE", "ALTER").Replace("Create", "ALTER");
             txtViewDefinition.Text = sResult;
+            ShowMsg(sResult);
             MPE_EditView.Show();
         }
 

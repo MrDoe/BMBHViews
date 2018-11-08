@@ -41,7 +41,6 @@
 Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.value)" ClientIDMode="Static" AutoCompleteType="Disabled" CssClass="SearchBox"></asp:TextBox>
 </div>
 </asp:Panel>
-<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
 <asp:UpdatePanel ID="updViews" runat="server" ClientIDMode="Static" ChildrenAsTriggers="true" UpdateMode="Always">
 <ContentTemplate>
     <asp:GridView ID="dgdViewPermissions" runat="server" AutoGenerateColumns="False" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333">
@@ -97,16 +96,6 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
         <SortedDescendingCellStyle BackColor="#FFFDF8" />
         <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
     </asp:GridView>
-</ContentTemplate>
-</asp:UpdatePanel>
-
-<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetPermittedViewsByRole @RoleId">
-<SelectParameters>
-    <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" />
-</SelectParameters>
-</asp:SqlDataSource>
-<asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select '' as PanelId union select PanelID from Panels">
-</asp:SqlDataSource>
 
 <%--Edit view window--%>
 <asp:LinkButton ID="lnkDummy" runat="server"></asp:LinkButton>
@@ -119,6 +108,18 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
     <asp:TextBox ID="txtViewDefinition" TextMode="MultiLine" Width="998px" Height="710px" runat="server"></asp:TextBox>
     <asp:Button ID="btnConfirmEditView" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="position:relative; left:910px; top:8px; padding:5px;" TabIndex="4" OnClick="btnConfirmEditView_Click"/>
 </asp:Panel>
+</ContentTemplate>
+</asp:UpdatePanel>
+
+<%--Data sources--%>
+<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
+<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetPermittedViewsByRole @RoleId">
+<SelectParameters>
+    <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" />
+</SelectParameters>
+</asp:SqlDataSource>
+<asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select '' as PanelId union select PanelID from Panels">
+</asp:SqlDataSource>
 
 <%--Add user role window--%>
 <asp:Panel ID="pnlAddRole" runat="server" CssClass="modalPopup" align="center" style="display:none" TabIndex="0" Height="100">
