@@ -207,19 +207,6 @@ namespace BMBH_View
             return Server.HtmlDecode(SQL);
         }
 
-        //// translate SQL string from german notation to English
-        //protected string TranslateSQL(string sSQL)
-        //{
-        //    sSQL = sSQL.Replace("UND", "AND")
-        //             .Replace("ODER", "OR")
-        //             .Replace("ENTHÄLT", "LIKE")
-        //             .Replace("ENTHÄLT NICHT", "NOT LIKE")
-        //             .Replace("IST LEER", "IS NULL")
-        //             .Replace("IST NICHT LEER", "IS NOT NULL")
-        //             .Replace("ZWISCHEN", "BETWEEN");
-        //    return Server.HtmlDecode(sSQL);
-        //}
-
         protected void GenerateSQL(bool bSubmit)
         {
             string sSelect = "select v.* ";
@@ -422,9 +409,9 @@ namespace BMBH_View
                     // cut last OR
                     if (sLogic == "ODER")
                         sWhere = sWhere.Substring(0, sWhere.Length - 4);
-                }
 
-                txtSQLwhere.Text = sWhere.Replace("WHERE", "") + " ORDER BY v.ID";
+                    txtSQLwhere.Text = sWhere.Replace("WHERE", "") + " ORDER BY v.ID";
+                }
             }
             else // submit search
             {
