@@ -352,9 +352,14 @@ namespace BMBH_View
                                 switch (sDatatype)
                                 {
                                     case "int":
+                                    case "smallint":
                                     case "bigint":
                                     case "float":
+                                    case "decimal":
                                     case "bit":
+                                    case "tinyint":
+                                    case "real":
+                                    case "numeric":
                                         if (sOperator == "ZWISCHEN")
                                         {
                                             int nSeparator = sValue.IndexOf(',');
@@ -379,8 +384,9 @@ namespace BMBH_View
                                         else
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(date, '" + sValue + "', 104)";
                                         break;
-
+                                    case "smalldatetime":
                                     case "datetime":
+                                    case "datetime2":
                                         if (sOperator == "ZWISCHEN")
                                         {
                                             int nSeparator = sValue.IndexOf(',');
@@ -530,7 +536,9 @@ namespace BMBH_View
 
             switch (sDatatype)
             {
+                case "smalldatetime":
                 case "datetime":
+                case "datetime2":
                 case "date":
                 if (sOperator == "ZWISCHEN")
                 {
@@ -548,11 +556,14 @@ namespace BMBH_View
                 }
                 break;
 
-                case "smallint":
                 case "int":
+                case "tinyint":
+                case "smallint":
                 case "bigint":
                 case "float":
                 case "numeric":
+                case "decimal":
+                case "real":
                 if (sOperator == "ZWISCHEN")
                 {
                     if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
@@ -678,7 +689,9 @@ namespace BMBH_View
                 switch (sDatatype)
                 {
                     case "date":
+                    case "smalldatetime":
                     case "datetime":
+                    case "datetime2":
                         cboOperator.Items.Add(new ListItem("<"));
                         cboOperator.Items.Add(new ListItem(">"));
                         cboOperator.Items.Add(new ListItem("ZWISCHEN"));
@@ -689,11 +702,15 @@ namespace BMBH_View
                         // calendar only
                         cboControltype.Items.Add(new ListItem("Calendar"));
                         break;
-
+                    
                     case "int":
+                    case "tinyint":
+                    case "smallint":
                     case "bigint":
                     case "float":
+                    case "real":
                     case "numeric":
+                    case "decimal":
                         cboOperator.Items.Add(new ListItem("<"));
                         cboOperator.Items.Add(new ListItem(">"));
                         cboOperator.Items.Add(new ListItem("ZWISCHEN"));
@@ -709,9 +726,12 @@ namespace BMBH_View
                         cboControltype.Items.Add(new ListItem("DropDownList"));
                         break;
 
+                    case "varchar":
                     case "nvarchar":
                     case "char":
-                    case "varchar":
+                    case "nchar":
+                    case "text":
+                    case "ntext":
                         cboOperator.Items.Add(new ListItem("ENTHÄLT"));
                         cboOperator.Items.Add(new ListItem("ENTHÄLT NICHT"));
                         cboOperator.Items.Add(new ListItem("IN"));
