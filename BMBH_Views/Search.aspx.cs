@@ -121,8 +121,13 @@ namespace BMBH_View
 
         private void ClearTempTable()
         {
-            SQLexecute("EXEC RecreateSearchTableForUser '" + Session["View"] + "','" + (String)Session["UserName"] + "'");
-            dgdSearch.DataBind();
+            if (Session["View"] != null && Session["UserName"] != null)
+            {
+                SQLexecute("EXEC RecreateSearchTableForUser '" + Session["View"] + "','" + (String)Session["UserName"] + "'");
+                dgdSearch.DataBind();
+            }
+            else
+                Response.Redirect("default.aspx");
         }
 
         private void SQLexecute(string sSQL)
@@ -336,6 +341,8 @@ namespace BMBH_View
                                 if(sOperator != "ZWISCHEN")
                                     sValue = sValue.Replace("'", "");
 
+                                //sValue = sValue.Replace("('", "").Replace("')", "");
+
                                 switch (sDatatype)
                                 {
                                     case "int":
@@ -505,6 +512,7 @@ namespace BMBH_View
             DropDownList cboValue = (DropDownList)row.FindControl("cboValue");
             CheckBoxList chkValue = (CheckBoxList)row.FindControl("chkValue");
             DropDownList cboOperator = (DropDownList)row.FindControl("cboOperator");
+            DropDownList cboControltype = (DropDownList)row.FindControl("cboControltype");
             TextBox txtCalFrom = (TextBox)row.FindControl("txtCalFrom");
             TextBox txtCalTo = (TextBox)row.FindControl("txtCalTo");
             CheckBox chkSingleValue = (CheckBox)row.FindControl("chkSingleValue");
@@ -514,12 +522,19 @@ namespace BMBH_View
             if (cboValue.Visible)
                 txtValue.Text = cboValue.SelectedValue;
 
-            if (chkValue.Visible)
+            if (chkValue.Visible) // handle checklist for IN operator
             {
                 String sSelected = String.Join("','", chkValue.Items.OfType<ListItem>().Where(r => r.Selected).Select(r => r.Text));
                 txtValue.Text = "('" + sSelected + "')";
             }
 
+            if (cboOperator.SelectedValue == "IN" && cboControltype.SelectedValue == "TextBox") // handle copied lists from excel
+            {
+                if(sDatatype.Contains("int") || sDatatype == "decimal" || sDatatype == "float" || sDatatype == "numeric" || sDatatype == "real" || sDatatype == "bit")
+                    txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 2).Replace("\r\n", ",") + ")";
+                else
+                    txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 2).Replace("\r\n", "','") + "')";
+            }
 
             switch (sDatatype)
             {
@@ -567,7 +582,7 @@ namespace BMBH_View
                         txtValue.Text = "";
                 break;
             }
-            
+
             btnNew.Enabled = true;
             btnSubmit.Enabled = true;
             btnLoadSearch.Enabled = true;
@@ -589,15 +604,6 @@ namespace BMBH_View
         { // call javascript function
             ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "pasteContent('" + sFieldId + "','" + sDatatype + "'); ", true);
             //Page.ClientScript.RegisterStartupScript(Page.GetType(), "pasteContent", "pasteContent()", true);
-        }
-
-        protected void btnInSelect_Click(object sender, ImageClickEventArgs e)
-        {
-            ImageButton btn = (ImageButton)sender;
-            GridViewRow row = (GridViewRow)btn.NamingContainer;
-            string sRow = row.RowIndex.ToString();
-            string sDatatype = row.Cells[5].Text;
-            GetFromClipboard("MainContent_dgdSearch_txtValue_" + sRow, sDatatype);
         }
 
         protected void btnEdit_Click(object sender, EventArgs e)
@@ -631,7 +637,6 @@ namespace BMBH_View
             DropDownList cboValue = (DropDownList)row.FindControl("cboValue");
             CheckBoxList chkValue = (CheckBoxList)row.FindControl("chkValue");
             TextBox txtValue = (TextBox)row.FindControl("txtValue");
-            ImageButton btnInSelect = (ImageButton)row.FindControl("btnInSelect");
             ImageButton btnCalFrom = (ImageButton)row.FindControl("btnCalFrom");
             ImageButton btnCalTo = (ImageButton)row.FindControl("btnCalTo");
             Label lblFrom = (Label)row.FindControl("lblFrom");
@@ -652,7 +657,6 @@ namespace BMBH_View
             chkValue.Visible = false;
             chkValue.DataSource = null;
             txtValue.Visible = false;
-            btnInSelect.Visible = false;
             btnCalFrom.Visible = false;
             btnCalTo.Visible = false;
             lblFrom.Visible = false;
@@ -756,6 +760,7 @@ namespace BMBH_View
             string sControltype = cboControltype.SelectedValue;
             CalendarExtender calFrom = (CalendarExtender)row.FindControl("calFrom");
             CalendarExtender calTo = (CalendarExtender)row.FindControl("calTo");
+            Label lblInsertValues = (Label)row.FindControl("lblInsertValues");
 
             switch (sControltype)
             {
@@ -763,8 +768,6 @@ namespace BMBH_View
                     switch (sOperator)
                     {
                         case "IN":
-                            //txtValue.Visible = true;
-                            //btnInSelect.Visible = true;
                             chkValue.Visible = true;
                             chkValue.DataSource = GetCboData(sCurrentField);
                             chkValue.DataTextField = "TEXT";
@@ -787,7 +790,10 @@ namespace BMBH_View
                             cboValue.DataTextField = "TEXT";
                             cboValue.DataValueField = "TEXT";
                             cboValue.DataBind();
-                            cboValue.SelectedValue = txtValue.Text;
+
+                            if(txtValue.Text != "" && !txtValue.Text.Contains("("))
+                                cboValue.SelectedValue = txtValue.Text;
+
                             break;
                     }
                     break;
@@ -803,11 +809,14 @@ namespace BMBH_View
                     }
                     else
                     {
+                        lblInsertValues.Visible = false;
+
                         switch (sOperator)
                         {
                             case "IN":
                                 txtValue.Visible = true;
-                                btnInSelect.Visible = true;
+                                txtValue.TextMode = TextBoxMode.MultiLine;
+                                lblInsertValues.Visible = true;
                                 break;
 
                             case "ZWISCHEN":
@@ -827,6 +836,7 @@ namespace BMBH_View
 
                             default:
                                 txtValue.Visible = true;
+                                txtValue.TextMode = TextBoxMode.SingleLine;
                                 break;
                         }
                     }

@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="BMBH-Views - Suchformular" Language="C#" Debug="true" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Search.aspx.cs" Inherits="BMBH_View.Search" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:HiddenField ID="width" runat="server" />
+<asp:HiddenField ID="width" runat="server" />
 <asp:HiddenField ID="height" runat="server" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
 <h4>Suche in <%:Session["View"]%> </h4>
@@ -95,8 +95,8 @@
                     <div style="float:left; position:relative; top:-20px">
                         <asp:DropDownList ID="cboValue" runat="server" Width="248px">
                         </asp:DropDownList>
+                        <asp:Label ID="lblInsertValues" runat="server" Text="Werte hier einfügen:"></asp:Label>
                         <asp:TextBox ID="txtValue" runat="server" Text='<%# Bind("Wert") %>' Width="220px" Wrap="False" OnTextChanged="txtValue_TextChanged" CssClass="input textarea"></asp:TextBox>
-                        <asp:ImageButton ID="btnInSelect" runat="server" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="2px" CssClass="btn-info" Height="22px" ImageUrl="~/Images/paste_16x16.gif" OnClick="btnInSelect_Click" ToolTip="Daten aus Zwischenablage einfügen" style="left: 1px; top: 5px"  />
                     </div>
                         <br />
                     </asp:Panel>
