@@ -32,7 +32,7 @@
     <h4>Benutzerverwaltung</h4>
     <asp:Button ID="btnNewUser" runat="server" Text="Neuer Benutzer" CssClass="btn btn-default btn-small" />
     <AjaxControlToolkit:ModalPopupExtender ID="MPE_User" runat="server" TargetControlID="btnNewUser" PopupControlID="pnlNewUser" PopupDragHandleControlID="pnlNewUserHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
-    <asp:Button ID="btnRoleMgr" runat="server" OnClick="btnRoleMgr_Click" Text="Views- und Rollenverwaltung" Width="162px" CssClass="btn btn-default btn-small" /> <br />
+    <asp:Button ID="btnRoleMgr" runat="server" OnClick="btnRoleMgr_Click" Text="Views- und Rollenverwaltung" Width="170px" CssClass="btn btn-default btn-small" /> <br />
     <div style="padding:5px;">
     Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.value)" ClientIDMode="Static" AutoCompleteType="Disabled" CssClass="SearchBox"></asp:TextBox>
     </div>
