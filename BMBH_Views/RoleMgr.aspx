@@ -13,6 +13,14 @@
         }
         // set focus for modal popup
         $find("MPE_ID").add_shown(setFocus);
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(onEndRequest);
+    }
+
+    function onEndRequest(sender, args) {
+        if(args.get_error() != null)
+            alert(args.get_error().message);
+        args.set_errorHandled(true);
     }
 
     // set focus for modal popup textfield

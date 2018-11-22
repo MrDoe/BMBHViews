@@ -15,7 +15,7 @@
 </head>
 <body>
     <form runat="server">
-        <asp:ScriptManager runat="server" EnableScriptGlobalization="true">
+        <asp:ScriptManager runat="server" EnableScriptGlobalization="true" OnAsyncPostBackError="AsyncError">
             <Scripts>
                 <%--Informationen zur Bündelung von Skripts in ScriptManager finden Sie unter https://go.microsoft.com/fwlink/?LinkID=301884 --%>
                 <%--Framework-Skripts--%>

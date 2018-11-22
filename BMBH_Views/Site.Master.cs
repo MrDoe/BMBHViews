@@ -21,5 +21,12 @@ namespace BMBH_View
             else
                 lnkUserMan.Visible = false;
         }
+
+        protected void AsyncError(object sender, AsyncPostBackErrorEventArgs e)
+        {
+            ScriptManager.GetCurrent(Page).AsyncPostBackErrorMessage =
+                "Fehler: " +
+                e.Exception.Message;
+        }
     }
 }
