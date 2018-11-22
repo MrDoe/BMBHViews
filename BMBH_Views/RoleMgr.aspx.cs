@@ -102,6 +102,7 @@ namespace BMBH_View
             }
             catch (Exception ex)
             {
+                ShowMsg(ex.Message);
                 throw ex;
             }
             finally
