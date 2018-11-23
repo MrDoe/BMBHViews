@@ -761,6 +761,7 @@ namespace BMBH_View
             CalendarExtender calFrom = (CalendarExtender)row.FindControl("calFrom");
             CalendarExtender calTo = (CalendarExtender)row.FindControl("calTo");
             Label lblInsertValues = (Label)row.FindControl("lblInsertValues");
+            lblInsertValues.Visible = false;
 
             switch (sControltype)
             {
@@ -807,10 +808,8 @@ namespace BMBH_View
                         chkSingleValue.Checked = (txtValue.Text == "") ? false : Convert.ToBoolean(Convert.ToInt32(txtValue.Text));
                         break;
                     }
-                    else
+                    else // int, nvarchar, etc. ...
                     {
-                        lblInsertValues.Visible = false;
-
                         switch (sOperator)
                         {
                             case "IN":
@@ -867,7 +866,7 @@ namespace BMBH_View
                             int nSplitPos = sDate.IndexOf(",");
 
                             if (txtValue.Text.Length > 15)
-                                txtCalFrom.Text = sDate.Substring(1, nSplitPos-2);
+                                txtCalFrom.Text = sDate.Substring(1, nSplitPos-2) ;
 
                             if (txtValue.Text.Length > 25)
                                 txtCalTo.Text = txtValue.Text.Substring(nSplitPos+3, sDate.Length-nSplitPos-4);
