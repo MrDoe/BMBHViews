@@ -44,7 +44,8 @@
 </asp:DropDownList> &nbsp;
 <asp:Button ID="btnAddRole" runat="server" CssClass="btn btn-default btn-small" OnClick="btnAddRole_Click" Text="Neue Rolle" />
 <AjaxControlToolkit:ModalPopupExtender ID="MPE_Role" runat="server" TargetControlID="btnAddRole" PopupControlID="pnlAddRole" PopupDragHandleControlID="pnlAddRoleHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
-<asp:Button ID="btnUpdateViews" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateViews_Click" Text="Views aktualisieren" /><br />
+<asp:Button ID="btnUpdateViews" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateViews_Click" Text="Views aktualisieren" />
+<br />
 <div style="padding:5px;">
 Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.value)" ClientIDMode="Static" AutoCompleteType="Disabled" CssClass="SearchBox"></asp:TextBox>
 </div>
@@ -114,7 +115,8 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
     </asp:Panel>
     View-Definition:<br />
     <asp:TextBox ID="txtViewDefinition" TextMode="MultiLine" Width="998px" Height="620px" runat="server"></asp:TextBox>
-    <asp:Button ID="btnConfirmEditView" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="position:relative; left:910px; top:8px; padding:5px;" TabIndex="4" OnClick="btnConfirmEditView_Click"/>
+    <AjaxControlToolkit:HtmlEditorExtender runat="server" ID="txtViewExt" TargetControlID="txtViewDefinition"></AjaxControlToolkit:HtmlEditorExtender>
+    <asp:Button ID="btnConfirmEditView" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="position:relative; left:910px; top:8px; padding:5px;" TabIndex="4" OnClick="btnConfirmEditView_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnConfirmEditView.UniqueID%>', 'EditView_OK');"/>
 </asp:Panel>
 </ContentTemplate>
 </asp:UpdatePanel>

@@ -38,7 +38,7 @@ namespace BMBH_View
                 
                 // adapt scrollbars to window size
                 ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "SetScrollBars(); ", true);
-                //pnlGrid.Height = Convert.ToInt32(height.Value) - 100;
+                //ScriptManager.RegisterStartupScript(Page, this.GetType(), "Key", "<script>MakeStaticHeader('" + dgdNCT.ClientID + "', 600, 1200 , 28 ,false); </script>", false);
             }
         }
          
@@ -362,6 +362,15 @@ namespace BMBH_View
         protected void txtRowPerPage_TextChanged(object sender, EventArgs e)
         {
             txtPage.Text = "1";
+        }
+
+        protected void dgdNCT_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                if (e.Row.RowIndex == 0)
+                    e.Row.Style.Add("padding-top", "30px");
+            }
         }
     }
 }

@@ -80,17 +80,21 @@
             <asp:TemplateField HeaderText="Wert" SortExpression="Wert" ItemStyle-Width="40%">
                 <EditItemTemplate>
                     <asp:Panel ID="Panel2" runat="server" Width="375px">
-                    <div style="float:left; width:50px; position:relative; top:1px">
-                        <asp:Label ID="lblFrom" runat="server" Text="Von:" BorderWidth="2px" BorderColor="Transparent" />
-                        <asp:Label ID="lblTo" runat="server" Text="Bis:" BorderWidth="2px" style="position:relative; top:13px;" BorderColor="Transparent"/>
+                    <div style="float:left; width:50px; position:relative; top:8px">
+                        <asp:Label ID="lblFrom" runat="server" Text="Von:" />
+                        <span style="top:11px; position:relative"><asp:Label ID="lblTo" runat="server" Text="Bis:" /></span>
                     </div>
-                    <div style="float:right; position:relative; width:180px; left:-20px">
-                        <asp:TextBox ID="txtCalFrom" runat="server" width="120px" style="position:relative; top:-8px;" Visible="False"/>
-                        <asp:ImageButton ID="btnCalFrom" runat="server" ImageUrl="~/Images/table_16x16.gif" AlternateText="Kalender anzeigen" /><br />
-                        <ajaxToolkit:CalendarExtender ID="calFrom" runat="server" TargetControlID="txtCalFrom" PopupButtonID="btnCalFrom" TodaysDateFormat="dd.MM.yyyy HH:mm" Format="dd.MM.yyyy HH:mm"/>
-                        <asp:TextBox ID="txtCalTo" runat="server" width="120px" style="position:relative; top:-8px;" Visible="False"/>
-                        <asp:ImageButton ID="btnCalTo" runat="server" ImageUrl="~/Images/table_16x16.gif" AlternateText="Kalender anzeigen" /><br />
-                        <ajaxToolkit:CalendarExtender ID="calTo" runat="server" TargetControlID="txtCalTo" PopupButtonID="btnCalTo" TodaysDateFormat="dd.MM.yyyy HH:mm" Format="dd.MM.yyyy HH:mm"/>
+                    <div style="float:right; position:relative; width:180px; left:-20px; top:0px;">
+                        <div style="padding:2px;">
+                            <asp:TextBox ID="txtCalFrom" runat="server" width="120px" Visible="False"/>
+                            <asp:ImageButton ID="btnCalFrom" runat="server" ImageUrl="~/Images/table_16x16.gif" CssClass="imagebutton" Width="24" AlternateText="Kalender anzeigen" /><br />
+                            <ajaxToolkit:CalendarExtender ID="calFrom" runat="server" TargetControlID="txtCalFrom" PopupButtonID="btnCalFrom" TodaysDateFormat="dd.MM.yyyy HH:mm" Format="dd.MM.yyyy HH:mm"/>
+                        </div>
+                        <div style="padding:2px;">
+                            <asp:TextBox ID="txtCalTo" runat="server" width="120px" Visible="False"/>
+                            <asp:ImageButton ID="btnCalTo" runat="server" ImageUrl="~/Images/table_16x16.gif" CssClass="imagebutton" Width="24" AlternateText="Kalender anzeigen"/>
+                            <ajaxToolkit:CalendarExtender ID="calTo" runat="server" TargetControlID="txtCalTo" PopupButtonID="btnCalTo" TodaysDateFormat="dd.MM.yyyy HH:mm" Format="dd.MM.yyyy HH:mm"/>
+                        </div>
                     </div>
                     <div style="float:left; position:relative; top:-20px">
                         <asp:DropDownList ID="cboValue" runat="server" Width="248px">
@@ -178,7 +182,7 @@
     </div>
         </asp:TableCell>
         <asp:TableCell>
-    <div style="position:absolute; top:110px;">
+    <div style="position:absolute; top:165px;">
         <asp:Panel ID="pnlSQLeditor" runat="server" Visible="false">
             SQL-Abfrageeditor:<br />
             <asp:TextBox ID="txtSQLselect" runat="server" Width="600px" style="box-shadow: 1px 1px 8px rgba(0,0,0,0.3); background-color:rgb(93, 123, 157); color:white;" ReadOnly="true"/>

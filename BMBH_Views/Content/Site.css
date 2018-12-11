@@ -1,7 +1,7 @@
 ﻿/* Move down content because we have a fixed navbar that is 50px tall */
 body {
     padding-top: 50px;
-    padding-bottom: 20px;
+    //padding-bottom: 20px;
     width: 99%;
 }
 
@@ -62,6 +62,7 @@ td {
 
 #custom-bootstrap-menu.navbar-default .navbar-brand {
     top: -50px;
+    float:left;
     color: rgb(0, 124, 158);
     height: 20px;
 }
@@ -73,14 +74,19 @@ td {
     background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
     border-width: 0px;
     border-radius: 6px;
+    height: 50px;
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    z-index: 999;
 }
 
-    #custom-bootstrap-menu.navbar-default .navbar-nav > li > a {
-        color: rgb(95, 160, 178);
-        background-color: rgb(150, 189, 200);
-        background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
-        background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
-    }
+#custom-bootstrap-menu.navbar-default .navbar-nav > li > a {
+    color: rgb(95, 160, 178);
+    background-color: rgb(150, 189, 200);
+    background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+    background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+}
 
         #custom-bootstrap-menu.navbar-default .navbar-nav > li > a:hover,
         #custom-bootstrap-menu.navbar-default .navbar-nav > li > a:focus {
@@ -156,6 +162,8 @@ td {
     padding: 5px 5px;
     border-width: 1px;
     border-style: outset;
+    border-color: rgb(220,240,255);
+    font-size: 14px;
 }
 
 .btn-default:hover,
@@ -171,7 +179,7 @@ td {
     padding: 2px 5px;
     margin: 0px;
     font-size: 9pt;
-    font-family: Arial;
+ //   font-family: Arial;
 }
 
 .btn-small:hover,
@@ -213,7 +221,7 @@ td {
     position: relative;
     left: -110px;
     top: -2px;
-    font-family: Arial;
+//    font-family: Arial;
     font-style: normal;
 }
 .btn-default {
@@ -385,4 +393,39 @@ td {
 .SearchBox::-webkit-search-results-button,
 .SearchBox::-webkit-search-results-decoration {
     display: none;
+}
+
+/*@media (min-width: 768px) {
+    .navbar-nav {
+        margin: 0 auto;
+        display: table;
+        table-layout: fixed;
+        float: left;
+    }*/
+/*}*/
+
+.nav-item {
+    background: transparent;
+    color:cadetblue !important;
+    padding-left: 10px;
+    padding-right: 10px;
+    top:5px;
+    position:relative;
+}
+
+.imagebutton {
+    padding:3px; 
+    top:6px; 
+    position:relative;
+}
+
+.FixedHeader {
+    position: absolute;
+}     
+
+.navbar-right {
+    position: relative;
+    top: -5px;
+    left: 10px;
+
 }

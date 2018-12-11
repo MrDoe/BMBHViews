@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
+using ColorCode;
+using System.Text.RegularExpressions;
 
 namespace BMBH_View
 {
@@ -25,6 +27,14 @@ namespace BMBH_View
             {
                 SQLexecute("insert into Roles (RoleName) VALUES ('" + txtRoleName.Text.Trim() + "')");
                 Response.Redirect("RoleMgr.aspx");
+            }
+
+            if (this.Request["__EVENTARGUMENT"] == "EditView_OK") // add new user
+            {
+                ShowMsg(txtViewDefinition.Text);
+                ShowMsg(GetTextOnly(txtViewDefinition.Text));
+                //SQLexecute(GetTextOnly(txtViewDefinition.Text));
+                //Response.Redirect("RoleMgr.aspx");
             }
 
             if (this.Request["__EVENTTARGET"] == updViews.ClientID) // search views
@@ -218,14 +228,21 @@ namespace BMBH_View
             string sView = row.Cells[0].Text;
             string sSQL = "SELECT OBJECT_DEFINITION (OBJECT_ID(N'" + sView + "'))";
             string sResult = SQLexecute_SingleResult(sSQL).Replace("\r\nCREATE", "ALTER").Replace("CREATE", "ALTER").Replace("Create", "ALTER");
-            txtViewDefinition.Text = sResult;
-            ShowMsg(sResult);
+            txtViewDefinition.Text = new CodeColorizer().Colorize(sResult, Languages.Sql);
+            //ShowMsg(sResult);
             MPE_EditView.Show();
+        }
+
+        public static string GetTextOnly(string sHTML)
+        {
+            return Regex.Replace(sHTML, @"<(.|\n)*?>", string.Empty);
         }
 
         protected void btnConfirmEditView_Click(object sender, EventArgs e)
         {
-            SQLexecute(txtViewDefinition.Text);
+            //ShowMsg(txtViewDefinition.Text);
+            //ShowMsg(GetTextOnly(txtViewDefinition.Text));
+            //SQLexecute(GetTextOnly(txtViewDefinition.Text));
         }
 
         protected void btnAddRole_Click(object sender, EventArgs e)
