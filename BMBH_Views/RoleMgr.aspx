@@ -65,12 +65,7 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
                 <ItemTemplate>
                     <asp:Button ID="btnShowView" runat="server" CssClass="btn btn-default btn-small" OnClick="btnShowView_Click" Text="Anzeigen" ToolTip="Suchformular öffnen"/>
                 </ItemTemplate>
-            </asp:TemplateField>
-            <asp:TemplateField>
-                <ItemTemplate>
-                    <asp:Button ID="btnClearTemp" runat="server" CssClass="btn btn-default btn-small" OnClick="btnClearTemp_Click" Text="Neu erstellen" ToolTip="Temp-Tabelle neu erstellen" />
-                </ItemTemplate>
-            </asp:TemplateField>        
+            </asp:TemplateField>     
             <asp:TemplateField HeaderText="Attributzähler">
                 <ItemTemplate>
                     <asp:Button ID="btnValueCnt" runat="server" CssClass="btn btn-default btn-small" OnClick="btnValueCnt_Click" Text="Aktualisieren" ToolTip="Attributanzahlen neu berechnen" />
@@ -83,14 +78,14 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Panel">
                 <ItemTemplate>
-                    <asp:DropDownList ID="cboPanel" runat="server" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="121px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged" DataSourceId="SqlDataSource3" DataValueField="PanelId" DataTextField="PanelId">
+                    <asp:DropDownList ID="cboPanel" runat="server" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="130px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged" DataSourceId="SqlDataSource3" DataValueField="PanelId" DataTextField="PanelId">
                     </asp:DropDownList>
                     <asp:Button ID="btnOK" runat="server" CssClass="btn btn-default btn-small" OnClick="btnOK_Click" Text="OK" />
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Bearbeiten">
+            <asp:TemplateField>
                 <ItemTemplate>
-                    <asp:Button ID="btnEditView" runat="server" CssClass="btn btn-default btn-small" Text="Bearbeiten" OnClick="btnEditView_Click" OnClientClick="scroll(0,0);"/>
+                    <asp:Button ID="btnEditView" runat="server" CssClass="btn btn-default btn-small" Text="View bearbeiten" OnClick="btnEditView_Click" OnClientClick="scroll(0,0);"/>
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
@@ -114,7 +109,7 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
         View bearbeiten <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButtonLarge modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnCancel.UniqueID%>', 'EditView_Cancel');" />
     </asp:Panel>
     View-Definition:<br />
-    <asp:TextBox ID="txtViewDefinition" TextMode="MultiLine" CssClass="TextArea" Width="998px" Height="620px" runat="server"></asp:TextBox>
+    <asp:TextBox ID="txtViewDefinition" TextMode="MultiLine" CssClass="TextArea" Width="998px" Height="620px" Columns="50" Rows="10" runat="server"></asp:TextBox>
     <AjaxControlToolkit:HtmlEditorExtender runat="server" ID="txtViewExt" TargetControlID="txtViewDefinition" DisplaySourceTab="false">
     <Toolbar>
         <ajaxToolkit:Cut />

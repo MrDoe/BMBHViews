@@ -160,15 +160,15 @@ namespace BMBH_View
             Response.Redirect("Search.aspx");
         }
 
-        protected void btnClearTemp_Click(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            GridViewRow row = (GridViewRow)btn.NamingContainer;
-            string sView = row.Cells[0].Text;
-            string sRoleId = cboRole.SelectedValue;
-            SQLexecute("EXEC RecreateSearchTable '" + sView + "'," + sRoleId);
-            ShowMsg("Die Suchtabelle wurde neu erstellt!");
-        }
+        //protected void btnClearTemp_Click(object sender, EventArgs e)
+        //{
+        //    Button btn = (Button)sender;
+        //    GridViewRow row = (GridViewRow)btn.NamingContainer;
+        //    string sView = row.Cells[0].Text;
+        //    string sRoleId = cboRole.SelectedValue;
+        //    SQLexecute("EXEC RecreateSearchTable '" + sView + "'," + sRoleId);
+        //    ShowMsg("Die Suchtabelle wurde neu erstellt!");
+        //}
 
         protected void btnValueCnt_Click(object sender, EventArgs e)
         {
@@ -228,7 +228,9 @@ namespace BMBH_View
             string sView = row.Cells[0].Text;
             string sSQL = "SELECT OBJECT_DEFINITION (OBJECT_ID(N'" + sView + "'))";
             string sResult = SQLexecute_SingleResult(sSQL).Replace("\r\nCREATE", "ALTER").Replace("CREATE", "ALTER").Replace("Create", "ALTER");
-            txtViewDefinition.Text = new CodeColorizer().Colorize(sResult, Languages.Sql);
+            sResult = new CodeColorizer().Colorize(sResult, Languages.Sql);
+            sResult = sResult.Replace("<div style=\"color:Black;background-color:White;\">", "").Replace("</div>", "");
+            txtViewDefinition.Text = sResult;
       
             //ShowMsg(sResult);
             MPE_EditView.Show();
