@@ -114,8 +114,16 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
         View bearbeiten <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButtonLarge modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnCancel.UniqueID%>', 'EditView_Cancel');" />
     </asp:Panel>
     View-Definition:<br />
-    <asp:TextBox ID="txtViewDefinition" TextMode="MultiLine" Width="998px" Height="620px" runat="server"></asp:TextBox>
-    <AjaxControlToolkit:HtmlEditorExtender runat="server" ID="txtViewExt" TargetControlID="txtViewDefinition"></AjaxControlToolkit:HtmlEditorExtender>
+    <asp:TextBox ID="txtViewDefinition" TextMode="MultiLine" CssClass="TextArea" Width="998px" Height="620px" runat="server"></asp:TextBox>
+    <AjaxControlToolkit:HtmlEditorExtender runat="server" ID="txtViewExt" TargetControlID="txtViewDefinition" DisplaySourceTab="false">
+    <Toolbar>
+        <ajaxToolkit:Cut />
+        <ajaxToolkit:Copy />
+        <ajaxToolkit:Paste />
+        <ajaxToolkit:SelectAll />
+        <ajaxToolkit:UnSelect />
+    </Toolbar>
+    </AjaxControlToolkit:HtmlEditorExtender>
     <asp:Button ID="btnConfirmEditView" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="position:relative; left:910px; top:8px; padding:5px;" TabIndex="4" OnClick="btnConfirmEditView_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnConfirmEditView.UniqueID%>', 'EditView_OK');"/>
 </asp:Panel>
 </ContentTemplate>

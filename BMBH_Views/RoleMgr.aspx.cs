@@ -9,6 +9,8 @@ using System.Configuration;
 using System.Data.SqlClient;
 using ColorCode;
 using System.Text.RegularExpressions;
+using HtmlAgilityPack;
+using System.Text;
 
 namespace BMBH_View
 {
@@ -31,9 +33,7 @@ namespace BMBH_View
 
             if (this.Request["__EVENTARGUMENT"] == "EditView_OK") // add new user
             {
-                ShowMsg(txtViewDefinition.Text);
-                ShowMsg(GetTextOnly(txtViewDefinition.Text));
-                //SQLexecute(GetTextOnly(txtViewDefinition.Text));
+                SQLexecute(GetTextOnly(txtViewDefinition.Text));
                 //Response.Redirect("RoleMgr.aspx");
             }
 
@@ -229,13 +229,17 @@ namespace BMBH_View
             string sSQL = "SELECT OBJECT_DEFINITION (OBJECT_ID(N'" + sView + "'))";
             string sResult = SQLexecute_SingleResult(sSQL).Replace("\r\nCREATE", "ALTER").Replace("CREATE", "ALTER").Replace("Create", "ALTER");
             txtViewDefinition.Text = new CodeColorizer().Colorize(sResult, Languages.Sql);
+      
             //ShowMsg(sResult);
             MPE_EditView.Show();
         }
 
         public static string GetTextOnly(string sHTML)
         {
-            return Regex.Replace(sHTML, @"<(.|\n)*?>", string.Empty);
+            string sHTML2 = HttpUtility.HtmlDecode(sHTML);
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(sHTML2);
+            return doc.DocumentNode.InnerText;
         }
 
         protected void btnConfirmEditView_Click(object sender, EventArgs e)
