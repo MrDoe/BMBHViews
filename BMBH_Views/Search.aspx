@@ -113,7 +113,7 @@
                     <asp:Label ID="lblValue" runat="server" Text='<%# Bind("Wert") %>' Style="word-wrap: normal; word-break: break-all;"></asp:Label>
                 </ItemTemplate>
                 <ControlStyle Width="250px" />
-                <%--<ItemStyle Width="250px" Wrap="true" BorderWidth="5px" BorderStyle="None"></ItemStyle>--%>
+                <ItemStyle Width="250px" Wrap="true"></ItemStyle>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Logik">
                 <EditItemTemplate>

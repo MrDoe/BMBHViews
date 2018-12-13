@@ -816,6 +816,7 @@ namespace BMBH_View
                             case "IN":
                                 txtValue.Visible = true;
                                 txtValue.TextMode = TextBoxMode.MultiLine;
+                                txtValue.Height = 150;
                                 lblInsertValues.Visible = true;
                                 break;
 

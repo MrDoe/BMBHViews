@@ -413,7 +413,7 @@ td {
 
 .imagebutton {
     padding: 3px;
-    top: 8px;
+    top: 5px;
     position: relative;
     width: 24px !important;
 }
@@ -427,9 +427,6 @@ td {
     top: -5px;
     left: 10px;
 
-}
-.TextArea {
-    resize: none;
 }
 
 .ajax__html_editor_extender_texteditor {
