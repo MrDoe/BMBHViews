@@ -659,7 +659,8 @@ namespace BMBH_View
             txtValue.Visible = false;
             btnCalFrom.Visible = false;
             btnCalTo.Visible = false;
-            lblFrom.Visible = false;
+            //lblFrom.Visible = false;
+            lblFrom.Text = " ";
             lblTo.Visible = false;
             txtCalFrom.Visible = false;
             txtCalTo.Visible = false;

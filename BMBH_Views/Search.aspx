@@ -45,7 +45,10 @@
     <asp:Table ID= "Table1" runat="server">
         <asp:TableRow>
             <asp:TableCell>
+
     <div style="box-shadow: 1px 2px 8px rgba(0,0,0,0.25);"> 
+    <asp:UpdatePanel runat="server" ID="updSearch">
+    <ContentTemplate>
     <asp:GridView ID="dgdSearch" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" DataKeyNames="ID" OnRowEditing="dgdSearch_RowEditing" OnRowDataBound="dgdSearch_RowDataBound" OnRowCommand="dgdSearch_RowCommand" OnRowCreated="dgdSearch_RowCreated" DataSourceID="dsSearch" Font-Names="Arial" Font-Size="Small">
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" Width="50%" Height="10px" />
         <Columns>
@@ -79,19 +82,16 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Wert" SortExpression="Wert" ItemStyle-Width="40%">
                 <EditItemTemplate>
-                    <asp:Panel ID="Panel2" runat="server" Width="375px">
-                    <div style="float:left; width:50px; position:relative; top:8px">
-                        <asp:Label ID="lblFrom" runat="server" Text="Von:" />
-                        <span style="top:11px; position:relative"><asp:Label ID="lblTo" runat="server" Text="Bis:" /></span>
-                    </div>
-                    <div style="float:right; position:relative; width:180px; left:-20px; top:0px;">
-                        <div style="padding:2px;">
-                            <asp:TextBox ID="txtCalFrom" runat="server" width="120px" Visible="False"/>
+                    <div>
+                        <div class="block" style="position:relative; top:-4px; padding-top:5px;">
+                            <asp:Label ID="lblFrom" runat="server" Text="Von:" CssClass="lblValue" />
+                            <asp:TextBox ID="txtCalFrom" runat="server" CssClass="txtValue" Visible="False"/>
                             <asp:ImageButton ID="btnCalFrom" runat="server" ImageUrl="~/Images/table_16x16.gif" CssClass="imagebutton" Width="24" AlternateText="Kalender anzeigen" /><br />
                             <ajaxToolkit:CalendarExtender ID="calFrom" runat="server" TargetControlID="txtCalFrom" PopupButtonID="btnCalFrom" TodaysDateFormat="dd.MM.yyyy HH:mm" Format="dd.MM.yyyy HH:mm"/>
                         </div>
-                        <div style="padding:2px;">
-                            <asp:TextBox ID="txtCalTo" runat="server" width="120px" Visible="False"/>
+                        <div class="block" style="padding-bottom:5px;">
+                            <asp:Label ID="lblTo" runat="server" Text="Bis:" CssClass="lblValue" />
+                            <asp:TextBox ID="txtCalTo" runat="server" CssClass="txtValue" Visible="False"/>
                             <asp:ImageButton ID="btnCalTo" runat="server" ImageUrl="~/Images/table_16x16.gif" CssClass="imagebutton" Width="24" AlternateText="Kalender anzeigen"/>
                             <ajaxToolkit:CalendarExtender ID="calTo" runat="server" TargetControlID="txtCalTo" PopupButtonID="btnCalTo" TodaysDateFormat="dd.MM.yyyy HH:mm" Format="dd.MM.yyyy HH:mm"/>
                         </div>
@@ -102,8 +102,6 @@
                         <asp:Label ID="lblInsertValues" runat="server" Text="Werte hier einfügen:"></asp:Label>
                         <asp:TextBox ID="txtValue" runat="server" Text='<%# Bind("Wert") %>' Width="220px" Wrap="False" OnTextChanged="txtValue_TextChanged" CssClass="input textarea"></asp:TextBox>
                     </div>
-                        <br />
-                    </asp:Panel>
                     <asp:CheckBoxList ID="chkValue" runat="server" CellPadding="1" CellSpacing="1" CssClass="chkChoice" Font-Bold="False" Font-Italic="False" Font-Names="Arial" Width="169px">
                     </asp:CheckBoxList>
                     <div style="float:left; position:relative">
@@ -115,7 +113,7 @@
                     <asp:Label ID="lblValue" runat="server" Text='<%# Bind("Wert") %>' Style="word-wrap: normal; word-break: break-all;"></asp:Label>
                 </ItemTemplate>
                 <ControlStyle Width="250px" />
-                <ItemStyle Width="250px" Wrap="true"></ItemStyle>
+                <%--<ItemStyle Width="250px" Wrap="true" BorderWidth="5px" BorderStyle="None"></ItemStyle>--%>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Logik">
                 <EditItemTemplate>
@@ -179,10 +177,13 @@
         <SortedDescendingCellStyle BackColor="#FFFDF8" />
         <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
     </asp:GridView>
+    </ContentTemplate>
+    </asp:UpdatePanel>
+
     </div>
         </asp:TableCell>
         <asp:TableCell>
-    <div style="position:absolute; top:165px;">
+    <div style="position:absolute; top:125px;">
         <asp:Panel ID="pnlSQLeditor" runat="server" Visible="false">
             SQL-Abfrageeditor:<br />
             <asp:TextBox ID="txtSQLselect" runat="server" Width="600px" style="box-shadow: 1px 1px 8px rgba(0,0,0,0.3); background-color:rgb(93, 123, 157); color:white;" ReadOnly="true"/>
