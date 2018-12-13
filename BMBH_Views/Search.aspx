@@ -28,8 +28,7 @@
             <asp:Label ID="lblAdditive" runat="server" Text="Additive Suche"></asp:Label>
         </div>
     </div>
-    <asp:DropDownList ID="cboSaveSearch" runat="server" DataSourceID="SqlDataSource1" DataTextField="SearchName" DataValueField="SearchName">
-    </asp:DropDownList>
+    <asp:DropDownList ID="cboSaveSearch" runat="server" DataSourceID="SqlDataSource1" DataTextField="SearchName" DataValueField="SearchName" CssClass="DropDown"></asp:DropDownList>
     <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select distinct SearchName from V_Save_Search where UserId = @User and ViewName = @View">
         <SelectParameters>
             <asp:SessionParameter Name="User" SessionField="UserName" />
@@ -62,7 +61,7 @@
             <asp:BoundField DataField="Attribut" HeaderText="Attribut" SortExpression="Attribut" ReadOnly="True" />
             <asp:TemplateField HeaderText="Operator" ItemStyle-Width="10%">
                 <EditItemTemplate>
-                    <asp:DropDownList ID="cboOperator" runat="server" SelectedValue='<%# Bind("Operator") %>' AutoPostBack="True" OnSelectedIndexChanged="cboOperator_SelectedIndexChanged">
+                    <asp:DropDownList ID="cboOperator" runat="server" SelectedValue='<%# Bind("Operator") %>' AutoPostBack="True" OnSelectedIndexChanged="cboOperator_SelectedIndexChanged" CssClass="DropDown">
                         <asp:ListItem>=</asp:ListItem>
                         <asp:ListItem Value="&lt;&gt;"></asp:ListItem>
                         <asp:ListItem>ENTHÄLT</asp:ListItem>
@@ -97,10 +96,11 @@
                         </div>
                     </div>
                     <div style="float:left; position:relative; top:-20px">
-                        <asp:DropDownList ID="cboValue" runat="server" Width="248px">
-                        </asp:DropDownList>
+                        <div style="position:relative; top:6px;">
+                            <asp:DropDownList ID="cboValue" runat="server" CssClass="DropDown"></asp:DropDownList>
+                        </div>
                         <asp:Label ID="lblInsertValues" runat="server" Text="Werte hier einfügen:"></asp:Label>
-                        <asp:TextBox ID="txtValue" runat="server" Text='<%# Bind("Wert") %>' Width="220px" Wrap="False" OnTextChanged="txtValue_TextChanged" CssClass="input textarea"></asp:TextBox>
+                        <asp:TextBox ID="txtValue" runat="server" Text='<%# Bind("Wert") %>' Width="220px" Wrap="False" OnTextChanged="txtValue_TextChanged" CssClass="txtValue2"></asp:TextBox>
                     </div>
                     <asp:CheckBoxList ID="chkValue" runat="server" CellPadding="1" CellSpacing="1" CssClass="chkChoice" Font-Bold="False" Font-Italic="False" Font-Names="Arial" Width="169px">
                     </asp:CheckBoxList>
@@ -117,7 +117,7 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Logik">
                 <EditItemTemplate>
-                    <asp:DropDownList ID="cboLogic" runat="server" SelectedValue='<%# Bind("Logic") %>' AutoPostBack="True" >
+                    <asp:DropDownList ID="cboLogic" runat="server" SelectedValue='<%# Bind("Logic") %>' AutoPostBack="True" CssClass="DropDown">
                         <asp:ListItem></asp:ListItem>
                         <asp:ListItem>UND</asp:ListItem>
                         <asp:ListItem>ODER</asp:ListItem>
@@ -131,7 +131,7 @@
             <asp:BoundField DataField="UserId" HeaderText="UserId" SortExpression="UserId" Visible="False" />
    			<asp:TemplateField HeaderText="Kontrollelement" >
                 <EditItemTemplate>
-                    <asp:DropDownList ID="cboControltype" runat="server" SelectedValue='<%# Bind("Controltype") %>' AutoPostBack="True" Height="17px" Width="148px" OnSelectedIndexChanged="cboControltype_SelectedIndexChanged">
+                    <asp:DropDownList ID="cboControltype" runat="server" SelectedValue='<%# Bind("Controltype") %>' AutoPostBack="True" Height="17px" Width="148px" OnSelectedIndexChanged="cboControltype_SelectedIndexChanged" CssClass="DropDown">
                         <asp:ListItem>TextBox</asp:ListItem>
                         <asp:ListItem>DropDownList</asp:ListItem>
                         <asp:ListItem>Calendar</asp:ListItem>
@@ -150,6 +150,7 @@
 			    <ItemTemplate>
                     <asp:Button ID="btnEdit" runat="server" CssClass="btn btn-default btn-small" commandname="Edit" Text="Ändern" OnClick="btnEdit_Click"/>
                 </ItemTemplate>
+            <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
 			</asp:Templatefield>
    			<asp:Templatefield>
                 <ItemStyle Width="45px"></ItemStyle>

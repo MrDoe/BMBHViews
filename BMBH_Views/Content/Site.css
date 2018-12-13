@@ -175,6 +175,7 @@ td {
 .btn-small {
     background-color: rgb(245, 250, 255);
     position: relative;
+    left: -2px;
     top: 2px;
     padding: 2px 5px;
     margin: 0px;
@@ -449,4 +450,21 @@ td {
     /*padding: 2px;*/
     /*margin: 2px;*/
     /*display: block;*/
+}
+
+.txtValue2 {
+    padding: 3px;
+    margin-top: 13px;
+    margin-left: 10px;
+    width: 220px !important;
+}
+
+.DropDown {
+    position: relative;
+    top: 2px;
+    border-radius: 4px;
+    border-width: 1px;
+    padding-left: 2px;
+    min-width: 100px;
+    height: 20px;
 }

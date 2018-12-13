@@ -838,6 +838,7 @@ namespace BMBH_View
                             default:
                                 txtValue.Visible = true;
                                 txtValue.TextMode = TextBoxMode.SingleLine;
+                                txtValue.Height = 25;
                                 break;
                         }
                     }
