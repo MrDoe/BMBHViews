@@ -468,3 +468,22 @@ td {
     min-width: 100px;
     height: 20px;
 }
+
+.txtViewDefinition {
+    overflow: scroll;
+    resize: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightslategrey;
+    height: 620px;
+    padding: 5px;
+}
+
+pre {
+    overflow: visible;
+    pointer-events: none;
+}
+
+.navbar {
+    padding: 0px 10px;
+}

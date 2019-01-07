@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="Views- und Rollenverwaltung" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoleMgr.aspx.cs" Inherits="BMBH_View.UserMan" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+<asp:HiddenField ID="HiddenField1" runat="server" />
+
     <script type="text/javascript">
     function pageLoad() {
         var oInput = document.getElementById("<%=txtSearch.ClientID%>");
@@ -34,6 +36,17 @@
 
         if (UpdatePanel != null) 
             __doPostBack(UpdatePanel, sArgument);
+    }
+
+    function CancelEditView() {
+    document.getElementById('MainContent_txtViewDefinition').value = '';
+    __doPostBack('<%= btnCancel.UniqueID%>', 'EditView_Cancel');
+        }
+
+    function ConfirmEditView() {
+        var hf = document.getElementById("<%= HiddenField1.ClientID%>");
+        hf.value = btoa(encodeURIComponent(document.getElementById('MainContent_txtViewDefinition').innerHTML));
+        __doPostBack('<%= btnConfirmEditView.UniqueID%>', 'EditView_OK');
     }
     </script>
 
@@ -106,20 +119,11 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
 <AjaxControlToolkit:ModalPopupExtender ID="MPE_EditView" runat="server" TargetControlID="lnkDummy" PopupControlID="pnlEditView" PopupDragHandleControlID="pnlEditViewHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID2"></AjaxControlToolkit:ModalPopupExtender>
 <asp:Panel ID="pnlEditView" runat="server" CssClass="modalPopupLarge modalPopup" align="center" style="display:none" TabIndex="0">
     <asp:Panel ID="pnlEditViewHeader" runat="server" CssClass="modalHeaderLarge modalHeader" HorizontalAlign="center" TabIndex="0">
-        View bearbeiten <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButtonLarge modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnCancel.UniqueID%>', 'EditView_Cancel');" />
+        View bearbeiten <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButtonLarge modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="CancelEditView();" />
     </asp:Panel>
     View-Definition:<br />
-    <asp:TextBox ID="txtViewDefinition" TextMode="MultiLine" CssClass="TextArea" Width="998px" Height="620px" Columns="50" Rows="10" runat="server"></asp:TextBox>
-    <AjaxControlToolkit:HtmlEditorExtender runat="server" ID="txtViewExt" TargetControlID="txtViewDefinition" DisplaySourceTab="false">
-    <Toolbar>
-        <ajaxToolkit:Cut />
-        <ajaxToolkit:Copy />
-        <ajaxToolkit:Paste />
-        <ajaxToolkit:SelectAll />
-        <ajaxToolkit:UnSelect />
-    </Toolbar>
-    </AjaxControlToolkit:HtmlEditorExtender>
-    <asp:Button ID="btnConfirmEditView" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="position:relative; left:910px; top:8px; padding:5px;" TabIndex="4" OnClick="btnConfirmEditView_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnConfirmEditView.UniqueID%>', 'EditView_OK');"/>
+    <div id="txtViewDefinition" runat="server" contenteditable="true" class="txtViewDefinition"></div>
+    <asp:Button ID="btnConfirmEditView" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="position:relative; left:910px; top:8px; padding:5px;" TabIndex="4" OnClick="btnConfirmEditView_Click" ClientIDMode="Static" OnClientClick="ConfirmEditView();"/>
 </asp:Panel>
 </ContentTemplate>
 </asp:UpdatePanel>

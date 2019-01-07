@@ -531,9 +531,9 @@ namespace BMBH_View
             if (cboOperator.SelectedValue == "IN" && cboControltype.SelectedValue == "TextBox") // handle copied lists from excel
             {
                 if(sDatatype.Contains("int") || sDatatype == "decimal" || sDatatype == "float" || sDatatype == "numeric" || sDatatype == "real" || sDatatype == "bit")
-                    txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 2).Replace("\r\n", ",") + ")";
+                    txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 2).Replace("\n", ",") + ")";
                 else
-                    txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 2).Replace("\r\n", "','") + "')";
+                    txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 2).Replace("\n", "','") + "')";
             }
 
             switch (sDatatype)
