@@ -47,8 +47,8 @@ namespace BMBH_View
             if (this.Request["__EVENTTARGET"] == updViews.ClientID) // search views
             {
                 string value = this.Request["__EVENTARGUMENT"];
-                if (value.Length > 0)
-                    SqlDataSource2.SelectCommand = "select r.ViewName, Permission, s.VIEW_CAPTION, s.PANEL_NAME from RoleViews r LEFT JOIN VIEW_SETTINGS s on s.VIEW_NAME = r.ViewName where r.RoleId = @RoleId and r.ViewName LIKE '%" + value + "%'";
+                if (value.Length > 0) // TODO: move to stored procedure
+                    SqlDataSource2.SelectCommand = "select r.ViewName, Permission, s.VIEW_CAPTION, s.PANEL_NAME, s.USE_LOOKUPS from RoleViews r LEFT JOIN VIEW_SETTINGS s on s.VIEW_NAME = r.ViewName where r.RoleId = @RoleId and r.ViewName LIKE '%" + value + "%'";
                 else
                     SqlDataSource2.SelectCommand = "EXEC GetPermittedViewsByRole @RoleId";
 
@@ -252,6 +252,22 @@ namespace BMBH_View
 
         protected void btnAddRole_Click(object sender, EventArgs e)
         {
+        }
+
+        // update lookup values for selected view
+        protected void btnUpdateLookups_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
+            string sView = row.Cells[0].Text;
+            SQLexecute("EXEC CreateLookups '" + sView + "'");
+        }
+
+        protected void chkUseLookups_CheckedChanged(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((CheckBox)sender).NamingContainer;
+            string sView = row.Cells[0].Text;
+            string sUseLookup = ((CheckBox)sender).Checked ? "1" : "0";
+            SQLexecute("update VIEW_SETTINGS set USE_LOOKUPS = " + sUseLookup + " where View_Name = '" + sView + "'");
         }
     }
 }

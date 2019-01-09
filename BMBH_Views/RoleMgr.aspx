@@ -79,11 +79,13 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
                     <asp:Button ID="btnShowView" runat="server" CssClass="btn btn-default btn-small" OnClick="btnShowView_Click" Text="Anzeigen" ToolTip="Suchformular öffnen"/>
                 </ItemTemplate>
             </asp:TemplateField>     
-            <asp:TemplateField HeaderText="Attributzähler">
+            <asp:TemplateField HeaderText="Attribute">
                 <ItemTemplate>
-                    <asp:Button ID="btnValueCnt" runat="server" CssClass="btn btn-default btn-small" OnClick="btnValueCnt_Click" Text="Aktualisieren" ToolTip="Attributanzahlen neu berechnen" />
+                    <asp:Button ID="btnValueCnt" runat="server" CssClass="btn btn-default btn-small" OnClick="btnValueCnt_Click" Text="Zähler aktualisieren" ToolTip="Anzahl der Vorkommnisse pro Attribut neu berechnen" />
+                    <asp:CheckBox ID="chkUseLookups" runat="server" Checked='<%# Eval("USE_LOOKUPS").ToString().Equals("True") %>' CssClass="chkChoice" AutoPostBack="True" OnCheckedChanged="chkUseLookups_CheckedChanged" Text="Lookup-Cache" ToolTip="Lookup-Cache verwenden"/>
+                    <asp:Button ID="btnUpdateLookups" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateLookups_Click" Text="Aktualisieren" ToolTip="Lookup-Cache aktualisieren" />
                 </ItemTemplate>
-            </asp:TemplateField>        
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Beschriftung">
                 <ItemTemplate>
                     <asp:TextBox ID="txtCaption" runat="server" Text='<%# Bind("VIEW_CAPTION") %>' Width="200px" />
