@@ -533,9 +533,9 @@ namespace BMBH_View
             if (cboOperator.SelectedValue == "IN" && cboControltype.SelectedValue == "TextBox") // handle copied lists from excel
             {
                 if(sDatatype.Contains("int") || sDatatype == "decimal" || sDatatype == "float" || sDatatype == "numeric" || sDatatype == "real" || sDatatype == "bit")
-                    txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 2).Replace("\n", ",") + ")";
+                    txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", ",") + ")";
                 else
-                    txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 2).Replace("\n", "','") + "')";
+                    txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
             }
 
             switch (sDatatype)
@@ -602,11 +602,11 @@ namespace BMBH_View
             EnableControls(row, false);
         }
 
-        public void GetFromClipboard(string sFieldId, string sDatatype)
-        { // call javascript function
-            ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "pasteContent('" + sFieldId + "','" + sDatatype + "'); ", true);
-            //Page.ClientScript.RegisterStartupScript(Page.GetType(), "pasteContent", "pasteContent()", true);
-        }
+        //public void GetFromClipboard(string sFieldId, string sDatatype)
+        //{ // call javascript function
+        //    ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "pasteContent('" + sFieldId + "','" + sDatatype + "'); ", true);
+        //    //Page.ClientScript.RegisterStartupScript(Page.GetType(), "pasteContent", "pasteContent()", true);
+        //}
 
         protected void btnEdit_Click(object sender, EventArgs e)
         {

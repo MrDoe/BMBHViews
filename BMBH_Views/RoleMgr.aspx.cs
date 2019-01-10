@@ -31,7 +31,7 @@ namespace BMBH_View
                 cboRole.SelectedValue = (string)Session["RoleId"];
             }
 
-            if (this.Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new user
+            if (this.Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new role
             {
                 SQLexecute("insert into Roles (RoleName) VALUES ('" + txtRoleName.Text.Trim() + "')");
                 Response.Redirect("RoleMgr.aspx");
@@ -259,7 +259,9 @@ namespace BMBH_View
         {
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sView = row.Cells[0].Text;
+            ScriptManager.RegisterClientScriptBlock((Page as Control), this.GetType(), "ShowHourglass", "document.body.style.cursor = 'progress';", true);
             SQLexecute("EXEC CreateLookups '" + sView + "'");
+            ScriptManager.RegisterClientScriptBlock((Page as Control), this.GetType(), "HideHourglass", "document.body.style.cursor = 'default';", true);
         }
 
         protected void chkUseLookups_CheckedChanged(object sender, EventArgs e)
