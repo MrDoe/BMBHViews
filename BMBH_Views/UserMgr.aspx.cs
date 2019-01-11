@@ -113,5 +113,17 @@ namespace BMBH_View
         protected void btnCancel_Click(object sender, EventArgs e)
         {
         }
+
+        protected void btnDeleteUser_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            GridViewRow row = (GridViewRow)btn.NamingContainer;
+            var sUserName = row.Cells[0].Text;
+            try
+            {
+                SQLexecute("delete from UserRoles where UserId='" + sUserName + "'");
+            }
+            catch (Exception ex) { }
+        }
     }
 }
