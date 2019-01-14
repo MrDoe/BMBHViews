@@ -80,7 +80,7 @@ order by USRNAM">
     </asp:SqlDataSource>
 <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select DEPT from V_STARLIMS_DEPT"></asp:SqlDataSource>
 
-<script src="Scripts/jquery-1.4.1.min.js" type="text/javascript"></script>
+<%--<script src="Scripts/jquery-1.4.1.min.js" type="text/javascript"></script>
 <script src="Scripts/ScrollableGridViewPlugin_ASP.NetAJAXmin.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -90,5 +90,5 @@ order by USRNAM">
         });
 
     });
-</script>
+</script>--%>
 </asp:Content>
