@@ -16,7 +16,8 @@ body {
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input {
     /*max-width: 480px;*/
-    /*position: center;*/
+    position: relative;
+    top: -1px;
     border: 1px solid rgb(96, 119, 165);
     border-radius: 5px;
     box-sizing: border-box;
