@@ -29,6 +29,7 @@ namespace BMBH_View
             if (!Page.IsPostBack) // on first load
             {
                 cboRole.SelectedValue = (string)Session["RoleId"];
+//                SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,''";
             }
 
             if (this.Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new role
@@ -44,16 +45,14 @@ namespace BMBH_View
                 //Response.Redirect("RoleMgr.aspx");
             }
 
-            if (this.Request["__EVENTTARGET"] == updViews.ClientID) // search views
+            if (this.Request["__EVENTTARGET"] == updViews.ClientID) // search views by filter textbox
             {
                 string value = this.Request["__EVENTARGUMENT"];
-                if (value.Length > 0) // TODO: move to stored procedure
-                    SqlDataSource2.SelectCommand = "select r.ViewName, Permission, s.VIEW_CAPTION, s.PANEL_NAME, s.USE_LOOKUPS from RoleViews r LEFT JOIN VIEW_SETTINGS s on s.VIEW_NAME = r.ViewName where r.RoleId = @RoleId and r.ViewName LIKE '%" + value + "%'";
-                else
-                    SqlDataSource2.SelectCommand = "EXEC GetPermittedViewsByRole @RoleId";
-
+                SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,'" + value + "'";
                 dgdViewPermissions.DataBind();
             }
+            else
+                SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,''";
         }
 
         private void SQLexecute_async(string sSQL)
@@ -186,6 +185,16 @@ namespace BMBH_View
             //Server.Transfer("RoleMgr.aspx");
         }
 
+        protected void btnOK_Sorter_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
+            string sSorter = ((TextBox)row.FindControl("txtSorter")).Text;
+            string sView = row.Cells[0].Text;
+
+            SQLexecute("UPDATE VIEW_SETTINGS SET SORTER=" + sSorter + " WHERE VIEW_NAME='" + sView + "'");
+            //Server.Transfer("RoleMgr.aspx");
+        }
+
         protected void cboPanel_SelectedIndexChanged(object sender, EventArgs e)
         {
             GridViewRow row = (GridViewRow)((DropDownList)sender).NamingContainer;
@@ -270,6 +279,14 @@ namespace BMBH_View
             string sView = row.Cells[0].Text;
             string sUseLookup = ((CheckBox)sender).Checked ? "1" : "0";
             SQLexecute("update VIEW_SETTINGS set USE_LOOKUPS = " + sUseLookup + " where View_Name = '" + sView + "'");
+        }
+
+        protected void btnDelView_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
+            string sView = row.Cells[0].Text;
+            SQLexecute("delete from RoleViews where ViewName='" + sView + "'");
+            dgdViewPermissions.DataBind();
         }
     }
 }

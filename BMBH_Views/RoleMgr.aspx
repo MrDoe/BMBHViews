@@ -69,6 +69,12 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
         <Columns>
             <asp:BoundField DataField="ViewName" HeaderText="View" ReadOnly="True" SortExpression="ViewName" />
+            <asp:TemplateField>
+                <ItemTemplate>
+                    <asp:Button ID="btnEditView" runat="server" CssClass="btn btn-default btn-small" Text="Bearbeiten" OnClick="btnEditView_Click" OnClientClick="scroll(0,0);"/>
+                    <asp:Button ID="btnDelView" runat="server" CssClass="btn btn-default btn-small" Text="Löschen" OnClick="btnDelView_Click" OnClientClick="return confirm('View wirklich löschen?');"/>
+                </ItemTemplate>
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Freigabe" SortExpression="Permission">
                 <ItemTemplate>
                     <asp:CheckBox ID="chkPermission" runat="server" Checked='<%# Eval("Permission").ToString().Equals("1") %>' AutoPostBack="True" OnCheckedChanged="chkPermission_CheckedChanged" />
@@ -79,28 +85,33 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
                     <asp:Button ID="btnShowView" runat="server" CssClass="btn btn-default btn-small" OnClick="btnShowView_Click" Text="Anzeigen" ToolTip="Suchformular öffnen"/>
                 </ItemTemplate>
             </asp:TemplateField>     
-            <asp:TemplateField HeaderText="Attribute">
+            <asp:TemplateField HeaderText="Attributzähler">
                 <ItemTemplate>
-                    <asp:Button ID="btnValueCnt" runat="server" CssClass="btn btn-default btn-small" OnClick="btnValueCnt_Click" Text="Zähler aktualisieren" ToolTip="Anzahl der Vorkommnisse pro Attribut neu berechnen" />
-                    <asp:CheckBox ID="chkUseLookups" runat="server" Checked='<%# Eval("USE_LOOKUPS").ToString().Equals("True") %>' CssClass="chkChoice" AutoPostBack="True" OnCheckedChanged="chkUseLookups_CheckedChanged" Text="Lookup-Cache" ToolTip="Lookup-Cache verwenden"/>
+                    <asp:Button ID="btnValueCnt" runat="server" CssClass="btn btn-default btn-small" OnClick="btnValueCnt_Click" Text="Aktualisieren" ToolTip="Anzahl der Vorkommnisse pro Attribut neu berechnen" />
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Lookup-Cache">
+                <ItemTemplate>
+                    <asp:CheckBox ID="chkUseLookups" runat="server" Checked='<%# Eval("USE_LOOKUPS").ToString().Equals("True") %>' CssClass="chkChoice" AutoPostBack="True" Text=" " OnCheckedChanged="chkUseLookups_CheckedChanged" ToolTip="Lookup-Cache für DropDowns verwenden"/>
                     <asp:Button ID="btnUpdateLookups" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateLookups_Click" Text="Aktualisieren" ToolTip="Lookup-Cache aktualisieren" />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Beschriftung">
                 <ItemTemplate>
                     <asp:TextBox ID="txtCaption" runat="server" Text='<%# Bind("VIEW_CAPTION") %>' Width="200px" />
+                    <asp:Button ID="btnOK" runat="server" CssClass="btn btn-default btn-small" OnClick="btnOK_Click" Text="OK" />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Panel">
                 <ItemTemplate>
                     <asp:DropDownList ID="cboPanel" runat="server" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="130px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged" DataSourceId="SqlDataSource3" DataValueField="PanelId" DataTextField="PanelId">
                     </asp:DropDownList>
-                    <asp:Button ID="btnOK" runat="server" CssClass="btn btn-default btn-small" OnClick="btnOK_Click" Text="OK" />
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField>
+            <asp:TemplateField HeaderText="Sortierer">
                 <ItemTemplate>
-                    <asp:Button ID="btnEditView" runat="server" CssClass="btn btn-default btn-small" Text="View bearbeiten" OnClick="btnEditView_Click" OnClientClick="scroll(0,0);"/>
+                    <asp:TextBox ID="txtSorter" runat="server" Text='<%# Bind("SORTER") %>' Width="50px" />
+                    <asp:Button ID="btnOKSorter" runat="server" CssClass="btn btn-default btn-small" OnClick="btnOK_Sorter_Click" Text="OK" />
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
@@ -132,7 +143,7 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
 
 <%--Data sources--%>
 <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
-<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetPermittedViewsByRole @RoleId">
+<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>">
 <SelectParameters>
     <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" />
 </SelectParameters>

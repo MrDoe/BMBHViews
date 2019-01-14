@@ -66,7 +66,7 @@
         </asp:TemplateField>
         <asp:TemplateField>
             <ItemTemplate>
-                <asp:Button ID="btnDeleteUser" runat="server" CssClass="btn btn-default btn-small" OnClick="btnDeleteUser_Click" Text="Rollenzuweisung löschen" Width="145px" />
+                <asp:Button ID="btnDeleteUser" runat="server" CssClass="btn btn-default btn-small" OnClick="btnDeleteUser_Click" OnClientClick="return confirm('Benutzer wirklich löschen?');" Text="Rollenzuweisung löschen" Width="145px" />
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>
