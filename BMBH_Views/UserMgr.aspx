@@ -64,6 +64,11 @@
             </ItemTemplate>
             <ControlStyle Width="190px" />
         </asp:TemplateField>
+        <asp:TemplateField>
+            <ItemTemplate>
+                <asp:Button ID="btnDeleteUser" runat="server" CssClass="btn btn-default btn-small" OnClick="btnDeleteUser_Click" OnClientClick="return confirm('Benutzer wirklich löschen?');" Text="Rollenzuweisung löschen" Width="145px" />
+            </ItemTemplate>
+        </asp:TemplateField>
     </Columns>
     <EditRowStyle BackColor="#999999" />
     <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />

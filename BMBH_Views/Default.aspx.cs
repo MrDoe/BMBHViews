@@ -9,7 +9,6 @@ using System.Collections;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
-using RestSharp;
 
 namespace BMBH_View
 {
@@ -41,10 +40,10 @@ namespace BMBH_View
 
     public partial class _Default : Page
     {
-        //private void ShowMsg(string message)
-        //{
-        //    Response.Write("<script>alert(\"" + message + "\");</script>");
-        //}
+        private void ShowMsg(string message)
+        {
+            Response.Write("<script>alert(\"" + message + "\");</script>");
+        }
 
         //// Show dataset contents (for debugging reasons)
         //private void ShowDataSet(DataSet ds)
@@ -152,7 +151,7 @@ namespace BMBH_View
                     pnl.CssClass = "inlineBlock";
                     Label lblHeading = new Label();
                     Label lblSubHeading = new Label();
-                    lblHeading.Text = "<h2>" + aPanels[i][1] + "</h2>";
+                    lblHeading.Text = "<h3>" + aPanels[i][1] + "</h3>";
                     pnl.Controls.Add(lblHeading);
                     lblSubHeading.Text = "<p>" + aPanels[i][2] + "</p>";
                     pnl.Controls.Add(lblSubHeading);

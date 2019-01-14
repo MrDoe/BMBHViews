@@ -184,6 +184,15 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.Table Table1;
         
         /// <summary>
+        /// updSearch-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updSearch;
+        
+        /// <summary>
         /// dgdSearch-Steuerelement
         /// </summary>
         /// <remarks>

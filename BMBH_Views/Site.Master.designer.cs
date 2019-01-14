@@ -40,6 +40,15 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.HyperLink lnkUserMan;
         
         /// <summary>
+        /// lblUserTxt-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblUserTxt;
+        
+        /// <summary>
         /// lblUserName-Steuerelement
         /// </summary>
         /// <remarks>

@@ -7,6 +7,10 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
+using ColorCode;
+using System.Text.RegularExpressions;
+using HtmlAgilityPack;
+using System.Text;
 
 namespace BMBH_View
 {
@@ -14,29 +18,41 @@ namespace BMBH_View
     {
         static string prevPage = String.Empty;
 
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack) // on first load
             {
                 cboRole.SelectedValue = (string)Session["RoleId"];
+//                SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,''";
             }
 
-            if (this.Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new user
+            if (this.Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new role
             {
                 SQLexecute("insert into Roles (RoleName) VALUES ('" + txtRoleName.Text.Trim() + "')");
                 Response.Redirect("RoleMgr.aspx");
             }
 
-            if (this.Request["__EVENTTARGET"] == updViews.ClientID) // search views
+            if (this.Request["__EVENTARGUMENT"] == "EditView_OK") // confirm edit view
+            {
+                string sViewDefinition = Server.UrlDecode(Base64Decode(HiddenField1.Value));
+                SQLexecute(GetTextOnly(sViewDefinition));
+                //Response.Redirect("RoleMgr.aspx");
+            }
+
+            if (this.Request["__EVENTTARGET"] == updViews.ClientID) // search views by filter textbox
             {
                 string value = this.Request["__EVENTARGUMENT"];
-                if (value.Length > 0)
-                    SqlDataSource2.SelectCommand = "select r.ViewName, Permission, s.VIEW_CAPTION, s.PANEL_NAME from RoleViews r LEFT JOIN VIEW_SETTINGS s on s.VIEW_NAME = r.ViewName where r.RoleId = @RoleId and r.ViewName LIKE '%" + value + "%'";
-                else
-                    SqlDataSource2.SelectCommand = "EXEC GetPermittedViewsByRole @RoleId";
-
+                SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,'" + value + "'";
                 dgdViewPermissions.DataBind();
             }
+            else
+                SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,''";
         }
 
         private void SQLexecute_async(string sSQL)
@@ -113,7 +129,6 @@ namespace BMBH_View
 
         private void ShowMsg(string message)
         {
-            //Response.Write("<script>alert(\"" + message + "\");</script>");
             message = "alert('" + message + "')";
             ScriptManager.RegisterClientScriptBlock((Page as Control), this.GetType(), "alert", message, true);
         }
@@ -127,11 +142,10 @@ namespace BMBH_View
 
             if (chk.Checked)
             {
-                //sSQL = "EXEC AddSearchForm @View='" + sViewName + "'";
-                //try { SQLexecute(sSQL); } catch (Exception ex) { }
-                
                 sSQL = "EXEC SetRolePermission " + cboRole.SelectedValue + ",'" + sViewName + "'";
                 try { SQLexecute(sSQL); } catch (Exception ex) { ShowMsg(ex.ToString());  }
+                sSQL = "EXEC SetRolePermission " + cboRole.SelectedValue + ",'" + sViewName + "'"; // hack to prevent from clicking two times
+                try { SQLexecute(sSQL); } catch (Exception ex) { ShowMsg(ex.ToString()); }
             }
             else
             {
@@ -150,16 +164,6 @@ namespace BMBH_View
             Response.Redirect("Search.aspx");
         }
 
-        protected void btnClearTemp_Click(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            GridViewRow row = (GridViewRow)btn.NamingContainer;
-            string sView = row.Cells[0].Text;
-            string sRoleId = cboRole.SelectedValue;
-            SQLexecute("EXEC RecreateSearchTable '" + sView + "'," + sRoleId);
-            ShowMsg("Die Suchtabelle wurde neu erstellt!");
-        }
-
         protected void btnValueCnt_Click(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
@@ -169,12 +173,26 @@ namespace BMBH_View
             ShowMsg("Die Werte wurden neu berechnet!");
         }
 
+        // OK button to confirm changes on button text and selected panel
         protected void btnOK_Click(object sender, EventArgs e)
         {
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sCaption = ((TextBox)row.FindControl("txtCaption")).Text;
             string sView = row.Cells[0].Text;
+            
             SQLexecute("EXEC AddViewToPanel '" + sView + "','" + sCaption + "'");
+            SQLexecute("EXEC AddViewToPanel '" + sView + "','" + sCaption + "'"); // hack to prevent from clicking two times
+            //Server.Transfer("RoleMgr.aspx");
+        }
+
+        protected void btnOK_Sorter_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
+            string sSorter = ((TextBox)row.FindControl("txtSorter")).Text;
+            string sView = row.Cells[0].Text;
+
+            SQLexecute("UPDATE VIEW_SETTINGS SET SORTER=" + sSorter + " WHERE VIEW_NAME='" + sView + "'");
+            //Server.Transfer("RoleMgr.aspx");
         }
 
         protected void cboPanel_SelectedIndexChanged(object sender, EventArgs e)
@@ -218,18 +236,57 @@ namespace BMBH_View
             string sView = row.Cells[0].Text;
             string sSQL = "SELECT OBJECT_DEFINITION (OBJECT_ID(N'" + sView + "'))";
             string sResult = SQLexecute_SingleResult(sSQL).Replace("\r\nCREATE", "ALTER").Replace("CREATE", "ALTER").Replace("Create", "ALTER");
-            txtViewDefinition.Text = sResult;
-            ShowMsg(sResult);
+            sResult = new CodeColorizer().Colorize(sResult, Languages.Sql);
+            sResult = sResult.Replace("<div style=\"color:Black;background-color:White;\">", "").Replace("</div>", "");
+            txtViewDefinition.InnerHtml = sResult;
+      
             MPE_EditView.Show();
+        }
+
+        public static string GetTextOnly(string sHTML)
+        {
+            string sHTML2 = HttpUtility.HtmlDecode(sHTML);
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(sHTML2);
+            return doc.DocumentNode.InnerText;
         }
 
         protected void btnConfirmEditView_Click(object sender, EventArgs e)
         {
-            SQLexecute(txtViewDefinition.Text);
+            //HiddenField1.Value = txtViewDefinition.InnerHtml;
+            //ShowMsg(txtViewDefinition.Text);
+            //ShowMsg(GetTextOnly(txtViewDefinition.Text));
+            //SQLexecute(GetTextOnly(txtViewDefinition.Text));
         }
 
         protected void btnAddRole_Click(object sender, EventArgs e)
         {
+        }
+
+        // update lookup values for selected view
+        protected void btnUpdateLookups_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
+            string sView = row.Cells[0].Text;
+            ScriptManager.RegisterClientScriptBlock((Page as Control), this.GetType(), "ShowHourglass", "document.body.style.cursor = 'progress';", true);
+            SQLexecute("EXEC CreateLookups '" + sView + "'");
+            ScriptManager.RegisterClientScriptBlock((Page as Control), this.GetType(), "HideHourglass", "document.body.style.cursor = 'default';", true);
+        }
+
+        protected void chkUseLookups_CheckedChanged(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((CheckBox)sender).NamingContainer;
+            string sView = row.Cells[0].Text;
+            string sUseLookup = ((CheckBox)sender).Checked ? "1" : "0";
+            SQLexecute("update VIEW_SETTINGS set USE_LOOKUPS = " + sUseLookup + " where View_Name = '" + sView + "'");
+        }
+
+        protected void btnDelView_Click(object sender, EventArgs e)
+        {
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
+            string sView = row.Cells[0].Text;
+            SQLexecute("delete from RoleViews where ViewName='" + sView + "'");
+            dgdViewPermissions.DataBind();
         }
     }
 }

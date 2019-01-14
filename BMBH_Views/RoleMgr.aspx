@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="Views- und Rollenverwaltung" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoleMgr.aspx.cs" Inherits="BMBH_View.UserMan" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+<asp:HiddenField ID="HiddenField1" runat="server" />
+
     <script type="text/javascript">
     function pageLoad() {
         var oInput = document.getElementById("<%=txtSearch.ClientID%>");
@@ -35,6 +37,17 @@
         if (UpdatePanel != null) 
             __doPostBack(UpdatePanel, sArgument);
     }
+
+    function CancelEditView() {
+    document.getElementById('MainContent_txtViewDefinition').value = '';
+    __doPostBack('<%= btnCancel.UniqueID%>', 'EditView_Cancel');
+        }
+
+    function ConfirmEditView() {
+        var hf = document.getElementById("<%= HiddenField1.ClientID%>");
+        hf.value = btoa(encodeURIComponent(document.getElementById('MainContent_txtViewDefinition').innerHTML));
+        __doPostBack('<%= btnConfirmEditView.UniqueID%>', 'EditView_OK');
+    }
     </script>
 
 <h4>Views- und Rollenverwaltung</h4>
@@ -44,7 +57,8 @@
 </asp:DropDownList> &nbsp;
 <asp:Button ID="btnAddRole" runat="server" CssClass="btn btn-default btn-small" OnClick="btnAddRole_Click" Text="Neue Rolle" />
 <AjaxControlToolkit:ModalPopupExtender ID="MPE_Role" runat="server" TargetControlID="btnAddRole" PopupControlID="pnlAddRole" PopupDragHandleControlID="pnlAddRoleHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
-<asp:Button ID="btnUpdateViews" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateViews_Click" Text="Views aktualisieren" /><br />
+<asp:Button ID="btnUpdateViews" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateViews_Click" Text="Views aktualisieren" />
+<br />
 <div style="padding:5px;">
 Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.value)" ClientIDMode="Static" AutoCompleteType="Disabled" CssClass="SearchBox"></asp:TextBox>
 </div>
@@ -55,6 +69,12 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
         <Columns>
             <asp:BoundField DataField="ViewName" HeaderText="View" ReadOnly="True" SortExpression="ViewName" />
+            <asp:TemplateField>
+                <ItemTemplate>
+                    <asp:Button ID="btnEditView" runat="server" CssClass="btn btn-default btn-small" Text="Bearbeiten" OnClick="btnEditView_Click" OnClientClick="scroll(0,0);"/>
+                    <asp:Button ID="btnDelView" runat="server" CssClass="btn btn-default btn-small" Text="Löschen" OnClick="btnDelView_Click" OnClientClick="return confirm('View wirklich löschen?');"/>
+                </ItemTemplate>
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Freigabe" SortExpression="Permission">
                 <ItemTemplate>
                     <asp:CheckBox ID="chkPermission" runat="server" Checked='<%# Eval("Permission").ToString().Equals("1") %>' AutoPostBack="True" OnCheckedChanged="chkPermission_CheckedChanged" />
@@ -64,32 +84,34 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
                 <ItemTemplate>
                     <asp:Button ID="btnShowView" runat="server" CssClass="btn btn-default btn-small" OnClick="btnShowView_Click" Text="Anzeigen" ToolTip="Suchformular öffnen"/>
                 </ItemTemplate>
-            </asp:TemplateField>
-            <asp:TemplateField>
-                <ItemTemplate>
-                    <asp:Button ID="btnClearTemp" runat="server" CssClass="btn btn-default btn-small" OnClick="btnClearTemp_Click" Text="Neu erstellen" ToolTip="Temp-Tabelle neu erstellen" />
-                </ItemTemplate>
-            </asp:TemplateField>        
+            </asp:TemplateField>     
             <asp:TemplateField HeaderText="Attributzähler">
                 <ItemTemplate>
-                    <asp:Button ID="btnValueCnt" runat="server" CssClass="btn btn-default btn-small" OnClick="btnValueCnt_Click" Text="Aktualisieren" ToolTip="Attributanzahlen neu berechnen" />
+                    <asp:Button ID="btnValueCnt" runat="server" CssClass="btn btn-default btn-small" OnClick="btnValueCnt_Click" Text="Aktualisieren" ToolTip="Anzahl der Vorkommnisse pro Attribut neu berechnen" />
                 </ItemTemplate>
-            </asp:TemplateField>        
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Lookup-Cache">
+                <ItemTemplate>
+                    <asp:CheckBox ID="chkUseLookups" runat="server" Checked='<%# Eval("USE_LOOKUPS").ToString().Equals("True") %>' CssClass="chkChoice" AutoPostBack="True" Text=" " OnCheckedChanged="chkUseLookups_CheckedChanged" ToolTip="Lookup-Cache für DropDowns verwenden"/>
+                    <asp:Button ID="btnUpdateLookups" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateLookups_Click" Text="Aktualisieren" ToolTip="Lookup-Cache aktualisieren" />
+                </ItemTemplate>
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Beschriftung">
                 <ItemTemplate>
                     <asp:TextBox ID="txtCaption" runat="server" Text='<%# Bind("VIEW_CAPTION") %>' Width="200px" />
+                    <asp:Button ID="btnOK" runat="server" CssClass="btn btn-default btn-small" OnClick="btnOK_Click" Text="OK" />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Panel">
                 <ItemTemplate>
-                    <asp:DropDownList ID="cboPanel" runat="server" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="121px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged" DataSourceId="SqlDataSource3" DataValueField="PanelId" DataTextField="PanelId">
+                    <asp:DropDownList ID="cboPanel" runat="server" Height="21px" SelectedValue='<%# Bind("PANEL_NAME") %>' Width="130px" OnSelectedIndexChanged="cboPanel_SelectedIndexChanged" DataSourceId="SqlDataSource3" DataValueField="PanelId" DataTextField="PanelId">
                     </asp:DropDownList>
-                    <asp:Button ID="btnOK" runat="server" CssClass="btn btn-default btn-small" OnClick="btnOK_Click" Text="OK" />
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Bearbeiten">
+            <asp:TemplateField HeaderText="Sortierer">
                 <ItemTemplate>
-                    <asp:Button ID="btnEditView" runat="server" CssClass="btn btn-default btn-small" Text="Bearbeiten" OnClick="btnEditView_Click" OnClientClick="scroll(0,0);"/>
+                    <asp:TextBox ID="txtSorter" runat="server" Text='<%# Bind("SORTER") %>' Width="50px" />
+                    <asp:Button ID="btnOKSorter" runat="server" CssClass="btn btn-default btn-small" OnClick="btnOK_Sorter_Click" Text="OK" />
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
@@ -110,18 +132,18 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
 <AjaxControlToolkit:ModalPopupExtender ID="MPE_EditView" runat="server" TargetControlID="lnkDummy" PopupControlID="pnlEditView" PopupDragHandleControlID="pnlEditViewHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID2"></AjaxControlToolkit:ModalPopupExtender>
 <asp:Panel ID="pnlEditView" runat="server" CssClass="modalPopupLarge modalPopup" align="center" style="display:none" TabIndex="0">
     <asp:Panel ID="pnlEditViewHeader" runat="server" CssClass="modalHeaderLarge modalHeader" HorizontalAlign="center" TabIndex="0">
-        View bearbeiten <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButtonLarge modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="__doPostBack('<%= btnCancel.UniqueID%>', 'EditView_Cancel');" />
+        View bearbeiten <asp:Button ID="btnCancel" runat="server" CssClass="modalHeaderButtonLarge modalHeaderButton" Text=" x " TabIndex="99" OnClick="btnCancel_Click" ClientIDMode="Static" OnClientClick="CancelEditView();" />
     </asp:Panel>
     View-Definition:<br />
-    <asp:TextBox ID="txtViewDefinition" TextMode="MultiLine" Width="998px" Height="620px" runat="server"></asp:TextBox>
-    <asp:Button ID="btnConfirmEditView" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="position:relative; left:910px; top:8px; padding:5px;" TabIndex="4" OnClick="btnConfirmEditView_Click"/>
+    <div id="txtViewDefinition" runat="server" contenteditable="true" class="txtViewDefinition"></div>
+    <asp:Button ID="btnConfirmEditView" runat="server" Text="Übernehmen" CssClass="btn btn-default btn-small" style="position:relative; left:910px; top:8px; padding:5px;" TabIndex="4" OnClick="btnConfirmEditView_Click" ClientIDMode="Static" OnClientClick="ConfirmEditView();"/>
 </asp:Panel>
 </ContentTemplate>
 </asp:UpdatePanel>
 
 <%--Data sources--%>
 <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
-<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetPermittedViewsByRole @RoleId">
+<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>">
 <SelectParameters>
     <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" />
 </SelectParameters>

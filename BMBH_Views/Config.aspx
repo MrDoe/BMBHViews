@@ -4,7 +4,7 @@
         <asp:Table ID="Table1" runat="server" Height="180px" Width="416px" CssClass="table" HorizontalAlign="Left">
             <asp:TableRow runat="server">
                 <asp:TableCell runat="server">
-                    <asp:ImageButton ID="btnUserConf" runat="server" AlternateText="UserConf" BorderColor="#EEEEEE" BorderStyle="Outset" BorderWidth="1px" Height="100px" ImageUrl="~/images/patienten.png" ToolTip="Benuterkonfiguration" OnClick="btnUserConf_Click"/>
+                    <asp:ImageButton ID="btnUserConf" runat="server" AlternateText="UserConf" BorderColor="#EEEEEE" BorderStyle="Outset" BorderWidth="1px" Height="100px" ImageUrl="~/images/patienten.png" ToolTip="Benutzerkonfiguration" OnClick="btnUserConf_Click"/>
                     Benutzer- und Rollenverwaltung   
                 </asp:TableCell>                
                 <asp:TableCell runat="server">

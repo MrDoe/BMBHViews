@@ -33,36 +33,43 @@
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
                 <%--Websiteskripts--%>
-                <asp:ScriptReference Path="~/Scripts/Clipboard.js" />
+                <asp:ScriptReference Path="~/Scripts/tools.js" />
                 <asp:ScriptReference Path="~/Scripts/jscolor.js" />
             </Scripts>
         </asp:ScriptManager>
-        <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <asp:HyperLink runat="server" ID="home" class="navbar-brand" NavigateURL="~/">
-                    <img style="position: relative; top:-11px; left: 0px; margin-bottom: 0px;" src="Images/bmbh_views_logo.png" alt="BMBH-Views-Logo"/>
-                </asp:HyperLink>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-menubuilder">
-                    <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="collapse navbar-collapse navbar-menubuilder">
-                <ul class="nav navbar-nav navbar-left">
-                    <li> <asp:HyperLink ID="lnkHelp" Text="Hilfe" NavigateURL="~/help" runat="server">Hilfe</asp:HyperLink> </li>
-                    <li> <asp:HyperLink ID="lnkUserMan" Text="Systemkonfiguration" NavigateURL="~/Config" runat="server">Systemkonfiguration</asp:HyperLink> </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li> <p class="nav navbar-text navbar-right">Benutzer: <asp:Label ID="lblUserName" runat="server" Text="Benutzername"></asp:Label>
-                        </p> </li>
-                </ul>
-            </div>
-          </div>
-        </div>
-        <div class="container body-content">
-            <asp:ContentPlaceHolder ID="MainContent" runat="server">
-            </asp:ContentPlaceHolder>
-        </div>
+
+
+<div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-expand-lg" style="width:100%;">
+<asp:HyperLink runat="server" ID="home" class="navbar-brand" NavigateURL="~/">
+    <img style="position: relative; top:-15px; left: 0px; margin-bottom: 0px;" src="Images/bmbh_views_logo.png" alt="BMBH-Views-Logo"/>
+</asp:HyperLink>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+          <span style="background:transparent !important; background-color:none !important;">
+            <asp:HyperLink ID="lnkHelp" Text="Hilfe" NavigateURL="~/help" runat="server" CssClass="nav-item">Hilfe</asp:HyperLink>
+          </span>
+      </li>
+      <li class="nav-item">
+        <p><asp:HyperLink ID="lnkUserMan" Text="Systemkonfiguration" NavigateURL="~/Config" runat="server" CssClass="nav-item">Systemkonfiguration</asp:HyperLink></p>
+      </li>
+    </ul>
+    <div class="navbar-nav navbar-right">
+        <asp:Label ID="lblUserTxt" runat="server" Text="Benutzer:" CssClass="nav-item"></asp:Label>
+        <asp:Label ID="lblUserName" runat="server" Text="Benutzername" CssClass="nav-item"></asp:Label>
+    </div>
+  </div>
+</nav>
+</div>
+
+    <div class="container body-content">
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
     </form>
 </body>
 </html>

@@ -88,6 +88,8 @@ namespace BMBH_View
 
                 // german date format
                 System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("de-DE");
+
+                Session["UseLookups"] = SQLexecute_SingleResult("select CAST(USE_LOOKUPS as Char(1)) from VIEW_SETTINGS where VIEW_NAME='" + Session["View"] + "'");
             }
 
             SetDataSource();
@@ -531,9 +533,9 @@ namespace BMBH_View
             if (cboOperator.SelectedValue == "IN" && cboControltype.SelectedValue == "TextBox") // handle copied lists from excel
             {
                 if(sDatatype.Contains("int") || sDatatype == "decimal" || sDatatype == "float" || sDatatype == "numeric" || sDatatype == "real" || sDatatype == "bit")
-                    txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 2).Replace("\r\n", ",") + ")";
+                    txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", ",") + ")";
                 else
-                    txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 2).Replace("\r\n", "','") + "')";
+                    txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
             }
 
             switch (sDatatype)
@@ -600,11 +602,11 @@ namespace BMBH_View
             EnableControls(row, false);
         }
 
-        public void GetFromClipboard(string sFieldId, string sDatatype)
-        { // call javascript function
-            ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "pasteContent('" + sFieldId + "','" + sDatatype + "'); ", true);
-            //Page.ClientScript.RegisterStartupScript(Page.GetType(), "pasteContent", "pasteContent()", true);
-        }
+        //public void GetFromClipboard(string sFieldId, string sDatatype)
+        //{ // call javascript function
+        //    ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "pasteContent('" + sFieldId + "','" + sDatatype + "'); ", true);
+        //    //Page.ClientScript.RegisterStartupScript(Page.GetType(), "pasteContent", "pasteContent()", true);
+        //}
 
         protected void btnEdit_Click(object sender, EventArgs e)
         {
@@ -619,7 +621,12 @@ namespace BMBH_View
         public DataTable GetCboData(string sCurrentField)
         {
             string sSQL;
-            sSQL = "exec('select null as TEXT union select distinct [" + sCurrentField + "] as TEXT from " + Session["View"] + " ORDER BY TEXT')";
+
+            if ((string)Session["UseLookups"] == "1")
+                sSQL = "exec('select null as TEXT union select VALUE as TEXT from LOOKUPS where ViewName=''" + Session["View"] + "'' and Attribute=''" + sCurrentField + "'' ORDER BY TEXT')";
+            else
+                sSQL = "exec('select null as TEXT union select distinct [" + sCurrentField + "] as TEXT from " + Session["View"] + " ORDER BY TEXT')";
+
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             using (var cmd = new SqlCommand(sSQL, conn))
             using (var adapter = new SqlDataAdapter(cmd))
@@ -659,7 +666,8 @@ namespace BMBH_View
             txtValue.Visible = false;
             btnCalFrom.Visible = false;
             btnCalTo.Visible = false;
-            lblFrom.Visible = false;
+            //lblFrom.Visible = false;
+            lblFrom.Text = " ";
             lblTo.Visible = false;
             txtCalFrom.Visible = false;
             txtCalTo.Visible = false;
@@ -815,6 +823,7 @@ namespace BMBH_View
                             case "IN":
                                 txtValue.Visible = true;
                                 txtValue.TextMode = TextBoxMode.MultiLine;
+                                txtValue.Height = 150;
                                 lblInsertValues.Visible = true;
                                 break;
 
@@ -836,6 +845,7 @@ namespace BMBH_View
                             default:
                                 txtValue.Visible = true;
                                 txtValue.TextMode = TextBoxMode.SingleLine;
+                                txtValue.Height = 25;
                                 break;
                         }
                     }

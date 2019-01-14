@@ -13,6 +13,15 @@ namespace BMBH_View {
     public partial class UserMan {
         
         /// <summary>
+        /// HiddenField1-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HiddenField1;
+        
+        /// <summary>
         /// pnlTop-Steuerelement
         /// </summary>
         /// <remarks>
@@ -136,7 +145,7 @@ namespace BMBH_View {
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtViewDefinition;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl txtViewDefinition;
         
         /// <summary>
         /// btnConfirmEditView-Steuerelement

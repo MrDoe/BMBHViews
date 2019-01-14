@@ -4,7 +4,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
 <h4>Suche in <%:Session["View"]%> </h4>
-    <asp:Panel ID="pnlMain" runat="server" EnableViewState="False" Height="1000px" Width="100%" style="top:4px; position:relative" >
+    <asp:Panel ID="pnlMain" runat="server" EnableViewState="False" Width="100%" style="top:4px; position:relative" >
         <asp:Button ID="btnSearch" runat="server" Text="Suche" CssClass="btn btn-default btn-small" EnableViewState="False" OnClick="btnSearch_Click" style="left:0px; position:relative; top:-2px; height:24px; width:60px" TabIndex="999" UseSubmitBehavior="False"/>
         &nbsp;<asp:ImageButton ID="btnPrevPage" runat="server" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateBackwards_6270.png" OnClick="btnPrevPage_Click" ToolTip="Vorherige Seite" style="left: 1px; top: 5px" TabIndex="3" AutoPostBack="true" />
         &nbsp;<asp:ImageButton ID="btnNextPage" runat="server" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateForward_6271.png" OnClick="btnNextPage_Click" ToolTip="Nächste Seite" style="left: 1px; top: 5px" TabIndex="4" AutoPostBack="true"/>
@@ -25,7 +25,7 @@
         </div>
 
         <asp:Panel ID="pnlGrid" runat="server" BorderColor="White" BorderStyle="Solid" BorderWidth="5px" Height="100%" HorizontalAlign="Center" ScrollBars="Both" Wrap="True" Width="100%">
-            <asp:GridView ID="dgdNCT" runat="server" AllowPaging="True" AllowSorting="True" BorderColor="Black" BorderStyle="Solid" BorderWidth="1px" CellPadding="4" Font-Names="Arial" Font-Size="8pt" ForeColor="#333333" PageSize="30" Height="100%" TabIndex="7" Width="100%" OnSorting="dgdNCT_Sorting" ViewStateMode="Inherit">
+            <asp:GridView ID="dgdNCT" runat="server" AllowPaging="True" AllowSorting="True" BorderColor="Black" BorderStyle="Solid" BorderWidth="1px" CellPadding="4" Font-Names="Arial" Font-Size="8pt" ForeColor="#333333" PageSize="30" Height="100%" TabIndex="7" Width="100%" OnSorting="dgdNCT_Sorting" ViewStateMode="Inherit" OnRowDataBound="dgdNCT_RowDataBound">
                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" HorizontalAlign="Left" VerticalAlign="Middle" Wrap="False" />
                 <EditRowStyle BackColor="#999999" />
                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -80,4 +80,15 @@ order by USRNAM">
     </asp:SqlDataSource>
 <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select DEPT from V_STARLIMS_DEPT"></asp:SqlDataSource>
 
+<script src="Scripts/jquery-1.4.1.min.js" type="text/javascript"></script>
+<script src="Scripts/ScrollableGridViewPlugin_ASP.NetAJAXmin.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#<%=dgdNCT.ClientID %>').Scrollable({
+            ScrollHeight: 500,
+            IsInUpdatePanel: false
+        });
+
+    });
+</script>
 </asp:Content>

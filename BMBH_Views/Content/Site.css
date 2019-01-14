@@ -1,8 +1,8 @@
 ﻿/* Move down content because we have a fixed navbar that is 50px tall */
 body {
     padding-top: 50px;
-    padding-bottom: 20px;
     width: 99%;
+    font-size: 0.9rem;
 }
 
 /* Wrapping element */
@@ -16,7 +16,7 @@ body {
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input {
     /*max-width: 480px;*/
-    position: center;
+    /*position: center;*/
     border: 1px solid rgb(96, 119, 165);
     border-radius: 5px;
     box-sizing: border-box;
@@ -29,7 +29,7 @@ textarea {
     border: 1px solid rgb(96, 119, 165);
     border-radius: 5px;
     box-shadow: 1px 1px 8px rgba(0,0,0,0.3);
-    box-sizing: border-box;
+    /*box-sizing: border-box;*/
     outline: none;
     padding: 5px;
 }
@@ -62,6 +62,7 @@ td {
 
 #custom-bootstrap-menu.navbar-default .navbar-brand {
     top: -50px;
+    float:left;
     color: rgb(0, 124, 158);
     height: 20px;
 }
@@ -73,14 +74,19 @@ td {
     background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
     border-width: 0px;
     border-radius: 6px;
+    height: 50px;
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    z-index: 999;
 }
 
-    #custom-bootstrap-menu.navbar-default .navbar-nav > li > a {
-        color: rgb(95, 160, 178);
-        background-color: rgb(150, 189, 200);
-        background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
-        background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
-    }
+#custom-bootstrap-menu.navbar-default .navbar-nav > li > a {
+    color: rgb(95, 160, 178);
+    background-color: rgb(150, 189, 200);
+    background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+    background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+}
 
         #custom-bootstrap-menu.navbar-default .navbar-nav > li > a:hover,
         #custom-bootstrap-menu.navbar-default .navbar-nav > li > a:focus {
@@ -156,6 +162,8 @@ td {
     padding: 5px 5px;
     border-width: 1px;
     border-style: outset;
+    border-color: rgb(220,240,255);
+    font-size: 14px;
 }
 
 .btn-default:hover,
@@ -167,12 +175,12 @@ td {
 .btn-small {
     background-color: rgb(245, 250, 255);
     position: relative;
+    left: -2px;
     top: 2px;
     padding: 2px 5px;
     margin: 0px;
     font-size: 9pt;
-    font-family: Arial;
-}
+} 
 
 .btn-small:hover,
 .btn.small:focus {
@@ -201,6 +209,7 @@ td {
     position: relative;
     left: 20px;
     padding-left: 5px;
+    padding-right: 20px;
     font-weight: normal;
 }
 
@@ -213,7 +222,6 @@ td {
     position: relative;
     left: -110px;
     top: -2px;
-    font-family: Arial;
     font-style: normal;
 }
 .btn-default {
@@ -385,4 +393,98 @@ td {
 .SearchBox::-webkit-search-results-button,
 .SearchBox::-webkit-search-results-decoration {
     display: none;
+}
+
+/*@media (min-width: 768px) {
+    .navbar-nav {
+        margin: 0 auto;
+        display: table;
+        table-layout: fixed;
+        float: left;
+    }*/
+/*}*/
+
+.nav-item {
+    background: transparent;
+    color:cadetblue !important;
+    padding-left: 10px;
+    padding-right: 10px;
+    top:5px;
+    position:relative;
+}
+
+.imagebutton {
+    padding: 3px;
+    top: 5px;
+    position: relative;
+    width: 24px !important;
+}
+
+.FixedHeader {
+    position: absolute;
+}     
+
+.navbar-right {
+    position: relative;
+    top: -5px;
+    left: 10px;
+
+}
+
+.ajax__html_editor_extender_texteditor {
+    resize: none;
+}
+.lblValue {
+    width: 20px !important;
+    display: inline-block;
+    text-align: left;
+}
+
+.txtValue {
+    padding: 3px;
+    margin-top: 3px;
+    margin-left: 30px;
+    width: 150px !important;
+    /*position: absolute;*/
+    /*top: 1px;*/
+    /*height: 35px;*/
+    /*padding: 2px;*/
+    /*margin: 2px;*/
+    /*display: block;*/
+}
+
+.txtValue2 {
+    padding: 3px;
+    margin-top: 13px;
+    margin-left: 10px;
+    width: 220px !important;
+}
+
+.DropDown {
+    position: relative;
+    top: 2px;
+    border-radius: 4px;
+    border-width: 1px;
+    padding-left: 2px;
+    min-width: 100px;
+    height: 20px;
+}
+
+.txtViewDefinition {
+    overflow: scroll;
+    resize: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightslategrey;
+    height: 620px;
+    padding: 5px;
+}
+
+pre {
+    overflow: visible;
+    pointer-events: none;
+}
+
+.navbar {
+    padding: 0px 10px;
 }
