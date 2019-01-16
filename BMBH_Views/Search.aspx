@@ -41,13 +41,13 @@
     &nbsp;<asp:Button ID="btnDeleteSearch" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" ClientIDMode="Static" OnClientClick="DeleteSearch('PostfromDelete');" Text="Löschen" Width="68px" />
     &nbsp;<asp:CheckBox ID="chkExpertMode" runat="server" AutoPostBack="True" OnCheckedChanged="chkExpertMode_CheckedChanged" Text="Expertenmodus" CssClass="chkChoice"/>
 </asp:Panel>
+
+    <asp:UpdatePanel runat="server" ID="updSearch">
+    <ContentTemplate>
     <asp:Table ID= "Table1" runat="server">
         <asp:TableRow>
             <asp:TableCell>
-
     <div style="box-shadow: 1px 2px 8px rgba(0,0,0,0.25);"> 
-    <asp:UpdatePanel runat="server" ID="updSearch">
-    <ContentTemplate>
     <asp:GridView ID="dgdSearch" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" DataKeyNames="ID" OnRowEditing="dgdSearch_RowEditing" OnRowDataBound="dgdSearch_RowDataBound" OnRowCommand="dgdSearch_RowCommand" OnRowCreated="dgdSearch_RowCreated" DataSourceID="dsSearch" Font-Names="Arial" Font-Size="Small">
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" Width="50%" Height="10px" />
         <Columns>
@@ -178,12 +178,10 @@
         <SortedDescendingCellStyle BackColor="#FFFDF8" />
         <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
     </asp:GridView>
-    </ContentTemplate>
-    </asp:UpdatePanel>
-
     </div>
-        </asp:TableCell>
-        <asp:TableCell>
+    </asp:TableCell>
+
+    <asp:TableCell>
     <div style="position:absolute; top:125px;">
         <asp:Panel ID="pnlSQLeditor" runat="server" Visible="false">
             SQL-Abfrageeditor:<br />
@@ -219,7 +217,11 @@
         </asp:Panel>
     </div>
         <%--<asp:TextBox ID="txtHistory" runat="server" TextMode="MultiLine" Wrap="true" Width="300" Height="500"></asp:TextBox>--%>
-        </asp:TableCell></asp:TableRow></asp:Table><asp:SqlDataSource ID="dsSearch" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" >
+        </asp:TableCell></asp:TableRow></asp:Table>
+    </ContentTemplate>
+    </asp:UpdatePanel>
+
+<asp:SqlDataSource ID="dsSearch" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" >
         <DeleteParameters>
             <asp:Parameter Name="ID" Type="Int32" />
         </DeleteParameters>
