@@ -13,6 +13,15 @@ namespace BMBH_View {
     public partial class Results {
         
         /// <summary>
+        /// updPage-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updPage;
+        
+        /// <summary>
         /// pnlMain-Steuerelement
         /// </summary>
         /// <remarks>
@@ -173,6 +182,15 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtListName;
+        
+        /// <summary>
+        /// updList-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updList;
         
         /// <summary>
         /// cboDept-Steuerelement

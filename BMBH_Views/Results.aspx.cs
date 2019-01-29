@@ -16,8 +16,7 @@ namespace BMBH_View
         {
             if (!Page.IsPostBack ||
                 this.Request["__EVENTARGUMENT"] == "PostFromList_Send" ||
-                this.Request["__EVENTARGUMENT"] == "PostFromList_Cancel" ||
-                this.Request["__EVENTARGUMENT"] == "PostFromDeptChange")
+                this.Request["__EVENTARGUMENT"] == "PostFromList_Cancel")
             {
                 if (this.Request["__EVENTARGUMENT"] == "PostFromList_Send")
                     btnSendList_Click(sender, e);
@@ -26,25 +25,23 @@ namespace BMBH_View
                     dgdNCT.DataSource = GetData();
                 else
                     dgdNCT.DataSource = Session["MainTable"] as DataTable;
-
                 dgdNCT.DataBind();
-                
+
                 // set page count
                 Session["MaxPage"] = dgdNCT.PageCount;
                 txtMaxPage.Text = dgdNCT.PageCount.ToString();
-                
+
                 // set default button for submit action
                 pnlMain.DefaultButton = btnRefresh.UniqueID;
-                
+
                 // adapt scrollbars to window size
                 ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "SetScrollBars(); ", true);
-                //ScriptManager.RegisterStartupScript(Page, this.GetType(), "Key", "<script>MakeStaticHeader('" + dgdNCT.ClientID + "', 600, 1200 , 28 ,false); </script>", false);
             }
         }
          
         private void ShowMsg(string message)
         {
-            Response.Write("<script>alert(\"" + message + "\");</script>");
+            ScriptManager.RegisterClientScriptBlock((Page as Control), this.GetType(), "alert", "alert('" + message + "');", true);
         }
 
         public DataTable GetData()
@@ -216,8 +213,8 @@ namespace BMBH_View
 
         protected void cboDept_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string sNewDept = ((DropDownList)sender).SelectedValue;
-            Session["UserDept"] = sNewDept;
+            Session["UserDept"] = cboDept.SelectedValue;
+            //cboSLuser.DataBind();
             MPE.Show();
         }
 
@@ -274,73 +271,6 @@ namespace BMBH_View
                 con.Dispose();
             }
         }
-
-        // example for sending datagrid via table variable
-        //
-        //private static DataTable CreateDataTable(IEnumerable<int> ids)
-        //{
-        //    DataTable table = new DataTable();
-        //    table.Columns.Add("nID", typeof(int));
-        //    foreach (int id in ids)
-        //    {
-        //        table.Rows.Add(id);
-        //    }
-        //    return table;
-        //}
-        //private static void ExecuteProcedure(bool useDataTable,
-        //                             string connectionString,
-        //                             IEnumerable<int> ids,
-        //                             string sCartName,
-        //                             string sUserName)
-        //{
-        //    using (SqlConnection connection = new SqlConnection(connectionString))
-        //    {
-        //        connection.Open();
-        //        using (SqlCommand command = connection.CreateCommand())
-        //        {
-        //            command.CommandText = "BMBH_VIEWS.dbo.CreateSTARLIMScart";
-        //            command.CommandType = CommandType.StoredProcedure;
-
-        //            SqlParameter parameter1;
-        //            parameter1 = command.Parameters.AddWithValue("@CartName", sCartName);
-        //            parameter1.SqlDbType = SqlDbType.NVarChar;
-
-        //            SqlParameter parameter2;
-        //            parameter2 = command.Parameters.AddWithValue("@UserName", sUserName);
-        //            parameter2.SqlDbType = SqlDbType.NVarChar;
-
-        //            SqlParameter parameter3;
-        //            if (useDataTable)
-        //            {
-        //                parameter3 = command.Parameters.AddWithValue("@Inventory", CreateDataTable(ids));
-        //            }
-        //            else
-        //            {
-        //                parameter3 = command.Parameters.AddWithValue("@Inventory", CreateSqlDataRecords(ids));
-        //            }
-        //            parameter3.SqlDbType = SqlDbType.Structured;
-        //            parameter3.TypeName = "dbo.IDType";
-
-        //            command.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
-        //private static IEnumerable<SqlDataRecord> CreateSqlDataRecords(IEnumerable<int> ids)
-        //{
-        //    SqlMetaData[] metaData = new SqlMetaData[1];
-        //    metaData[0] = new SqlMetaData("nID", SqlDbType.Int);
-        //    SqlDataRecord record = new SqlDataRecord(metaData);
-        //    foreach (int id in ids)
-        //    {
-        //        record.SetInt32(0, id);
-        //        yield return record;
-        //    }
-        //}
-        //private IEnumerable<int> GetAllIDs()
-        //{
-        //    DataTable dt = GetData();
-        //    return dt.AsEnumerable().Select(x => x.Field<int>("ID"));
-        //}
 
         protected void btnSendList_Click(object sender, EventArgs e)
         {

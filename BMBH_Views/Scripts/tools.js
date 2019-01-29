@@ -85,14 +85,15 @@ $(document).ready(function () {
 
 $(document).on("load", $(window).bind("resize", SetScrollBars));
 
-function DeptChange() {
-    var value = $("#cboDept option:selected").val();
-    if (value == "")
-        return false;
-    else {
-        __doPostBack(value, 'PostFromDeptChange');
-    }
-}
+//function DeptChange() {
+//    var value = $("#cboDept option:selected").val();
+//    if (value == "")
+//        return false;
+//    else {
+//        __doPostBack(value, 'PostFromDeptChange');
+//        //__doPostBack('<%=updList.ClientID %>', 'PostFromDeptChange');
+//    }
+//}
 
 function colorChanged(sender) {
     sender.get_element().style.color = "#" + sender.get_selectedColor();
