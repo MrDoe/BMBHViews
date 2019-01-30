@@ -6,12 +6,12 @@
 <div style="display:block;float:left;">
     <h4>Suche in <%:Session["View"]%></h4>
 </div>
-<div style="display:block;float:right;z-index:-1">
-    <asp:ImageButton ID="btnList" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/script_(add)_32.png" BorderColor="#E2E2E2" ToolTip="Als STARLIMS-Liste speichern" style="left:-14px; top:5px;" TabIndex="9" AutoPostBack="true"/>
+<div style="display:block;float:right;position:relative;top:5px;">
+    <asp:ImageButton ID="btnList" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/script_(add)_32.png" BorderColor="#E2E2E2" ToolTip="Als STARLIMS-Liste speichern" style="left:-17px; top:5px;" TabIndex="9" AutoPostBack="true"/>
     <AjaxControlToolkit:ModalPopupExtender ID="MPE" runat="server" TargetControlID="btnList" PopupControlID="pnlList" PopupDragHandleControlID="pnlListHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
     <asp:ImageButton ID="btnExcel" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/Excel-icon.png" OnClick="btnExcel_Click" BorderColor="#E2E2E2" ToolTip="Excel-Export" style="left:-14px; top:5px;" EnableViewState="False" TabIndex="10"/>
-</div><br /><br />
-    <asp:Panel ID="pnlMain" runat="server" EnableViewState="False" Width="100%" style="top:4px; position:relative" >
+</div><br /><br>
+    <asp:Panel ID="pnlMain" runat="server" EnableViewState="False" Width="100%" style="top:4px; position:relative;" >
 <asp:UpdatePanel ID="updPage" runat="server" UpdateMode="Conditional">
 <ContentTemplate>
         <asp:Button ID="btnSearch" runat="server" Text="Suche" CssClass="btn btn-default btn-small" EnableViewState="False" OnClick="btnSearch_Click" style="left:0px; position:relative; top:-2px; height:24px; width:60px" TabIndex="999" UseSubmitBehavior="False"/>
