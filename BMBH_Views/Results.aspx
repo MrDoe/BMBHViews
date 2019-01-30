@@ -3,10 +3,17 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
-<h4>Suche in <%:Session["View"]%> </h4>
+<div style="display:block;float:left;">
+    <h4>Suche in <%:Session["View"]%></h4>
+</div>
+<div style="display:block;float:right;z-index:-1">
+    <asp:ImageButton ID="btnList" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/script_(add)_32.png" BorderColor="#E2E2E2" ToolTip="Als STARLIMS-Liste speichern" style="left:-14px; top:5px;" TabIndex="9" AutoPostBack="true"/>
+    <AjaxControlToolkit:ModalPopupExtender ID="MPE" runat="server" TargetControlID="btnList" PopupControlID="pnlList" PopupDragHandleControlID="pnlListHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
+    <asp:ImageButton ID="btnExcel" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/Excel-icon.png" OnClick="btnExcel_Click" BorderColor="#E2E2E2" ToolTip="Excel-Export" style="left:-14px; top:5px;" EnableViewState="False" TabIndex="10"/>
+</div><br /><br />
+    <asp:Panel ID="pnlMain" runat="server" EnableViewState="False" Width="100%" style="top:4px; position:relative" >
 <asp:UpdatePanel ID="updPage" runat="server" UpdateMode="Conditional">
 <ContentTemplate>
-    <asp:Panel ID="pnlMain" runat="server" EnableViewState="False" Width="100%" style="top:4px; position:relative" >
         <asp:Button ID="btnSearch" runat="server" Text="Suche" CssClass="btn btn-default btn-small" EnableViewState="False" OnClick="btnSearch_Click" style="left:0px; position:relative; top:-2px; height:24px; width:60px" TabIndex="999" UseSubmitBehavior="False"/>
         &nbsp;<asp:ImageButton ID="btnPrevPage" runat="server" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateBackwards_6270.png" OnClick="btnPrevPage_Click" ToolTip="Vorherige Seite" style="left: 1px; top: 5px" TabIndex="3" AutoPostBack="true" />
         &nbsp;<asp:ImageButton ID="btnNextPage" runat="server" BackColor="#EAF5F8" BorderColor="#E2E2E2" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/NavigateForward_6271.png" OnClick="btnNextPage_Click" ToolTip="Nächste Seite" style="left: 1px; top: 5px" TabIndex="4" AutoPostBack="true"/>
@@ -20,12 +27,6 @@
         &nbsp; # Datensätze:
         <asp:TextBox ID="txtTotalRows" runat="server" Width="63px" TabIndex="8"></asp:TextBox>
 
-        <div style="display:block;float:right">
-            <asp:ImageButton ID="btnList" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/script_(add)_32.png" BorderColor="#E2E2E2" ToolTip="Als STARLIMS-Liste speichern" style="left:-14px; top:5px;" TabIndex="9" AutoPostBack="true"/>
-            <AjaxControlToolkit:ModalPopupExtender ID="MPE" runat="server" TargetControlID="btnList" PopupControlID="pnlList" PopupDragHandleControlID="pnlListHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
-            <asp:ImageButton ID="btnExcel" runat="server" BackColor="#EAF5F8" BorderStyle="Outset" BorderWidth="1px" CssClass="btn-info" Height="24px" ImageUrl="~/Images/Excel-icon.png" OnClick="btnExcel_Click" BorderColor="#E2E2E2" ToolTip="Excel-Export" style="left:-14px; top:5px;" EnableViewState="False" TabIndex="10"/>
-        </div>
-
         <asp:Panel ID="pnlGrid" runat="server" BorderColor="White" BorderStyle="Solid" BorderWidth="5px" Height="100%" HorizontalAlign="Center" ScrollBars="Both" Wrap="True" Width="100%">
             <asp:GridView ID="dgdNCT" runat="server" AllowPaging="True" AllowSorting="True" BorderColor="Black" BorderStyle="Solid" BorderWidth="1px" CellPadding="4" Font-Names="Arial" Font-Size="8pt" ForeColor="#333333" PageSize="30" Height="100%" TabIndex="7" Width="100%" OnSorting="dgdNCT_Sorting" ViewStateMode="Enabled" OnRowDataBound="dgdNCT_RowDataBound">
                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" HorizontalAlign="Left" VerticalAlign="Middle" Wrap="False" />
@@ -38,9 +39,9 @@
                 <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
             </asp:GridView>
         </asp:Panel>
-    </asp:Panel>
 </ContentTemplate>
 </asp:UpdatePanel>
+    </asp:Panel>
 
 <asp:Panel ID="pnlList" runat="server" CssClass="modalPopup" align="center" style="display:none;height:205px;" TabIndex="0">
 <asp:Panel ID="pnlListHeader" runat="server" CssClass="modalHeader" HorizontalAlign="center" TabIndex="0">

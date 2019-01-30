@@ -13,13 +13,31 @@ namespace BMBH_View {
     public partial class Results {
         
         /// <summary>
-        /// updPage-Steuerelement
+        /// btnList-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updPage;
+        protected global::System.Web.UI.WebControls.ImageButton btnList;
+        
+        /// <summary>
+        /// MPE-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::AjaxControlToolkit.ModalPopupExtender MPE;
+        
+        /// <summary>
+        /// btnExcel-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnExcel;
         
         /// <summary>
         /// pnlMain-Steuerelement
@@ -29,6 +47,15 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlMain;
+        
+        /// <summary>
+        /// updPage-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updPage;
         
         /// <summary>
         /// btnSearch-Steuerelement
@@ -101,33 +128,6 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtTotalRows;
-        
-        /// <summary>
-        /// btnList-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnList;
-        
-        /// <summary>
-        /// MPE-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::AjaxControlToolkit.ModalPopupExtender MPE;
-        
-        /// <summary>
-        /// btnExcel-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnExcel;
         
         /// <summary>
         /// pnlGrid-Steuerelement
