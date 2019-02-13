@@ -934,7 +934,7 @@ namespace BMBH_View
                 HashSet<string> DateTimeCols = new HashSet<string>();
                 foreach (GridViewRow row in dgdSearch.Rows)
                 {
-                    string sDatatype = row.Cells[5].Text;
+                    string sDatatype = row.Cells[6].Text;
                     string sColumnName = row.Cells[2].Text;
 
                     if (sDatatype =="date")
