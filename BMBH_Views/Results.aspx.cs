@@ -119,6 +119,7 @@ namespace BMBH_View
             Session["CurrentPage"] = dgdNCT.PageIndex + 1;
             Session["MaxPage"] = dgdNCT.PageCount;
             txtMaxPage.Text = dgdNCT.PageCount.ToString();
+            ScriptManager.RegisterStartupScript(Page, typeof(Page), "SetScrollBars", "SetScrollBars()", true);
         }
 
         protected void btnRefresh_Click(object sender, EventArgs e)

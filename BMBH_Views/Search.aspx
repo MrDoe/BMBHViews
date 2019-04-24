@@ -148,7 +148,7 @@
 					<asp:Button ID="btnCopyRow" runat="server" CssClass="btn btn-default btn-small" Text="Zeile kopieren" OnClick="btnCopyRow_Click" />
 				</edititemtemplate>
 			    <ItemTemplate>
-                    <asp:Button ID="btnEdit" runat="server" CssClass="btn btn-default btn-small" commandname="Edit" Text="Ändern" OnClick="btnEdit_Click"/>
+                    <asp:Button ID="btnEdit" runat="server" CssClass="btn btn-default btn-small" commandname="Edit" Text="Ändern" />
                 </ItemTemplate>
             <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
 			</asp:Templatefield>

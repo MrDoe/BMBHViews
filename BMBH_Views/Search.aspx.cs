@@ -319,6 +319,10 @@ namespace BMBH_View
 
                         switch (sOperator)
                         {
+                            case "≠":
+                                sOperator = "<>";
+                                break;
+                            
                             case "IN":
                                 sWhere += "v.[" + sAttribute + "] IN " + sValue;
                                 break;
@@ -584,14 +588,6 @@ namespace BMBH_View
                         txtValue.Text = "";
                 break;
             }
-
-            btnNew.Enabled = true;
-            btnSubmit.Enabled = true;
-            btnLoadSearch.Enabled = true;
-            btnSaveSearch.Enabled = true;
-            btnDeleteSearch.Enabled = true;
-            cboSaveSearch.Enabled = true;
-
             GenerateSQL(false);
         }
 
@@ -600,22 +596,6 @@ namespace BMBH_View
             DropDownList cboOperator = (DropDownList)sender;
             GridViewRow row = (GridViewRow)cboOperator.NamingContainer;
             EnableControls(row, false);
-        }
-
-        //public void GetFromClipboard(string sFieldId, string sDatatype)
-        //{ // call javascript function
-        //    ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "pasteContent('" + sFieldId + "','" + sDatatype + "'); ", true);
-        //    //Page.ClientScript.RegisterStartupScript(Page.GetType(), "pasteContent", "pasteContent()", true);
-        //}
-
-        protected void btnEdit_Click(object sender, EventArgs e)
-        {
-            btnNew.Enabled = false;
-            btnSubmit.Enabled = false;
-            btnLoadSearch.Enabled = false;
-            btnSaveSearch.Enabled = false;
-            btnDeleteSearch.Enabled = false;
-            cboSaveSearch.Enabled = false;
         }
 
         public DataTable GetCboData(string sCurrentField)
@@ -1148,14 +1128,6 @@ namespace BMBH_View
                         if (prevSender != null)
                         {
                             btnOK_Click(prevSender, e);
-
-                            // disable control buttons
-                            btnSubmit.Enabled = false;
-                            btnSaveSearch.Enabled = false;
-                            btnLoadSearch.Enabled = false;
-                            btnDeleteSearch.Enabled = false;
-                            cboSaveSearch.Enabled = false;
-
                             dgdSearch.UpdateRow(prevIndex, false);
                         }
                     }
@@ -1174,7 +1146,7 @@ namespace BMBH_View
             {
                 pnlSQLeditor.Visible = false;
             }
-            
+
             // column visibility is set in dgdSearch_RowCreated() event
             dgdSearch.DataBind();
         }
