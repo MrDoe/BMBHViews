@@ -126,6 +126,9 @@
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.DirectoryServices.Protocols" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DataVisualization" />
@@ -312,6 +315,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="SysConf.aspx" />
     <Content Include="UserMgr.aspx" />
     <Content Include="Search.aspx" />
     <Content Include="Results.aspx" />
@@ -408,6 +412,13 @@
     </Compile>
     <Compile Include="Panels.aspx.designer.cs">
       <DependentUpon>Panels.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SysConf.aspx.cs">
+      <DependentUpon>SysConf.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SysConf.aspx.designer.cs">
+      <DependentUpon>SysConf.aspx</DependentUpon>
     </Compile>
     <Compile Include="UserMgr.aspx.cs">
       <DependentUpon>UserMgr.aspx</DependentUpon>

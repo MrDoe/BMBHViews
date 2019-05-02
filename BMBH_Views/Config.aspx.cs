@@ -27,5 +27,10 @@ namespace BMBH_View
         {
             //Response.Redirect("");
         }
+
+        protected void btnSysConf_Click(object sender, ImageClickEventArgs e)
+        {
+            Response.Redirect("SysConf.aspx");
+        }
     }
 }

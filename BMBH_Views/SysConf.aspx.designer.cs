@@ -10,51 +10,33 @@
 namespace BMBH_View {
     
     
-    public partial class Config {
+    public partial class SysConf {
         
         /// <summary>
-        /// Table1-Steuerelement
+        /// dgdSysConf-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table Table1;
+        protected global::System.Web.UI.WebControls.GridView dgdSysConf;
         
         /// <summary>
-        /// btnSysConf-Steuerelement
+        /// SqlDataSource1-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnSysConf;
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
         
         /// <summary>
-        /// btnUserConf-Steuerelement
+        /// btnSendEmail-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnUserConf;
-        
-        /// <summary>
-        /// btnPanelConf-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnPanelConf;
-        
-        /// <summary>
-        /// btnDiagConf-Steuerelement
-        /// </summary>
-        /// <remarks>
-        /// Automatisch generiertes Feld
-        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnDiagConf;
+        protected global::System.Web.UI.WebControls.Button btnSendEmail;
     }
 }

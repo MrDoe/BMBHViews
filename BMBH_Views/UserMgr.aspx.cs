@@ -20,10 +20,14 @@ namespace BMBH_View
 
             if (this.Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new user
             {
-                SQLexecute("EXEC AddNewUser '" + txtUserName.Text.Trim() + "'");
+                string sUsername = txtUserName.Text.Trim();
+                SQLexecute("EXEC AddNewUser '" + sUsername + "'");
+                string eMail = (this.Master as SiteMaster).GetEmailFromUser(sUsername);
+                (this.Master as SiteMaster).SendEmail(eMail, "Sehr geehrter Nutzer,\n\nIhr Benutzerkonto wurde für das Datawarehouse BMBH-Views freigeschaltet.\nSie können sich im Klinikumsnetz unter http://pat03/views mit Ihrem Windows-Benutzernamen und Passwort anmelden.\n\nMit freundlichen Grüßen\n\nIhr BMBH-IT Team", "BMBH-Views Account-Freischaltung");
+
                 Response.Redirect("UserMgr.aspx");
             }
-            if (this.Request["__EVENTTARGET"] == updUsers.ClientID) // add new user
+            if (this.Request["__EVENTTARGET"] == updUsers.ClientID)
             {
                 string value = this.Request["__EVENTARGUMENT"];
 
