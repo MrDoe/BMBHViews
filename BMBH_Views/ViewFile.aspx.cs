@@ -22,7 +22,7 @@ namespace BMBH_View
 
             ScriptManager.RegisterStartupScript(this, this.GetType(), "redirect",
             "alert('" + message + "'); window.location='" +
-            sPath + "default';", true);
+            sPath + "';", true);
         }
 
         public void OpenFile_(string fileName)

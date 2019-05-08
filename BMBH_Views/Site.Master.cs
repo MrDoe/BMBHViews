@@ -19,7 +19,7 @@ namespace BMBH_View
             if (Session["UserName"] != null)
                 lblUserName.Text = (String)Session["UserName"];
             else
-                Response.Redirect("default.aspx");
+                Response.Redirect("~/");
 
             if ((Boolean)Session["IsAdmin"] == true)
                 lnkUserMan.Visible = true;

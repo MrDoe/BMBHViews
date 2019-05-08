@@ -129,7 +129,7 @@ namespace BMBH_View
                 dgdSearch.DataBind();
             }
             else
-                Response.Redirect("default.aspx");
+                Response.Redirect("~/");
         }
 
         private void SQLexecute(string sSQL)

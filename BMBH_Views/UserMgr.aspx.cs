@@ -93,7 +93,7 @@ namespace BMBH_View
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
             Session["UserName"] = row.Cells[0].Text;
-            Response.Redirect("Default.aspx");
+            Response.Redirect("~/");
         }
 
         protected void chkPatientSearch_CheckedChanged(object sender, EventArgs e)
