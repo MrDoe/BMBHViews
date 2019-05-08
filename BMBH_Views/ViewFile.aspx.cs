@@ -15,9 +15,14 @@ namespace BMBH_View
         }
         private void ShowMsg(string message)
         {
+            string sPath = Request.ApplicationPath;
+
+            if (sPath[sPath.Length - 1] != '/') // append '/' if missing
+                sPath += "/";
+
             ScriptManager.RegisterStartupScript(this, this.GetType(), "redirect",
             "alert('" + message + "'); window.location='" +
-            Request.ApplicationPath + "default.aspx';", true);
+            sPath + "default';", true);
         }
 
         public void OpenFile_(string fileName)
