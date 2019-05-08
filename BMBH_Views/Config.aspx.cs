@@ -32,5 +32,10 @@ namespace BMBH_View
         {
             Response.Redirect("SysConf.aspx");
         }
+
+        protected void btnDocConf_Click(object sender, ImageClickEventArgs e)
+        {
+            Response.Redirect("Docs.aspx");
+        }
     }
 }

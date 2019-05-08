@@ -55,7 +55,9 @@
           </span>
       </li>
       <li class="nav-item">
-        <p>&nbsp;<asp:HyperLink ID="lnkUserMan" Text="Systemkonfiguration" NavigateURL="~/Config" runat="server" CssClass="nav-item">Systemkonfiguration</asp:HyperLink></p>
+        <p>&nbsp;<asp:HyperLink ID="lnkUserMan" Text="Systemkonfiguration" NavigateURL="~/Config" runat="server" CssClass="nav-item">Systemkonfiguration</asp:HyperLink>
+           <%--&nbsp;<asp:HyperLink ID="lnkDocs" Text="Dokumentenverwaltung" NavigateURL="~/Docs" runat="server" CssClass="nav-item">Dokumentenverwaltung</asp:HyperLink>--%>
+        </p>
       </li>
     </ul>
     <div class="navbar-nav navbar-right">

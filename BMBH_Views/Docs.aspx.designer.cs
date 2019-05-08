@@ -10,60 +10,69 @@
 namespace BMBH_View {
     
     
-    public partial class Config {
+    public partial class Documents {
         
         /// <summary>
-        /// Table1-Steuerelement
+        /// updatePanelAttachments-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table Table1;
+        protected global::System.Web.UI.UpdatePanel updatePanelAttachments;
         
         /// <summary>
-        /// btnSysConf-Steuerelement
+        /// cboRole-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnSysConf;
+        protected global::System.Web.UI.WebControls.DropDownList cboRole;
         
         /// <summary>
-        /// btnUserConf-Steuerelement
+        /// SqlDataSource2-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnUserConf;
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource2;
         
         /// <summary>
-        /// btnPanelConf-Steuerelement
+        /// dgdDocs-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnPanelConf;
+        protected global::System.Web.UI.WebControls.GridView dgdDocs;
         
         /// <summary>
-        /// btnDocConf-Steuerelement
+        /// SqlDataSource1-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnDocConf;
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
         
         /// <summary>
-        /// btnDiagConf-Steuerelement
+        /// AjaxFileUpload1-Steuerelement
         /// </summary>
         /// <remarks>
         /// Automatisch generiertes Feld
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnDiagConf;
+        protected global::AjaxControlToolkit.AjaxFileUpload AjaxFileUpload1;
+        
+        /// <summary>
+        /// btnHiddenSubmit-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnHiddenSubmit;
     }
 }

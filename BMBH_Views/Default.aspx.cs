@@ -9,6 +9,8 @@ using System.Collections;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Drawing;
+//using System.Net;
 
 namespace BMBH_View
 {
@@ -115,6 +117,27 @@ namespace BMBH_View
             }
         }
 
+        public String[][] GetDocPermissions()
+        {
+            string sUser = (string)Session["UserName"];
+            DataSet ds = new DataSet("Permissions");
+
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand("GetPermittedDocs", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@User", sUser);
+                SqlDataAdapter da = new SqlDataAdapter();
+                da.SelectCommand = cmd;
+                da.Fill(ds);
+
+                if (ds.Tables[0].Rows.Count > 0)
+                    return StringArray3(ds);
+                else
+                    return null;
+            }
+        }
+
         public String[][] GetPanels()
         {
             DataSet ds = new DataSet("Panels");
@@ -134,79 +157,155 @@ namespace BMBH_View
             }
         }
 
-        protected Panel GeneratePanel(string sPanelId, String[][] aPanels)
+        protected Panel GeneratePanel(string sPanelId, String[][] aProperties)
         {
-            for (int i = 0; i < aPanels.Length; ++i)
+            for (int i = 0; i < aProperties.Length; ++i)
             {
-                if(sPanelId == aPanels[i][0])
+                if(sPanelId == aProperties[i][0])
                 {
                     Panel pnl = new Panel();
                     pnl.ID = sPanelId;
-                    pnl.BackColor = System.Drawing.ColorTranslator.FromHtml(aPanels[i][3]);
-                    pnl.ForeColor = System.Drawing.ColorTranslator.FromHtml(aPanels[i][4]);
-                    pnl.BorderColor = System.Drawing.ColorTranslator.FromHtml(aPanels[i][5]);
-                    pnl.Height = Convert.ToInt32(aPanels[i][6]);
-                    pnl.Width = Convert.ToInt32(aPanels[i][7]);
+                    
+                    // set color, size and style
+                    pnl.BackColor = System.Drawing.ColorTranslator.FromHtml(aProperties[i][3]);
+                    pnl.ForeColor = System.Drawing.ColorTranslator.FromHtml(aProperties[i][4]);
+                    pnl.BorderColor = System.Drawing.ColorTranslator.FromHtml(aProperties[i][5]);
+                    pnl.Height = Convert.ToInt32(aProperties[i][6]);
+                    pnl.Width = Convert.ToInt32(aProperties[i][7]);
                     pnl.BorderWidth = 3;
                     pnl.CssClass = "inlineBlock";
+                    
+                    // add heading
                     Label lblHeading = new Label();
-                    Label lblSubHeading = new Label();
-                    lblHeading.Text = "<h3>" + aPanels[i][1] + "</h3>";
+                    lblHeading.Text = "<h3>" + aProperties[i][1] + "</h3>";
                     pnl.Controls.Add(lblHeading);
-                    lblSubHeading.Text = "<p>" + aPanels[i][2] + "</p>";
-                    pnl.Controls.Add(lblSubHeading);
 
-                    if (aPanels[i][9] == "True") // show patient search button
+                    // add tab container
+                    AjaxControlToolkit.TabContainer tcPnl = new AjaxControlToolkit.TabContainer();
+
+                    // add first page (views panel)
+                    Panel pnlViews = new Panel();
+                    pnlViews.ID = sPanelId + "_views";
+
+                    // add subheading
+                    Label lblSubHeading = new Label();
+                    lblSubHeading.Text = "<p>" + aProperties[i][2] + "</p>";
+                    lblSubHeading.ID = sPanelId + "_sub";
+                    pnlViews.Controls.Add(lblSubHeading);
+
+                    // create views tab page
+                    AjaxControlToolkit.TabPanel tpViews = new AjaxControlToolkit.TabPanel();
+                    tpViews.HeaderText = "Views";
+                    tpViews.ForeColor = System.Drawing.Color.Black;
+
+                    // create empty documents tab page
+                    AjaxControlToolkit.TabPanel tpDocs = new AjaxControlToolkit.TabPanel();
+                    tpDocs.HeaderText = "Dokumente";
+                    Panel pnlDocuments = new Panel();
+                    pnlDocuments.ID = sPanelId + "_docs";
+
+                    // add subheading for documents (fixed)
+                    Label lblDocSubHeading = new Label();
+                    lblDocSubHeading.Text = "<p>Dokumente:</p>";
+                    lblDocSubHeading.ID = sPanelId + "_docsub";
+                    pnlDocuments.Controls.Add(lblDocSubHeading);
+
+                    // add panels to tabs & tabs to tab control
+                    tpDocs.Controls.Add(pnlDocuments);
+                    tpViews.Controls.Add(pnlViews);
+                    tcPnl.Tabs.Add(tpViews);
+                    tcPnl.Tabs.Add(tpDocs);
+                    tcPnl.ActiveTabIndex = 0;
+                    pnl.Controls.Add(tcPnl);
+
+                    if (aProperties[i][9] == "True") // show patient search button
                     {
                         Button btn = new Button();
-                        btn.ID = "btn_" + aPanels[i][0];
+                        btn.ID = "btn_" + aProperties[i][0];
                         btn.BackColor = System.Drawing.ColorTranslator.FromHtml("#EDFDFE");
                         btn.CssClass = "btn btn-default";
                         btn.Height = 34;
                         btn.Width = 170;
                         btn.Text = "Patientensuche »";
                         btn.Click += new EventHandler(btnPatientSearch_Click);
+                        pnl.Controls.Add(new LiteralControl("<br />"));
                         pnl.Controls.Add(btn);
                     }
-
-                    pnlContainer.Controls.Add(pnl);
                     return pnl;
                 }
             }
             return null;
         }
 
-        protected void GenerateButton(string sView, string sCaption, Panel pnl)
+        protected void GenerateButton(string sView, string sCaption, Panel pnl, bool bIsDocButton)
         {
-            pnl.Visible = true;
-            if (pnl.Parent.GetType().Equals(typeof(Panel)))
-                pnl.Parent.Visible = true;
-
             Button btnNew = new Button();
-            btnNew.ID = "btn" + sView;
-            btnNew.Text = sCaption + " » ";
+            pnl.Visible = true;
+            
             btnNew.ControlStyle.CssClass = "btn btn-default";
-            btnNew.ToolTip = sView;
             btnNew.Click += new EventHandler(btnGeneric_Click);
+
+            if (!bIsDocButton)
+            {
+                if (pnl.Parent.GetType().Equals(typeof(Panel))) // button in nested panel -> show parent panel
+                    pnl.Parent.Visible = true;
+
+                btnNew.ID = "btn" + sView;
+                btnNew.ToolTip = "Suche in View \"" + sView + "\" starten";
+                btnNew.Attributes.Add("VIEWNAME", sView);
+                btnNew.Text = sCaption + " » ";
+            }
+            else
+            {
+                btnNew.ID = "btnDoc" + sView;
+                btnNew.ToolTip = "Dokument \"" + sView + "\" öffnen";
+                btnNew.Attributes.Add("DOCNAME", sView);
+                btnNew.Attributes.Add("DOCPATH", sCaption);
+                btnNew.Text = sView + " » ";
+            }
+
             if (btnNew.Text.Length < 25)
                 btnNew.Width = 170;
+
             pnl.Controls.Add(btnNew);
         }
 
-        protected void GenerateControls(String[][] aUserPerm, String[][] aPanels)
+        protected void GenerateControls(String[][] aViewPerm, String[][] aDocPerm, String[][] aPanels)
         {
-            if (aUserPerm.Length > 0)
+            if (aViewPerm.Length > 0) // generate main panel and tabs
             {
-                for (int i = 0; i < aUserPerm.Length; ++i)
+                for (int i = 0; i < aViewPerm.Length; ++i)
                 {
-                    if (aUserPerm[i][2].Length > 0)
+                    if (aViewPerm[i][2].Length > 0)
                     {
-                        Panel pnl = (Panel)Utils.FindAnyControl(Page, aUserPerm[i][2]);
-                        if(pnl == null)
-                            pnl = GeneratePanel(aUserPerm[i][2], aPanels);
-                        if (pnl != null)
+                        Panel pnlDept = (Panel)Utils.FindAnyControl(Page, aViewPerm[i][2]);
+                        if (pnlDept == null) 
                         {
-                            GenerateButton(aUserPerm[i][0], aUserPerm[i][1], pnl);
+                            // create main panel for department
+                            pnlDept = GeneratePanel(aViewPerm[i][2], aPanels);
+                            pnlContainer.Controls.Add(pnlDept);
+                        }
+
+                        Panel pnlViews = (Panel)Utils.FindAnyControl(Page, aViewPerm[i][2] + "_views");
+                        if (pnlViews != null) // populate views panel with buttons
+                        {
+                            GenerateButton(aViewPerm[i][0], aViewPerm[i][1], pnlViews, false);
+                        }
+                    }
+                }
+            }
+
+            if (aDocPerm != null) // populate documents panel with buttons
+            {
+                for (int i = 0; i < aDocPerm.Length; ++i)
+                {
+                    if (aDocPerm[i][2].Length > 0)
+                    {
+                        Panel pnlDocs = (Panel)Utils.FindAnyControl(Page, aDocPerm[i][2] + "_docs");
+
+                        if (pnlDocs != null)
+                        {
+                            GenerateButton(aDocPerm[i][1], aDocPerm[i][0], pnlDocs, true);
                         }
                     }
                 }
@@ -297,20 +396,26 @@ namespace BMBH_View
 
             String[][] aUserPerm = GetUserPermissions();
             String[][] aPanels = GetPanels();
-            GenerateControls(aUserPerm, aPanels);
-        }
-
-        protected void btnDZIFupload_Click(object sender, EventArgs e)
-        {
+            String[][] aDocPerm = GetDocPermissions();
+            GenerateControls(aUserPerm, aDocPerm, aPanels);
         }
 
         protected void btnGeneric_Click(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
-            Session["View"] = btn.ToolTip;
-            Session["FormTable"] = Session["View"] + "_Search";
-            Session["FormView"] = Session["View"] + "_SearchForm";
-            Response.Redirect("Search.aspx");
+            if (btn.Attributes["VIEWNAME"] != null)
+            {
+                Session["View"] = btn.Attributes["VIEWNAME"];
+                Session["FormTable"] = Session["View"] + "_Search";
+                Session["FormView"] = Session["View"] + "_SearchForm";
+                Response.Redirect("Search.aspx");
+            }
+            if (btn.Attributes["DOCNAME"] != null)
+            {
+                string fileName = btn.Attributes["DOCPATH"];
+                Session["FilePath"] = fileName;
+                Response.Redirect("ViewFile.aspx");
+            }
         }
 
         protected void btnDiagram_Click(object sender, EventArgs e)

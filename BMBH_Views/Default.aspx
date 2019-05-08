@@ -7,6 +7,6 @@
     <img src="Images/bmbh_views2_550.png"/>
 </div>
 <div style="position:relative;top:-10px">
-<asp:Panel ID="pnlContainer" runat="server"></asp:Panel>
+    <asp:Panel ID="pnlContainer" runat="server"></asp:Panel>
 </div>
 </asp:Content>

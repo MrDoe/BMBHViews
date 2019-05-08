@@ -69,9 +69,6 @@
     <Reference Include="AjaxControlToolkit.HtmlEditor.Sanitizer, Version=18.1.1.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
       <HintPath>..\packages\AjaxControlToolkit.HtmlEditor.Sanitizer.18.1.1\lib\net40\AjaxControlToolkit.HtmlEditor.Sanitizer.dll</HintPath>
     </Reference>
-    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="AspNet.ScriptManager.bootstrap, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AspNet.ScriptManager.bootstrap.4.1.1\lib\net45\AspNet.ScriptManager.bootstrap.dll</HintPath>
     </Reference>
@@ -185,6 +182,7 @@
     <Content Include="Content\jscolor\hv.png" />
     <Content Include="Content\Site.css" />
     <Content Include="DiagramView.aspx" />
+    <Content Include="Docs.aspx" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Help.aspx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -192,6 +190,9 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Default.aspx" />
+    <Content Include="Images\document.png" />
+    <Content Include="Images\button_add.png" />
+    <Content Include="Images\down_16x16.gif" />
     <Content Include="Images\favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Images\add_16x16.gif" />
@@ -265,6 +266,7 @@
     <Content Include="Images\table_cell_alignment_16x16.gif" />
     <Content Include="Images\table_merge_cells_16x16.gif" />
     <Content Include="Images\table_split_cells_16x16.gif" />
+    <Content Include="Images\view_16x16.gif" />
     <Content Include="Images\workstation-Vista-icon.png" />
     <Content Include="MultipleSearch.aspx" />
     <Content Include="Panels.aspx" />
@@ -350,6 +352,7 @@
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
     <Content Include="RoleMgr.aspx" />
+    <Content Include="ViewFile.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -380,6 +383,13 @@
     </Compile>
     <Compile Include="DiagramView.aspx.designer.cs">
       <DependentUpon>DiagramView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Docs.aspx.cs">
+      <DependentUpon>Docs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Docs.aspx.designer.cs">
+      <DependentUpon>Docs.aspx</DependentUpon>
     </Compile>
     <Compile Include="Help.aspx.cs">
       <DependentUpon>Help.aspx</DependentUpon>
@@ -462,6 +472,13 @@
     </Compile>
     <Compile Include="RoleMgr.aspx.designer.cs">
       <DependentUpon>RoleMgr.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewFile.aspx.cs">
+      <DependentUpon>ViewFile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewFile.aspx.designer.cs">
+      <DependentUpon>ViewFile.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
