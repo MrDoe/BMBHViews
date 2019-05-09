@@ -272,7 +272,7 @@ namespace BMBH_View
 
         protected void GenerateControls(String[][] aViewPerm, String[][] aDocPerm, String[][] aPanels)
         {
-            if (aViewPerm.Length > 0) // generate main panel and tabs
+            if (aViewPerm != null) // generate main panel and tabs
             {
                 for (int i = 0; i < aViewPerm.Length; ++i)
                 {
