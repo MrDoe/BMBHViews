@@ -42,6 +42,7 @@
             <asp:BoundField DataField="FilePath" HeaderText="DateiPfad" ReadOnly="True" SortExpression="FilePath" />
             <asp:BoundField DataField="FileName" HeaderText="Dateiname" ReadOnly="True" SortExpression="FileName" />
             <asp:BoundField DataField="FileType" HeaderText="Dateityp" ReadOnly="True" SortExpression="FileType" />
+            <asp:BoundField DataField="Version" HeaderText="Version" />
             <asp:BoundField DataField="Timestamp" HeaderText="Zeitstempel" ReadOnly="True" SortExpression="Timestamp" />
             <asp:TemplateField HeaderText="Panel">
                 <EditItemTemplate>
@@ -77,14 +78,15 @@
     </asp:GridView>
     <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" 
                        DeleteCommand="DELETE FROM [Documents] WHERE [DocID] = @DocID" 
-                       SelectCommand="SELECT d.DocId,rd.Permission,d.FileName,d.FilePath,d.FileType,d.ShortName,d.Description,d.Timestamp,d.PanelId,d.Sorter
+                       SelectCommand="SELECT d.DocId,rd.Permission,d.FileName,d.FilePath,d.FileType,d.ShortName,d.Description,d.Timestamp,d.PanelId,d.Sorter,d.Version
                                       FROM [BMBH_Views].[dbo].[Documents] d 
                                       JOIN [BMBH_Views].[dbo].[RoleDocs] rd on rd.DocId = d.DocID
                                       WHERE rd.RoleId = @RoleId" 
                        UpdateCommand="UPDATE [Documents] SET [Description] = @Description, 
                                                              [ShortName] = @ShortName, 
                                                              [PanelId] = @PanelId,
-                                                             [Sorter] = @Sorter
+                                                             [Sorter] = @Sorter,
+                                                             [Version] = @Version
                                       WHERE [DocID] = @DocID">
         <DeleteParameters>
             <asp:Parameter Name="DocID" Type="Int32" />
