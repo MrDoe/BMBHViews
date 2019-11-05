@@ -39,10 +39,12 @@ namespace BMBH_View
             return parent.FindControl(controlId);
         }
     }
-
+    
     public partial class _Default : Page
     {
-        private void ShowMsg(string message)
+        bool bAllowPatientSearch { get; set; } = false;
+
+        private void ShowMsg(string message) 
         {
             Response.Write("<script>alert(\"" + message + "\");</script>");
         }
@@ -218,22 +220,16 @@ namespace BMBH_View
                     tcPnl.ActiveTabIndex = 0;
                     pnl.Controls.Add(tcPnl);
 
-                    if (aProperties[i][9] == "True") // show patient search button
+                    if (bAllowPatientSearch) // show patient search button
                     {
-                        Button btn = new Button();
-                        btn.ID = "btn_" + aProperties[i][0];
-                        btn.BackColor = System.Drawing.ColorTranslator.FromHtml("#EDFDFE");
-                        btn.CssClass = "btn btn-default";
-                        btn.Height = 34;
-                        btn.Width = 170;
-                        btn.Text = "Patientensuche »";
-                        btn.Click += new EventHandler(btnPatientSearch_Click);
+
                         pnl.Controls.Add(new LiteralControl("<br />"));
-                        pnl.Controls.Add(btn);
+                        pnl.Controls.Add(addPatienteSearchBtn("btn_" + aProperties[i][0]));
                     }
                     return pnl;
                 }
             }
+           
             return null;
         }
 
@@ -270,6 +266,21 @@ namespace BMBH_View
             pnl.Controls.Add(btnNew);
         }
 
+        private Button addPatienteSearchBtn(string id)
+        {
+           
+                Button btn = new Button();
+                btn.ID = id;
+                btn.BackColor = System.Drawing.ColorTranslator.FromHtml("#EDFDFE");
+                btn.CssClass = "btn btn-default";
+                btn.Height = 34;
+                btn.Width = 170;
+                btn.Text = "Patientensuche »";
+                btn.Click += new EventHandler(btnPatientSearch_Click);
+            return btn;
+            
+        }
+
         protected void GenerateControls(String[][] aViewPerm, String[][] aDocPerm, String[][] aPanels)
         {
             if (aViewPerm != null) // generate main panel and tabs
@@ -292,6 +303,7 @@ namespace BMBH_View
                             GenerateButton(aViewPerm[i][0], aViewPerm[i][1], pnlViews, false);
                         }
                     }
+                   
                 }
             }
 
@@ -309,6 +321,16 @@ namespace BMBH_View
                         }
                     }
                 }
+            }
+
+            if(aDocPerm== null && aViewPerm == null)
+            {
+                
+                if (bAllowPatientSearch) // show patient search button
+                {
+                    pnlContainer.Controls.Add(addPatienteSearchBtn("btn_MEDV"));
+                }
+                
             }
         }
 
@@ -366,6 +388,8 @@ namespace BMBH_View
             // get user role
             string sRoleId = SQLexecute_SingleResult("select RoleId from UserRoles where UserId = '" + sRealUserName + "'");
             Session["RoleId"] = sRoleId;
+
+            bAllowPatientSearch = (SQLexecute_SingleResult("select AllowPatientSearch from UserRoles where UserId = '" + sRealUserName + "'") == "Y");
 
             if (sRoleId == "1")
                 Session["IsAdmin"] = true;
@@ -425,6 +449,8 @@ namespace BMBH_View
 
         protected void btnPatientSearch_Click(object sender, EventArgs e)
         {
+
+            ShowMsg(((Button)sender).ID);
             if (((Button)sender).ID == "btn_pnlTBB")
                 Session["OE"] = "NCT-Gewebebank";
             else if (((Button)sender).ID == "btn_pnlPraevOnk")
@@ -433,13 +459,21 @@ namespace BMBH_View
                 Session["OE"] = "Präv. Onkologie";
             else if (((Button)sender).ID == "btn_pnlPanco")
                 Session["OE"] = "PancoBank-EPZ";
-            else if (((Button)sender).ID == "btn_pnlMedV")
+            else if (((Button)sender).ID == "btn_MEDV")
+            {
+               
                 Session["OE"] = "Med. Klinik V";
+            }
             else if (((Button)sender).ID == "btn_pnlGyn")
                 Session["OE"] = "Frauenklinik";
             else
+            {
+                ShowMsg(((Button)sender).ID);
                 return;
-
+            }
+               
+               
+            
             Response.Redirect("MultipleSearch.aspx");
         }
     }

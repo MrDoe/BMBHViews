@@ -23,7 +23,7 @@ namespace BMBH_View
                 string sUsername = txtUserName.Text.Trim();
                 SQLexecute("EXEC AddNewUser '" + sUsername + "'");
                 string eMail = (this.Master as SiteMaster).GetEmailFromUser(sUsername);
-                (this.Master as SiteMaster).SendEmail(eMail, "Sehr geehrter Nutzer,\n\nIhr Benutzerkonto wurde für das Datawarehouse BMBH-Views freigeschaltet.\nSie können sich im Klinikumsnetz unter http://pat03/views mit Ihrem Windows-Benutzernamen und Passwort anmelden.\n\nMit freundlichen Grüßen\n\nIhr BMBH-IT Team", "BMBH-Views Account-Freischaltung");
+                (this.Master as SiteMaster).SendEmail(eMail, "Sehr geehrter Nutzer,\n\nIhr Benutzerkonto wurde für das Datawarehouse BMBH-Views freigeschaltet.\nSie können sich im Klinikumsnetz unter http://med5-haedwh01 mit Ihrem Windows-Benutzernamen und Passwort anmelden.\n\nMit freundlichen Grüßen\n\nIhr BMBH-IT Team", "BMBH-Views Account-Freischaltung");
 
                 Response.Redirect("UserMgr.aspx");
             }
