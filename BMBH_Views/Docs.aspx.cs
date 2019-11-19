@@ -7,6 +7,10 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
+using System.IO;
+using System.Text;
 
 namespace BMBH_View
 {
@@ -106,6 +110,37 @@ namespace BMBH_View
             string sPermission = chkPermission.Checked ? "1" : "0";
 
             SQLexecute("EXEC SetDocPermission " + sRoleId + "," + sDocId + "," + sPermission);
+        }
+
+        public string ReadPdfFile(string fileName)
+        {
+            string text = "";
+
+            if (File.Exists(fileName))
+            {
+                PdfReader pdfReader = new PdfReader(fileName);
+                FdfWriter fdfWriter = new FdfWriter();
+                AcroFields pdfFormFields = pdfReader.AcroFields;
+                pdfFormFields.ExportAsFdf(fdfWriter);
+                Dictionary<string, object> ff = fdfWriter.GetFields();
+                pdfReader.Close();
+
+                foreach (var field in ff)
+                {
+                    text += field.Key + "  :  " + field.Value + "\n";
+                }
+            }
+            return text;
+        }
+
+        protected void btnPDF_Click(object sender, ImageClickEventArgs e)
+        {
+            ImageButton btnPDF = (ImageButton)sender;
+            GridViewRow row = (GridViewRow)btnPDF.NamingContainer;
+            string sFileName = row.Cells[6].Text;
+            sFileName = Server.MapPath(sFileName);
+            string sContent = ReadPdfFile(sFileName);
+            txtResult.Text = sContent;
         }
     }
 }

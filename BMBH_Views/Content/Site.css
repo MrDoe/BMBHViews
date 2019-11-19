@@ -23,7 +23,9 @@ input {
     box-sizing: border-box;
     outline: none;
     padding: 3px;
-    /*padding-left: 5px;*/
+    left: -2px;
+    height: 29px;
+    width: 92px;
 }
 
 textarea {

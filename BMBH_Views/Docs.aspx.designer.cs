@@ -49,6 +49,24 @@ namespace BMBH_View {
         protected global::System.Web.UI.WebControls.GridView dgdDocs;
         
         /// <summary>
+        /// GridView1-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridView1;
+        
+        /// <summary>
+        /// txtResult-Steuerelement
+        /// </summary>
+        /// <remarks>
+        /// Automatisch generiertes Feld
+        /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtResult;
+        
+        /// <summary>
         /// SqlDataSource1-Steuerelement
         /// </summary>
         /// <remarks>
