@@ -1,16 +1,15 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die
 // Assemblyinformationen zu ändern.
-[assembly: AssemblyTitle("BMBH_View")]
+[assembly: AssemblyTitle("BMBHviews")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KHD")]
-[assembly: AssemblyProduct("BMBH_View")]
-[assembly: AssemblyCopyright("Copyright © KHD 2017")]
+[assembly: AssemblyProduct("BMBHviews")]
+[assembly: AssemblyCopyright("Copyright © KHD 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

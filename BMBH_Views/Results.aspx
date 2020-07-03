@@ -1,4 +1,4 @@
-﻿<%@ Page Title="BMBH-Views - Tabellenansicht" Language="C#" EnableEventValidation="false" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Results.aspx.cs" Inherits="BMBH_View.Results" %>
+﻿<%@ Page Title="BMBH_Views - Tabellenansicht" Language="C#" EnableEventValidation="false" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Results.aspx.cs" Inherits="BMBHviews.Results" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">

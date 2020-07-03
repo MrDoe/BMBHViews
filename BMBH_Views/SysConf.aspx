@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SysConf.aspx.cs" Inherits="BMBH_View.SysConf" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SysConf.aspx.cs" Inherits="BMBHviews.SysConf" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <h4>Systemkonfiguration</h4>
     <asp:GridView ID="dgdSysConf" runat="server" AllowSorting="True" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="ORIGREC" DataSourceID="SqlDataSource1" ForeColor="#333333" >

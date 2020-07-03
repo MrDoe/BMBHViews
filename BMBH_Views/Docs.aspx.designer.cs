@@ -7,11 +7,13 @@
 // </automatisch generiert>
 //------------------------------------------------------------------------------
 
-namespace BMBH_View {
-    
-    
-    public partial class Documents {
-        
+namespace BMBHviews
+{
+
+
+    public partial class ViewDocument
+    {
+
         /// <summary>
         /// updatePanelAttachments-Steuerelement
         /// </summary>
@@ -20,7 +22,7 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updatePanelAttachments;
-        
+
         /// <summary>
         /// cboRole-Steuerelement
         /// </summary>
@@ -29,7 +31,7 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList cboRole;
-        
+
         /// <summary>
         /// SqlDataSource2-Steuerelement
         /// </summary>
@@ -38,7 +40,7 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource2;
-        
+
         /// <summary>
         /// dgdDocs-Steuerelement
         /// </summary>
@@ -47,7 +49,7 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView dgdDocs;
-        
+
         /// <summary>
         /// GridView1-Steuerelement
         /// </summary>
@@ -56,7 +58,7 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GridView1;
-        
+
         /// <summary>
         /// txtResult-Steuerelement
         /// </summary>
@@ -65,7 +67,7 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtResult;
-        
+
         /// <summary>
         /// SqlDataSource1-Steuerelement
         /// </summary>
@@ -74,7 +76,7 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
-        
+
         /// <summary>
         /// AjaxFileUpload1-Steuerelement
         /// </summary>
@@ -83,7 +85,7 @@ namespace BMBH_View {
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::AjaxControlToolkit.AjaxFileUpload AjaxFileUpload1;
-        
+
         /// <summary>
         /// btnHiddenSubmit-Steuerelement
         /// </summary>

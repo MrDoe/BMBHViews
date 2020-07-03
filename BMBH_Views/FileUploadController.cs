@@ -8,12 +8,11 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 
-namespace BMBH_View
+namespace BMBHviews
 {
     public class FileUploadController : ApiController
     {
-
-        List<UploadedFile> files = new List<UploadedFile>();
+        private readonly List<UploadedFile> files = new List<UploadedFile>();
         private int fileCounter = 0;
 
         //// GET api/<controller>
@@ -33,7 +32,7 @@ namespace BMBH_View
                 List<string> docfiles = new List<string>();
                 foreach (string file in httpRequest.Files)
                 {
-                    var postedFile = httpRequest.Files[file];
+                    HttpPostedFile postedFile = httpRequest.Files[file];
                     string sFilePath = HttpContext.Current.Server.MapPath("~/Documents/" + postedFile.FileName);
                     postedFile.SaveAs(sFilePath);
                     ++fileCounter;
@@ -48,19 +47,25 @@ namespace BMBH_View
             }
 
             if (fileCounter < id)
-               return "ID " + id.ToString() + " ungültig! Filecounter: " + fileCounter.ToString();
+            {
+                return "ID " + id.ToString() + " ungültig! Filecounter: " + fileCounter.ToString();
+            }
             else
-               return "ID: " + files[id-1].nID.ToString() + ", Path = " + files[id-1].sFilePath;
+            {
+                return "ID: " + files[id - 1].nID.ToString() + ", Path = " + files[id - 1].sFilePath;
+            }
         }
 
-        private void SQLexecute(string sSQL)
+        private static void SQLexecute(string sSQL)
         {
-            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(sConnString);
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = sSQL;
-            cmd.Connection = con;
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = sSQL,
+                Connection = con
+            };
             try
             {
                 con.Open();
@@ -68,7 +73,7 @@ namespace BMBH_View
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
             finally
             {
@@ -77,7 +82,7 @@ namespace BMBH_View
             }
         }
 
-        private void AddFileToDB(string sFileName, string sFilePath, string sRoleId)
+        private static void AddFileToDB(string sFileName, string sFilePath, string sRoleId)
         {
             SQLexecute("EXEC UploadFile '" + sFilePath + "','" + sFileName + "'," + sRoleId);
         }
@@ -93,7 +98,7 @@ namespace BMBH_View
                 List<string> docfiles = new List<string>();
                 foreach (string file in httpRequest.Files)
                 {
-                    var postedFile = httpRequest.Files[file];
+                    HttpPostedFile postedFile = httpRequest.Files[file];
                     string sFilePath = HttpContext.Current.Server.MapPath("~/Documents/" + postedFile.FileName);
                     postedFile.SaveAs(sFilePath);
                     ++fileCounter;

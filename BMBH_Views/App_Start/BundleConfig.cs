@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 using System.Web.UI;
 
-namespace BMBH_View
+namespace BMBHviews
 {
-    public class BundleConfig
+    public static class BundleConfig
     {
         // Weitere Informationen zur Bündelung finden Sie unter https://go.microsoft.com/fwlink/?LinkID=303951
         public static void RegisterBundles(BundleCollection bundles)
         {
+            if (bundles == null)
+                throw new System.ArgumentNullException();
+
             bundles.Add(new ScriptBundle("~/bundles/WebFormsJs").Include(
                             "~/Scripts/WebForms/WebForms.js",
                             "~/Scripts/WebForms/WebUIValidation.js",

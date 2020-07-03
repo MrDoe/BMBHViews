@@ -1,27 +1,26 @@
-﻿using System;
+﻿using AjaxControlToolkit;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
-using System.Web;
+using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Collections;
-using System.IO;
-using System.Drawing;
-using System.Data;
-using System.Configuration;
-using System.Data.SqlClient;
-using AjaxControlToolkit;
 
-namespace BMBH_View
+namespace BMBHviews
 {
-    public partial class Search : System.Web.UI.Page
+    public partial class Search : Page
     {
-        const string sCurrentPage = "Search.aspx";
-        const string sParentPage = "Results.aspx";
+        //private const string sCurrentPage = "Search.aspx";
+        private const string sParentPage = "Results.aspx";
 
         protected void SetDataSource()
         {
-            dsSearch.SelectCommand = "SELECT * FROM [" + Session["FormTable"] + "] WHERE ([UserId] = '" + (String)Session["UserName"] + "') order by Sorter";
+            dsSearch.SelectCommand = "SELECT * FROM [" + Session["FormTable"] + "] WHERE ([UserId] = '" + (string)Session["UserName"] + "') order by Sorter";
             dsSearch.UpdateCommand = "UPDATE [" + Session["FormTable"] + "] SET [Operator] = @Operator, [Wert] = @Wert, [Controltype] = @Controltype, [Logic] = @Logic WHERE [ID] = @ID";
             dsSearch.InsertCommand = "INSERT INTO [" + Session["FormTable"] + "] ([Attribut], [Operator], [Wert], [Datatype], [UserId]) VALUES (@Attribut, @Operator, @Wert, @Datatype, @UserId)";
             dsSearch.DeleteCommand = "DELETE FROM [" + Session["FormTable"] + "] WHERE [ID] = @ID";
@@ -38,10 +37,15 @@ namespace BMBH_View
                 Session["MainTable"] = null;
 
                 // hashtable for brackets
-                if(Session["htBracket1"] == null)
+                if (Session["htBracket1"] == null)
+                {
                     Session["htBracket1"] = new Hashtable();
+                }
+
                 if (Session["htBracket2"] == null)
+                {
                     Session["htBracket2"] = new Hashtable();
+                }
 
                 //if (Session["LastQuery"] == null)
                 ClearTempTable();
@@ -54,27 +58,35 @@ namespace BMBH_View
 
                 Session["LastQuery"] = null;
 
-                if((int)Session["Iteration"] > 1)
+                if ((int)Session["Iteration"] > 1)
+                {
                     pnlSQLhistory.Visible = true;
+                }
 
                 if (Session["Recursive"] != null)
                 {
-                    if(Session["Recursive"].ToString() == "False")
+                    if (Session["Recursive"].ToString() == "False")
+                    {
                         chkRecursive.Checked = false;
+                    }
 
                     if (Session["Recursive"].ToString() == "True")
                     {
                         chkRecursive.Checked = true;
 
                         if (Session["DataCount"] != null)
+                        {
                             lblRecursive.Text = "Rekursive Suche (" + Session["DataCount"] + " Datensätze)";
+                        }
                     }
                 }
 
                 if (Session["Additive"] != null)
                 {
                     if (Session["Additive"].ToString() == "False")
+                    {
                         chkAdditive.Checked = false;
+                    }
 
                     if (Session["Additive"].ToString() == "True")
                     {
@@ -82,7 +94,9 @@ namespace BMBH_View
                         pnlSQLhistory.Visible = true;
 
                         if (Session["DataCount"] != null)
+                        {
                             lblAdditive.Text = "Additive Suche (" + Session["DataCount"] + " Datensätze)";
+                        }
                     }
                 }
 
@@ -94,7 +108,7 @@ namespace BMBH_View
 
             SetDataSource();
 
-            string parameter = this.Request["__EVENTARGUMENT"];
+            string parameter = Request["__EVENTARGUMENT"];
 
             if (parameter == "PostFromSave")
             {
@@ -106,10 +120,12 @@ namespace BMBH_View
                 }
             }
 
-            if(parameter == "PostfromDelete")
+            if (parameter == "PostfromDelete")
             {
-                if(HiddenInputBox.Value == "YES")
+                if (HiddenInputBox.Value == "YES")
+                {
                     DeleteSearch(cboSaveSearch.SelectedValue);
+                }
 
                 cboSaveSearch.DataBind();
                 btnNew_Click(sender, e);
@@ -125,21 +141,25 @@ namespace BMBH_View
         {
             if (Session["View"] != null && Session["UserName"] != null)
             {
-                SQLexecute("EXEC RecreateSearchTableForUser '" + Session["View"] + "','" + (String)Session["UserName"] + "'");
+                SQLexecute("EXEC RecreateSearchTableForUser '" + Session["View"] + "','" + (string)Session["UserName"] + "'");
                 dgdSearch.DataBind();
             }
             else
+            {
                 Response.Redirect("~/");
+            }
         }
 
-        private void SQLexecute(string sSQL)
+        private static void SQLexecute(string sSQL)
         {
-            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(sConnString);
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = sSQL;
-            cmd.Connection = con;
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = sSQL,
+                Connection = con
+            };
             try
             {
                 con.Open();
@@ -147,7 +167,7 @@ namespace BMBH_View
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
             finally
             {
@@ -156,14 +176,14 @@ namespace BMBH_View
             }
         }
 
-        private string SQLexecute_SingleResult(string sSQL)
+        private static string SQLexecute_SingleResult(string sSQL)
         {
-            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(sConnString);
-            using (var command = new SqlCommand(sSQL, con))
+            using (SqlCommand command = new SqlCommand(sSQL, con))
             {
                 con.Open();
-                using (var reader = command.ExecuteReader())
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     reader.Read();
                     return reader.GetString(0);
@@ -196,6 +216,9 @@ namespace BMBH_View
         // escape SQL string for saving query in history
         protected string EscapeSQL(string SQL)
         {
+            if (SQL == null)
+                throw new ArgumentNullException(nameof(SQL));
+
             SQL = SQL.Replace("'", "''")
                       .Replace("[", "")
                       .Replace("]", "")
@@ -209,7 +232,7 @@ namespace BMBH_View
                       .Replace("<", " < ")
                       .Replace(">", " > ")
                       .Replace("BETWEEN", "ZWISCHEN");
-            int nLastIndex = SQL.IndexOf("union") > 0 ? SQL.IndexOf("union")-1 : SQL.Length;
+            int nLastIndex = SQL.IndexOf("union") > 0 ? SQL.IndexOf("union") - 1 : SQL.Length;
             SQL = SQL.Substring(0, nLastIndex);
             return Server.HtmlDecode(SQL);
         }
@@ -227,16 +250,24 @@ namespace BMBH_View
             if (bSubmit) // submit search
             {
                 if (Session["Recursive"] != null)
+                {
                     bRecursive = (Session["Recursive"].ToString() == "True");
+                }
 
                 if (Session["Additive"] != null)
+                {
                     bAdditive = (Session["Additive"].ToString() == "True");
+                }
 
                 if (!bRecursive && !bAdditive)
+                {
                     bStandard = true;
+                }
 
                 if ((bRecursive && nLastIteration > 0 || (bStandard && (bool)Session["JumpedBack"])))
+                {
                     sFrom += " inner join V_Recursive_Temp t on v.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
+                }
             }
 
             if (!bSubmit) // don't submit search, just fill the query editor
@@ -253,11 +284,13 @@ namespace BMBH_View
                     string sOperator = row.Cells[3].Text;
                     string sValue = row.Cells[4].Text;
                     string sDatatype = row.Cells[6].Text;
-                    bool bLeadingBracket = row.Cells[1].BackColor == System.Drawing.Color.Aquamarine ? true : false;
-                    bool bEndingBracket = row.Cells[12].BackColor == System.Drawing.Color.Aquamarine ? true : false;
+                    bool bLeadingBracket = row.Cells[1].BackColor == Color.Aquamarine ? true : false;
+                    bool bEndingBracket = row.Cells[12].BackColor == Color.Aquamarine ? true : false;
 
                     if (row.FindControl("lblValue") != null)
+                    {
                         sValue = ((Label)row.FindControl("lblValue")).Text;
+                    }
 
                     if (row.FindControl("cboControltype") != null) // only available for selected row
                     {
@@ -266,19 +299,34 @@ namespace BMBH_View
                         {
                             case "TextBox":
                                 if (row.FindControl("txtValue") != null)
+                                {
                                     sValue = ((TextBox)row.FindControl("txtValue")).Text;
+                                }
+
                                 break;
                             case "DropDownList":
                                 if (row.FindControl("cboValue") != null)
+                                {
                                     sValue = ((DropDownList)row.FindControl("cboValue")).SelectedValue;
+                                }
+
                                 if (row.FindControl("txtValue") != null)
+                                {
                                     sValue = ((TextBox)row.FindControl("txtValue")).Text;
+                                }
+
                                 break;
                             case "Calendar":
                                 if (row.FindControl("txtCalFrom") != null)
+                                {
                                     sValue = ((TextBox)row.FindControl("txtCalFrom")).Text;
+                                }
+
                                 if (row.FindControl("txtCalFrom") != null && ((TextBox)row.FindControl("txtCalTo")).Text != "")
+                                {
                                     sValue = ((TextBox)row.FindControl("txtCalFrom")).Text + ',' + ((TextBox)row.FindControl("txtCalTo")).Text;
+                                }
+
                                 break;
                         }
                     }
@@ -294,19 +342,29 @@ namespace BMBH_View
                         ShowMsg("Fehler: Kann die Abfrage nicht ausführen! Nicht erlaubte Schlüsselwörter verwendet. Bitte ändern und noch einmal versuchen.");
                         return;
                     }
-                    
+
                     // get value from drop down list
                     if (row.FindControl("lblOperator") != null)
+                    {
                         sOperator = ((Label)row.FindControl("lblOperator")).Text;
+                    }
+
                     if (row.FindControl("cboOperator") != null)
+                    {
                         sOperator = ((DropDownList)row.FindControl("cboOperator")).SelectedValue;
+                    }
 
                     if (sValue != "" || sOperator.Contains("LEER"))
-                    { 
+                    {
                         if (row.FindControl("lblLogic") != null)
+                        {
                             sLogic = ((Label)row.FindControl("lblLogic")).Text;
+                        }
+
                         if (row.FindControl("cboLogic") != null)
+                        {
                             sLogic = ((DropDownList)row.FindControl("cboLogic")).SelectedValue;
+                        }
 
                         if (bIsFirst)
                         {
@@ -315,14 +373,16 @@ namespace BMBH_View
                         }
 
                         if (bLeadingBracket)
+                        {
                             sWhere += "(";
+                        }
 
                         switch (sOperator)
                         {
                             case "≠":
                                 sOperator = "<>";
                                 break;
-                            
+
                             case "IN":
                                 sWhere += "v.[" + sAttribute + "] IN " + sValue;
                                 break;
@@ -344,8 +404,10 @@ namespace BMBH_View
                                 break;
 
                             default:
-                                if(sOperator != "ZWISCHEN")
+                                if (sOperator != "ZWISCHEN")
+                                {
                                     sValue = sValue.Replace("'", "");
+                                }
 
                                 //sValue = sValue.Replace("('", "").Replace("')", "");
 
@@ -369,20 +431,26 @@ namespace BMBH_View
                                             sWhere += "v.[" + sAttribute + "] BETWEEN " + sValue;
                                         }
                                         else
+                                        {
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                        }
+
                                         break;
                                     case "date":
                                         if (sOperator == "ZWISCHEN")
                                         {
                                             int nSeparator = sValue.IndexOf(',');
-                                            string sDate1 = "'" + sValue.Substring(0, nSeparator) + "'";
-                                            string sDate2 = "'" + sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 1) + "'";
+                                            string sDate1 = "CONVERT(date, '" + sValue.Substring(0, nSeparator) + "', 104)";
+                                            string sDate2 = "CONVERT(date, '" + sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 1) + "', 104)";
                                             sValue = sDate1 + " AND " + sDate2;
 
                                             sWhere += "v.[" + sAttribute + "] BETWEEN " + sValue;
                                         }
                                         else
+                                        {
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(date, '" + sValue + "', 104)";
+                                        }
+
                                         break;
                                     case "smalldatetime":
                                     case "datetime":
@@ -397,7 +465,10 @@ namespace BMBH_View
                                             sWhere += "v.[" + sAttribute + "] BETWEEN " + sValue;
                                         }
                                         else
+                                        {
                                             sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(datetime, '" + sValue + "', 104)";
+                                        }
+
                                         break;
 
                                     default:
@@ -408,7 +479,9 @@ namespace BMBH_View
                         }
 
                         if (bEndingBracket)
+                        {
                             sWhere += ")";
+                        }
 
                         sWhere += "\n" + sLogic.Replace("UND", "AND").Replace("ODER", "OR") + " ";
                     }
@@ -418,10 +491,14 @@ namespace BMBH_View
                 {
                     // cut last AND
                     if (sLogic == "UND")
+                    {
                         sWhere = sWhere.Substring(0, sWhere.Length - 5);
+                    }
                     // cut last OR
                     if (sLogic == "ODER")
+                    {
                         sWhere = sWhere.Substring(0, sWhere.Length - 4);
+                    }
 
                     txtSQLwhere.Text = sWhere.Replace("WHERE", "") + " ORDER BY v.ID";
                 }
@@ -437,8 +514,10 @@ namespace BMBH_View
                               " inner join V_Recursive_Temp t on v2.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
                 }
 
-                if(sWhere.Length > 6)
+                if (sWhere.Length > 6)
+                {
                     sWhere = " WHERE " + sWhere;
+                }
 
                 string sSQL = Server.HtmlDecode(sSelect + sFrom + sWhere);
                 Session["LastQuery"] = sSQL;
@@ -446,8 +525,8 @@ namespace BMBH_View
                 if ((bool)Session["JumpedBack"] == false) // save result to temporary table
                 {
                     string sInsert = "insert into V_Recursive_Temp (ID, GUID, ITERATION) ";
-                    string sSQL2 = "";
-                    string sMode = "";
+                    string sSQL2;
+                    string sMode;
 
                     if (bRecursive)
                     {
@@ -469,7 +548,7 @@ namespace BMBH_View
                     }
 
                     SQLexecute(sSQL2);
-                    SQLexecute("insert into V_Recursive_Log (GUID, Iteration, SQL, SEARCHMODE) values ('" + Session["GUID"] + "'," + Session["Iteration"] + ",'" + EscapeSQL(sWhere.Replace("WHERE","")) + "','" + sMode + "')");
+                    SQLexecute("insert into V_Recursive_Log (GUID, Iteration, SQL, SEARCHMODE) values ('" + Session["GUID"] + "'," + Session["Iteration"] + ",'" + EscapeSQL(sWhere.Replace("WHERE", "")) + "','" + sMode + "')");
 
                     Session["Iteration"] = (int)Session["Iteration"] + 1;
                 }
@@ -482,36 +561,42 @@ namespace BMBH_View
             Response.Redirect(sParentPage, true);
         }
 
-        private DataSet GetData(string query)
-        {
-            string conString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
-            SqlCommand cmd = new SqlCommand(query);
-            using (SqlConnection con = new SqlConnection(conString))
-            {
-                using (SqlDataAdapter sda = new SqlDataAdapter())
-                {
-                    cmd.Connection = con;
-                    sda.SelectCommand = cmd;
-                    using (DataSet ds = new DataSet())
-                    {
-                        sda.Fill(ds);
-                        return ds;
-                    }
-                }
-            }
-        }
-        
+        //private DataSet GetData(string query)
+        //{
+        //    string conString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+        //    SqlCommand cmd = new SqlCommand(query);
+        //    using (SqlConnection con = new SqlConnection(conString))
+        //    {
+        //        using (SqlDataAdapter sda = new SqlDataAdapter())
+        //        {
+        //            cmd.Connection = con;
+        //            sda.SelectCommand = cmd;
+        //            using (DataSet ds = new DataSet())
+        //            {
+        //                sda.Fill(ds);
+        //                return ds;
+        //            }
+        //        }
+        //    }
+        //}
+
         // executed after hitting the "Edit" button, but before loading controls
         protected void dgdSearch_RowEditing(object sender, GridViewEditEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             GridViewRow newRow = dgdSearch.Rows[e.NewEditIndex];
-            string sCurrentField = (string)newRow.Cells[2].Text;
+            string sCurrentField = newRow.Cells[2].Text;
             Session["CurrentField"] = sCurrentField;
         }
 
         // save current row to search form table
         protected void btnOK_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
             TextBox txtValue = (TextBox)row.FindControl("txtValue");
@@ -526,20 +611,26 @@ namespace BMBH_View
             string sDatatype = row.Cells[6].Text;
 
             if (cboValue.Visible)
+            {
                 txtValue.Text = cboValue.SelectedValue;
+            }
 
             if (chkValue.Visible) // handle checklist for IN operator
             {
-                String sSelected = String.Join("','", chkValue.Items.OfType<ListItem>().Where(r => r.Selected).Select(r => r.Text));
+                string sSelected = string.Join("','", chkValue.Items.OfType<ListItem>().Where(r => r.Selected).Select(r => r.Text));
                 txtValue.Text = "('" + sSelected + "')";
             }
 
             if (cboOperator.SelectedValue == "IN" && cboControltype.SelectedValue == "TextBox") // handle copied lists from excel
             {
-                if(sDatatype.Contains("int") || sDatatype == "decimal" || sDatatype == "float" || sDatatype == "numeric" || sDatatype == "real" || sDatatype == "bit")
+                if (sDatatype.Contains("int") || sDatatype == "decimal" || sDatatype == "float" || sDatatype == "numeric" || sDatatype == "real" || sDatatype == "bit")
+                {
                     txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", ",") + ")";
+                }
                 else
+                {
                     txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
+                }
             }
 
             switch (sDatatype)
@@ -548,21 +639,29 @@ namespace BMBH_View
                 case "datetime":
                 case "datetime2":
                 case "date":
-                if (sOperator == "ZWISCHEN")
-                {
-                    if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
-                        txtValue.Text = "'" + txtCalFrom.Text + "', '" + txtCalTo.Text + "'";
-                    else
-                        txtValue.Text = "";
-                }
-                else // Operator >, <, =
-                {
-                    if (txtCalFrom.Text.Length > 0)
-                        txtValue.Text = "'" + txtCalFrom.Text + "'";
-                    else
-                        txtValue.Text = "";
-                }
-                break;
+                    if (sOperator == "ZWISCHEN")
+                    {
+                        if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
+                        {
+                            txtValue.Text = "'" + txtCalFrom.Text + "', '" + txtCalTo.Text + "'";
+                        }
+                        else
+                        {
+                            txtValue.Text = "";
+                        }
+                    }
+                    else // Operator >, <, =
+                    {
+                        if (txtCalFrom.Text.Length > 0)
+                        {
+                            txtValue.Text = "'" + txtCalFrom.Text + "'";
+                        }
+                        else
+                        {
+                            txtValue.Text = "";
+                        }
+                    }
+                    break;
 
                 case "int":
                 case "tinyint":
@@ -572,27 +671,39 @@ namespace BMBH_View
                 case "numeric":
                 case "decimal":
                 case "real":
-                if (sOperator == "ZWISCHEN")
-                {
-                    if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
-                        txtValue.Text = txtCalFrom.Text + "," + txtCalTo.Text;
-                    else
-                        txtValue.Text = "";
-                }
-                break;
+                    if (sOperator == "ZWISCHEN")
+                    {
+                        if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
+                        {
+                            txtValue.Text = txtCalFrom.Text + "," + txtCalTo.Text;
+                        }
+                        else
+                        {
+                            txtValue.Text = "";
+                        }
+                    }
+                    break;
 
                 case "bit":
                     if (txtValue.Text != " ")
+                    {
                         txtValue.Text = chkSingleValue.Checked == true ? "1" : "0";
+                    }
                     else
+                    {
                         txtValue.Text = "";
-                break;
+                    }
+
+                    break;
             }
             GenerateSQL(false);
         }
 
         protected void cboOperator_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             DropDownList cboOperator = (DropDownList)sender;
             GridViewRow row = (GridViewRow)cboOperator.NamingContainer;
             EnableControls(row, false);
@@ -603,23 +714,30 @@ namespace BMBH_View
             string sSQL;
 
             if ((string)Session["UseLookups"] == "1")
-                sSQL = "exec('select null as TEXT union select VALUE as TEXT from LOOKUPS where ViewName=''" + Session["View"] + "'' and Attribute=''" + sCurrentField + "'' ORDER BY TEXT')";
-            else
-                sSQL = "exec('select null as TEXT union select distinct [" + sCurrentField + "] as TEXT from " + Session["View"] + " ORDER BY TEXT')";
-
-            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
-            using (var cmd = new SqlCommand(sSQL, conn))
-            using (var adapter = new SqlDataAdapter(cmd))
             {
-                var dt = new DataTable();
+                sSQL = "exec('select null as TEXT union select VALUE as TEXT from LOOKUPS where ViewName=''" + Session["View"] + "'' and Attribute=''" + sCurrentField + "'' ORDER BY TEXT')";
+            }
+            else
+            {
+                sSQL = "exec('select null as TEXT union select distinct [" + sCurrentField + "] as TEXT from " + Session["View"] + " ORDER BY TEXT')";
+            }
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(sSQL, conn))
+            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+            {
+                DataTable dt = new DataTable();
                 adapter.Fill(dt);
                 conn.Close();
                 return dt;
             }
         }
-    
+
         public void EnableControls(GridViewRow row, bool bLoadOperators)
         {
+            if (row == null)
+                throw new ArgumentNullException(nameof(row));
+
             // get controls
             DropDownList cboValue = (DropDownList)row.FindControl("cboValue");
             CheckBoxList chkValue = (CheckBoxList)row.FindControl("chkValue");
@@ -635,8 +753,10 @@ namespace BMBH_View
             ImageButton btnClearValue = (ImageButton)row.FindControl("btnClearValue");
             DropDownList cboOperator = ((DropDownList)row.FindControl("cboOperator"));
             DropDownList cboLogic = (DropDownList)row.FindControl("cboLogic");
-            if(cboLogic.SelectedValue == "")
+            if (cboLogic.SelectedValue == "")
+            {
                 cboLogic.SelectedValue = "UND";
+            }
 
             // hide all controls
             cboValue.Visible = false;
@@ -653,7 +773,7 @@ namespace BMBH_View
             txtCalTo.Visible = false;
 
             // populate operators
-            string sDatatype = (string)row.Cells[6].Text;
+            string sDatatype = row.Cells[6].Text;
 
             if (bLoadOperators) // Load Operator and Control Type Items
             {
@@ -677,11 +797,11 @@ namespace BMBH_View
                         cboOperator.Items.Add(new ListItem("IST LEER"));
                         cboOperator.Items.Add(new ListItem("IST NICHT LEER"));
                         cboOperator.SelectedValue = sSelectedOperator;
-                        
+
                         // calendar only
                         cboControltype.Items.Add(new ListItem("Calendar"));
                         break;
-                    
+
                     case "int":
                     case "tinyint":
                     case "smallint":
@@ -721,9 +841,13 @@ namespace BMBH_View
                             cboOperator.SelectedValue == ">" ||
                             cboOperator.SelectedValue == "<>" ||
                             cboOperator.SelectedValue == "ZWISCHEN")
+                        {
                             cboOperator.SelectedValue = "=";
+                        }
                         else
+                        {
                             cboOperator.SelectedValue = sSelectedOperator;
+                        }
 
                         // user can choose between TextBox and DropDown
                         cboControltype.Items.Add(new ListItem("TextBox"));
@@ -743,7 +867,7 @@ namespace BMBH_View
             }
 
             // get cell values
-            string sCurrentField = (string)row.Cells[2].Text;
+            string sCurrentField = row.Cells[2].Text;
             string sOperator = cboOperator.SelectedValue;
             string sControltype = cboControltype.SelectedValue;
             CalendarExtender calFrom = (CalendarExtender)row.FindControl("calFrom");
@@ -772,7 +896,7 @@ namespace BMBH_View
                         case "IST LEER":
                         case "IST NICHT LEER":
                             break;
-                        
+
                         default:
                             cboValue.Visible = true;
                             cboValue.DataSource = GetCboData(sCurrentField);
@@ -780,8 +904,10 @@ namespace BMBH_View
                             cboValue.DataValueField = "TEXT";
                             cboValue.DataBind();
 
-                            if(txtValue.Text != "" && !txtValue.Text.Contains("("))
+                            if (txtValue.Text != "" && !txtValue.Text.Contains("("))
+                            {
                                 cboValue.SelectedValue = txtValue.Text;
+                            }
 
                             break;
                     }
@@ -849,33 +975,37 @@ namespace BMBH_View
                         calTo.Format = "dd.MM.yyyy HH:mm";
                     }
 
-                    switch(sOperator)
+                    switch (sOperator)
                     {
                         case "ZWISCHEN":
                             string sDate = txtValue.Text;
                             int nSplitPos = sDate.IndexOf(",");
 
                             if (txtValue.Text.Length > 15)
-                                txtCalFrom.Text = sDate.Substring(1, nSplitPos-2) ;
+                            {
+                                txtCalFrom.Text = sDate.Substring(1, nSplitPos - 2);
+                            }
 
                             if (txtValue.Text.Length > 25)
-                                txtCalTo.Text = txtValue.Text.Substring(nSplitPos+3, sDate.Length-nSplitPos-4);
+                            {
+                                txtCalTo.Text = txtValue.Text.Substring(nSplitPos + 3, sDate.Length - nSplitPos - 4);
+                            }
 
                             calTo.Enabled = true;
                             lblFrom.Text = "Von:";
                             lblTo.Visible = true;
                             btnCalTo.Visible = true;
                             txtCalTo.Visible = true;
-                        break;
+                            break;
 
                         case "IST LEER":
                         case "IST NICHT LEER":
                             break;
 
                         default:
-                        lblFrom.Text = "Datum:";
-                        txtCalFrom.Text = txtValue.Text.Replace("'", "");
-                        break;
+                            lblFrom.Text = "Datum:";
+                            txtCalFrom.Text = txtValue.Text.Replace("'", "");
+                            break;
                     }
                     break;
             }
@@ -884,28 +1014,41 @@ namespace BMBH_View
         // called after hitting the "Edit" or "OK" button
         protected void dgdSearch_RowDataBound(object sender, GridViewRowEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 if ((e.Row.RowState & DataControlRowState.Edit) > 0) // edit mode
+                {
                     EnableControls(e.Row, true);
+                }
 
                 // apply bracket colors
                 if (((Hashtable)Session["htBracket1"]).Count > 0)
                 {
                     Hashtable htBracket1 = (Hashtable)Session["htBracket1"];
                     if (Convert.ToBoolean(htBracket1[e.Row.RowIndex]) == true)
-                        e.Row.Cells[1].BackColor = System.Drawing.Color.Aquamarine;
+                    {
+                        e.Row.Cells[1].BackColor = Color.Aquamarine;
+                    }
                     else
-                        e.Row.Cells[1].BackColor = System.Drawing.Color.Transparent;
+                    {
+                        e.Row.Cells[1].BackColor = Color.Transparent;
+                    }
                 }
 
                 if (((Hashtable)Session["htBracket2"]).Count > 0)
                 {
                     Hashtable htBracket2 = (Hashtable)Session["htBracket2"];
                     if (Convert.ToBoolean(htBracket2[e.Row.RowIndex]) == true)
-                        e.Row.Cells[12].BackColor = System.Drawing.Color.Aquamarine;
+                    {
+                        e.Row.Cells[12].BackColor = Color.Aquamarine;
+                    }
                     else
-                        e.Row.Cells[12].BackColor = System.Drawing.Color.Transparent;
+                    {
+                        e.Row.Cells[12].BackColor = Color.Transparent;
+                    }
                 }
             }
             else // save date & datetime column names for correct excel export in results.aspx        
@@ -917,16 +1060,20 @@ namespace BMBH_View
                     string sDatatype = row.Cells[6].Text;
                     string sColumnName = row.Cells[2].Text;
 
-                    if (sDatatype =="date")
+                    if (sDatatype == "date")
                     {
                         if (!DateCols.Contains(sColumnName))
+                        {
                             DateCols.Add(sColumnName);
+                        }
                     }
 
                     if (sDatatype == "datetime")
                     {
                         if (!DateTimeCols.Contains(sColumnName))
+                        {
                             DateTimeCols.Add(sColumnName);
+                        }
                     }
                 }
                 Session["DateCols"] = DateCols;
@@ -936,13 +1083,19 @@ namespace BMBH_View
 
         protected void cboControltype_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             DropDownList cboOperator = (DropDownList)sender;
             GridViewRow row = (GridViewRow)cboOperator.NamingContainer;
             EnableControls(row, false);
         }
-        
+
         protected void chkAdditive_CheckedChanged(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             bool bChecked = ((CheckBox)sender).Checked;
             Session["Additive"] = bChecked;
 
@@ -957,6 +1110,9 @@ namespace BMBH_View
 
         protected void chkRecursive_CheckedChanged(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             bool bChecked = ((CheckBox)sender).Checked;
             Session["Recursive"] = bChecked;
 
@@ -971,14 +1127,17 @@ namespace BMBH_View
 
         private void SaveSearch(string sSearchName)
         {
+            if (sSearchName == null)
+                throw new ArgumentNullException(nameof(sSearchName));
+
             // clear previous search
             DeleteSearch(sSearchName);
 
             // save new search
             string sSQL = "insert into V_Save_Search " +
                    "(ID, Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, ViewName, SearchName, Logic, Sorter)" +
-                   " select ID, Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, '" + (String)Session["View"] + "', '" + sSearchName + "', Logic, Sorter" +
-                   " from " + Session["FormTable"] + " where UserId='" + (String)Session["UserName"] + "'";
+                   " select ID, Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, '" + (string)Session["View"] + "', '" + sSearchName + "', Logic, Sorter" +
+                   " from " + Session["FormTable"] + " where UserId='" + (string)Session["UserName"] + "'";
 
             SQLexecute(Server.HtmlDecode(sSQL));
 
@@ -987,22 +1146,22 @@ namespace BMBH_View
 
         public static string Base64Encode(string plainText)
         {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
+            byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            return Convert.ToBase64String(plainTextBytes);
         }
 
         public static string Base64Decode(string base64EncodedData)
         {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+            byte[] base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
+            return Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
         private void SaveExtSearch(string sSearchName)
         {
             string sSQLwhere = Base64Encode(txtSQLwhere.Text);
-            
+
             string sSQL = "insert into V_Save_Ext_Search (SQL, UserId, ViewName, SearchName) " +
-                          "values ('" + sSQLwhere + "','" + (String)Session["UserName"] + "','" + (String)Session["View"] + "','" + sSearchName + "')";
+                          "values ('" + sSQLwhere + "','" + (string)Session["UserName"] + "','" + (string)Session["View"] + "','" + sSearchName + "')";
 
             SQLexecute(Server.HtmlDecode(sSQL));
         }
@@ -1011,8 +1170,8 @@ namespace BMBH_View
         {
 
             string sSQL = "delete from V_Save_Search where SearchName = '" + sSearchName + "'" +
-                                                   " and UserId = '" + (String)Session["UserName"] + "'" +
-                                                   " and ViewName = '" + (String)Session["View"] + "'";
+                                                   " and UserId = '" + (string)Session["UserName"] + "'" +
+                                                   " and ViewName = '" + (string)Session["View"] + "'";
             SQLexecute(sSQL);
 
             DeleteExtSearch(sSearchName);
@@ -1022,30 +1181,30 @@ namespace BMBH_View
         {
 
             string sSQL = "delete from V_Save_Ext_Search where SearchName = '" + sSearchName + "'" +
-                                                   " and UserId = '" + (String)Session["UserName"] + "'" +
-                                                   " and ViewName = '" + (String)Session["View"] + "'";
+                                                   " and UserId = '" + (string)Session["UserName"] + "'" +
+                                                   " and ViewName = '" + (string)Session["View"] + "'";
             SQLexecute(sSQL);
         }
 
         private void LoadSearch(string sSearchName)
         {
             // clear previous search
-            string sSQL = "delete from [" + Session["FormTable"] + "] where UserId = '" + (String)Session["UserName"] + "'";
+            string sSQL = "delete from [" + Session["FormTable"] + "] where UserId = '" + (string)Session["UserName"] + "'";
             SQLexecute(sSQL);
 
             // pull new search into search table
             sSQL = "insert into [" + Session["FormTable"] + "] " +
                    "(Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, Logic, Sorter)" +
                    " select Attribut, Operator, Wert, Datatype, UserId, Controltype, ValueCnt, Logic, Sorter" +
-                   " from V_Save_Search where UserId='" + (String)Session["UserName"] + "' and ViewName = '" + Session["View"] + "' and SearchName = '" + sSearchName + "'";
+                   " from V_Save_Search where UserId='" + (string)Session["UserName"] + "' and ViewName = '" + Session["View"] + "' and SearchName = '" + sSearchName + "'";
 
             SQLexecute(Server.HtmlDecode(sSQL));
             dgdSearch.DataBind();
-            
+
             // load sql string from V_Save_Ext_Search
             txtSQLselect.Text = "select v.* from [" + Session["View"] + "] v WHERE ";
             txtSQLwhere.Text = Base64Decode(SQLexecute_SingleResult("select SQL from V_Save_Ext_Search" +
-                                                        " where UserId='" + (String)Session["UserName"] +
+                                                        " where UserId='" + (string)Session["UserName"] +
                                                         "' and ViewName = '" + Session["View"] +
                                                         "' and SearchName = '" + sSearchName + "'"));
         }
@@ -1061,6 +1220,9 @@ namespace BMBH_View
 
         protected void btnJumpBack_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             Button btnJumpBack = (Button)sender;
             GridViewRow row = (GridViewRow)btnJumpBack.NamingContainer;
 
@@ -1068,7 +1230,7 @@ namespace BMBH_View
             string sIterationSelected = row.Cells[0].Text;
             int nIterationSelected = Convert.ToInt16(sIterationSelected);
 
-            if (nIterationSelected < nIteration-1)
+            if (nIterationSelected < nIteration - 1)
             {
                 Session["Iteration"] = nIterationSelected + 1;
                 Session["JumpedBack"] = true;
@@ -1080,6 +1242,9 @@ namespace BMBH_View
         }
         protected void btnClearValue_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             ImageButton btnClearValue = (ImageButton)sender;
             GridViewRow row = (GridViewRow)btnClearValue.NamingContainer;
             CheckBox chkSingleValue = (CheckBox)row.FindControl("chkSingleValue");
@@ -1090,27 +1255,42 @@ namespace BMBH_View
 
         protected void chkSingleValue_CheckedChanged(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             CheckBox chkSingleValue = (CheckBox)sender;
             GridViewRow row = (GridViewRow)chkSingleValue.NamingContainer;
             TextBox txtValue = (TextBox)row.FindControl("txtValue");
 
             if (chkSingleValue.Checked)
+            {
                 txtValue.Text = "1";
+            }
             else
+            {
                 txtValue.Text = "0";
+            }
         }
 
         protected void txtValue_TextChanged(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             GridViewRow row = (GridViewRow)((TextBox)sender).NamingContainer;
             DropDownList cboLogic = (DropDownList)row.FindControl("cboLogic");
-            if(cboLogic.SelectedValue == "")
+            if (cboLogic.SelectedValue == "")
+            {
                 cboLogic.SelectedValue = "UND";
+            }
         }
 
         // called after hitting OK button
         protected void dgdSearch_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             if (e.CommandName == "Edit")
             {
                 // get row index
@@ -1138,6 +1318,9 @@ namespace BMBH_View
 
         protected void chkExpertMode_CheckedChanged(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             if (((CheckBox)sender).Checked)
             {
                 pnlSQLeditor.Visible = true;
@@ -1153,6 +1336,9 @@ namespace BMBH_View
 
         protected void btnDown_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
             string sID = row.Cells[0].Text;
             int nRow = row.RowIndex;
@@ -1167,6 +1353,9 @@ namespace BMBH_View
 
         protected void btnUp_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
             string sID = row.Cells[0].Text;
             int nRow = row.RowIndex;
@@ -1181,13 +1370,18 @@ namespace BMBH_View
 
         protected void dgdSearch_RowCreated(object sender, GridViewRowEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             e.Row.Cells[0].Visible = false; // hide id column
             e.Row.Cells[11].Visible = false; // hide sorter column
 
             if (chkExpertMode.Checked)
             { // show ...
-                if(e.Row.FindControl("btnCopyRow") != null)
+                if (e.Row.FindControl("btnCopyRow") != null)
+                {
                     e.Row.FindControl("btnCopyRow").Visible = true;
+                }
 
                 e.Row.Cells[1].Visible = true; // leading bracket column
                 e.Row.Cells[5].Visible = true; // logic column
@@ -1199,7 +1393,9 @@ namespace BMBH_View
             else
             { // hide ...
                 if (e.Row.FindControl("btnCopyRow") != null)
+                {
                     e.Row.FindControl("btnCopyRow").Visible = false;
+                }
 
                 e.Row.Cells[1].Visible = false; // leading bracket column
                 e.Row.Cells[5].Visible = false; // logic column
@@ -1212,20 +1408,25 @@ namespace BMBH_View
 
         protected void btnBracket1_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
 
             if (Session["CellColor"] == null)
-                Session["CellColor"] = row.Cells[1].BackColor;
-
-            if (row.Cells[1].BackColor != System.Drawing.Color.Aquamarine)
             {
-                row.Cells[1].BackColor = System.Drawing.Color.Aquamarine;
+                Session["CellColor"] = row.Cells[1].BackColor;
+            }
+
+            if (row.Cells[1].BackColor != Color.Aquamarine)
+            {
+                row.Cells[1].BackColor = Color.Aquamarine;
 
                 ((Hashtable)Session["htBracket1"]).Add(row.RowIndex, true);
             }
             else
             {
-                row.Cells[1].BackColor = (System.Drawing.Color)Session["CellColor"];
+                row.Cells[1].BackColor = (Color)Session["CellColor"];
                 ((Hashtable)Session["htBracket1"]).Remove(row.RowIndex);
             }
             GenerateSQL(false);
@@ -1233,19 +1434,24 @@ namespace BMBH_View
 
         protected void btnBracket2_Click(object sender, EventArgs e)
         {
-            GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
 
             if (Session["CellColor"] == null)
-                Session["CellColor"] = row.Cells[12].BackColor;
-
-            if (row.Cells[12].BackColor != System.Drawing.Color.Aquamarine)
             {
-                row.Cells[12].BackColor = System.Drawing.Color.Aquamarine;
+                Session["CellColor"] = row.Cells[12].BackColor;
+            }
+
+            if (row.Cells[12].BackColor != Color.Aquamarine)
+            {
+                row.Cells[12].BackColor = Color.Aquamarine;
                 ((Hashtable)Session["htBracket2"]).Add(row.RowIndex, true);
             }
             else
             {
-                row.Cells[12].BackColor = (System.Drawing.Color)Session["CellColor"];
+                row.Cells[12].BackColor = (Color)Session["CellColor"];
                 ((Hashtable)Session["htBracket2"]).Remove(row.RowIndex);
             }
             GenerateSQL(false);
@@ -1253,6 +1459,9 @@ namespace BMBH_View
 
         protected void btnCopyRow_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sID = row.Cells[0].Text;
             string sSQL = "INSERT INTO [" + Session["FormTable"] + "] ([Attribut], [Operator], [Wert], [Datatype], [ControlType], [UserId], [Logic], [Sorter]) " +
@@ -1260,7 +1469,7 @@ namespace BMBH_View
             SQLexecute(sSQL);
             dgdSearch.DataBind();
         }
-        
+
         // don't remove!
         protected void btnCancel_Click(object sender, EventArgs e)
         {

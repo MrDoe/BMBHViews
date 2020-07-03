@@ -1,30 +1,37 @@
-﻿using System;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.IO;
+﻿using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Configuration;
-using OfficeOpenXml;
-using System.Collections.Generic;
+using System.IO;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
-namespace BMBH_View
+namespace BMBHviews
 {
     public partial class Results : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack ||
-                this.Request["__EVENTARGUMENT"] == "PostFromList_Send" ||
-                this.Request["__EVENTARGUMENT"] == "PostFromList_Cancel")
+                Request["__EVENTARGUMENT"] == "PostFromList_Send" ||
+                Request["__EVENTARGUMENT"] == "PostFromList_Cancel")
             {
-                if (this.Request["__EVENTARGUMENT"] == "PostFromList_Send")
+                if (Request["__EVENTARGUMENT"] == "PostFromList_Send")
+                {
                     btnSendList_Click(sender, e);
+                }
 
                 if (Session["MainTable"] == null)
+                {
                     dgdNCT.DataSource = GetData();
+                }
                 else
+                {
                     dgdNCT.DataSource = Session["MainTable"] as DataTable;
+                }
+
                 dgdNCT.DataBind();
 
                 // set page count
@@ -35,13 +42,13 @@ namespace BMBH_View
                 pnlMain.DefaultButton = btnRefresh.UniqueID;
 
                 // adapt scrollbars to window size
-                ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "SetScrollBars(); ", true);
+                ScriptManager.RegisterStartupScript(Page, Page.GetType(), "text", "SetScrollBars(); ", true);
             }
         }
-         
+
         private void ShowMsg(string message)
         {
-            ScriptManager.RegisterClientScriptBlock((Page as Control), this.GetType(), "alert", "alert('" + message + "');", true);
+            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "alert", "alert('" + message + "');", true);
         }
 
         public DataTable GetData()
@@ -55,15 +62,19 @@ namespace BMBH_View
             //    sOrderBy = "order by v.[ID]";
 
             if (Session["LastQuery"] == null)
-                sSQL = "SELECT * FROM [" + Session["View"] + "] v " + sOrderBy;
-            else
-                sSQL = Session["LastQuery"].ToString() + " " + sOrderBy;
-           
-            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
-            using (var cmd = new SqlCommand(sSQL, conn))
-            using (var adapter = new SqlDataAdapter(cmd))
             {
-                var dt = new DataTable();
+                sSQL = "SELECT * FROM [" + Session["View"] + "] v " + sOrderBy;
+            }
+            else
+            {
+                sSQL = Session["LastQuery"].ToString() + " " + sOrderBy;
+            }
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(sSQL, conn))
+            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+            {
+                DataTable dt = new DataTable();
                 adapter.Fill(dt);
                 Session["MainTable"] = dt;
                 txtTotalRows.Text = dt.Rows.Count.ToString();
@@ -74,31 +85,40 @@ namespace BMBH_View
 
         protected void btnExcel_Click(object sender, EventArgs e)
         {
-            var datatable = (Session["MainTable"] as DataTable).DefaultView.ToTable();
+            DataTable datatable = (Session["MainTable"] as DataTable).DefaultView.ToTable();
             ExcelPackage excel = new ExcelPackage();
-            var workSheet = excel.Workbook.Worksheets.Add("Exportierte Daten");
-            var totalCols = datatable.Columns.Count;
-            var totalRows = datatable.Rows.Count;
+            ExcelWorksheet workSheet = excel.Workbook.Worksheets.Add("Exportierte Daten");
+            int totalCols = datatable.Columns.Count;
+            int totalRows = datatable.Rows.Count;
             HashSet<string> DateCols = Session["DateCols"] as HashSet<string>;
             HashSet<string> DateTimeCols = Session["DateTimeCols"] as HashSet<string>;
 
-            for (var col = 1; col <= totalCols; col++)
+            for (int col = 1; col <= totalCols; col++)
+            {
                 workSheet.Cells[1, col].Value = datatable.Columns[col - 1].ColumnName;
+            }
 
-            for (var row = 1; row <= totalRows; row++)
-                for (var col = 0; col < totalCols; col++)
+            for (int row = 1; row <= totalRows; row++)
+            {
+                for (int col = 0; col < totalCols; col++)
                 {
                     workSheet.Cells[row + 1, col + 1].Value = datatable.Rows[row - 1][col];
 
                     string sColName = datatable.Columns[col].ColumnName;
-                   
-                    if (DateCols.Contains(sColName))
-                        workSheet.Cells[row + 1, col + 1].Style.Numberformat.Format = "dd.mm.yyyy";
-                    if (DateTimeCols.Contains(sColName))
-                        workSheet.Cells[row + 1, col + 1].Style.Numberformat.Format = "dd.mm.yyyy HH:mm";
-                }
 
-            using (var memoryStream = new MemoryStream())
+                    if (DateCols.Contains(sColName))
+                    {
+                        workSheet.Cells[row + 1, col + 1].Style.Numberformat.Format = "dd.mm.yyyy";
+                    }
+
+                    if (DateTimeCols.Contains(sColName))
+                    {
+                        workSheet.Cells[row + 1, col + 1].Style.Numberformat.Format = "dd.mm.yyyy HH:mm";
+                    }
+                }
+            }
+
+            using (MemoryStream memoryStream = new MemoryStream())
             {
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                 string sFileName = (string)Session["View"] + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".xlsx";
@@ -113,8 +133,8 @@ namespace BMBH_View
         protected void RefreshPage()
         {
             dgdNCT.DataSource = Session["MainTable"];
-            dgdNCT.PageIndex = Int32.Parse(txtPage.Text)-1;
-            dgdNCT.PageSize = Int32.Parse(txtRowPerPage.Text);
+            dgdNCT.PageIndex = int.Parse(txtPage.Text) - 1;
+            dgdNCT.PageSize = int.Parse(txtRowPerPage.Text);
             dgdNCT.DataBind();
             Session["CurrentPage"] = dgdNCT.PageIndex + 1;
             Session["MaxPage"] = dgdNCT.PageCount;
@@ -138,10 +158,10 @@ namespace BMBH_View
         }
 
         protected void btnNextPage_Click(object sender, ImageClickEventArgs e)
-        {       
+        {
             int nPageNo = (int)Session["CurrentPage"];
             int nMaxPage = (int)Session["MaxPage"];
- 
+
             if (nPageNo < nMaxPage)
             {
                 txtPage.Text = (nPageNo + 1).ToString();
@@ -197,6 +217,9 @@ namespace BMBH_View
 
         protected void dgdNCT_Sorting(object sender, GridViewSortEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             //Retrieve the table from the session object.
             DataTable dt = Session["MainTable"] as DataTable;
 
@@ -221,40 +244,50 @@ namespace BMBH_View
 
         private void CreateCart(string sCartName, string sUserName)
         {
-            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(sConnString);
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "dbo.CreateSTARLIMScart";
-            cmd.Connection = con;
-            
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.StoredProcedure,
+                CommandText = "dbo.CreateSTARLIMScart",
+                Connection = con
+            };
+
             // Add the input parameter and set its properties.
-            SqlParameter parameter = new SqlParameter();
-            parameter.ParameterName = "@CartName";
-            parameter.SqlDbType = SqlDbType.NVarChar;
-//            parameter.Direction = ParameterDirection.Input;
-            parameter.Value = sCartName;
+            SqlParameter parameter = new SqlParameter
+            {
+                ParameterName = "@CartName",
+                SqlDbType = SqlDbType.NVarChar,
+                //            parameter.Direction = ParameterDirection.Input;
+                Value = sCartName
+            };
             cmd.Parameters.Add(parameter);
 
-            SqlParameter parameter2 = new SqlParameter();
-            parameter2.ParameterName = "@UserName";
-            parameter2.SqlDbType = SqlDbType.NVarChar;
-//            parameter2.Direction = ParameterDirection.Input;
-            parameter2.Value = sUserName;
+            SqlParameter parameter2 = new SqlParameter
+            {
+                ParameterName = "@UserName",
+                SqlDbType = SqlDbType.NVarChar,
+                //            parameter2.Direction = ParameterDirection.Input;
+                Value = sUserName
+            };
             cmd.Parameters.Add(parameter2);
 
-            SqlParameter parameter3 = new SqlParameter();
-            parameter3.ParameterName = "@GUID";
-            parameter3.SqlDbType = SqlDbType.NVarChar;
-//            parameter3.Direction = ParameterDirection.Input;
-            parameter3.Value = Session["GUID"];
+            SqlParameter parameter3 = new SqlParameter
+            {
+                ParameterName = "@GUID",
+                SqlDbType = SqlDbType.NVarChar,
+                //            parameter3.Direction = ParameterDirection.Input;
+                Value = Session["GUID"]
+            };
             cmd.Parameters.Add(parameter3);
 
-            SqlParameter parameter4 = new SqlParameter();
-            parameter4.ParameterName = "@Iteration";
-            parameter4.SqlDbType = SqlDbType.Int;
-            //            parameter3.Direction = ParameterDirection.Input;
-            parameter4.Value = Session["Iteration"];
+            SqlParameter parameter4 = new SqlParameter
+            {
+                ParameterName = "@Iteration",
+                SqlDbType = SqlDbType.Int,
+                //            parameter3.Direction = ParameterDirection.Input;
+                Value = Session["Iteration"]
+            };
             cmd.Parameters.Add(parameter4);
 
             try
@@ -264,7 +297,7 @@ namespace BMBH_View
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
             finally
             {
@@ -297,10 +330,15 @@ namespace BMBH_View
 
         protected void dgdNCT_RowDataBound(object sender, GridViewRowEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 if (e.Row.RowIndex == 0)
+                {
                     e.Row.Style.Add("padding-top", "30px");
+                }
             }
         }
     }

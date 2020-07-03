@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Config.aspx.cs" Inherits="BMBH_View.Config" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Config.aspx.cs" Inherits="BMBHviews.Config" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <h3>Systemkonfiguration</h3>
         <asp:Table ID="Table1" runat="server" Height="180px" Width="416px" CssClass="table" HorizontalAlign="Left">

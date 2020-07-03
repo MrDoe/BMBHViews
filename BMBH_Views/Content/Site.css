@@ -16,17 +16,17 @@ body {
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input {
     /*max-width: 480px;*/
-    position: relative;
+/*    position: relative;
     top: -1px;
-    border: 1px solid rgb(96, 119, 165);
+*/    border: 1px solid rgb(96, 119, 165);
     border-radius: 5px;
     box-sizing: border-box;
     outline: none;
     padding: 3px;
-    left: -2px;
+/*    left: -2px;
     height: 29px;
-    width: 92px;
-}
+    width: auto;
+*/}
 
 textarea {
     /*max-width: 480px;*/
@@ -154,6 +154,7 @@ td {
     left: 1px;
     display: inline-block;
     padding: 2px;
+    width: 24px;
 }
 
 .inlineBlock {
@@ -181,9 +182,11 @@ td {
     position: relative;
     left: -2px;
     top: 2px;
-    padding: 2px 5px;
+    padding: 2px 5px 0px 5px;
     margin: 0px;
     font-size: 9pt;
+    height: 26px;
+    width: auto;
 } 
 
 .btn-small:hover,
@@ -200,21 +203,21 @@ td {
 }
 
 .chkChoice input {
-    position: relative;
+/*    position: relative;
     left: 20px;
     margin-left: -20px;
-}
+*/}
 
 .chkChoice td {
-    padding-left: 20px;
+/*    padding-left: 20px;*/
 }
 
 .chkChoice label {
-    position: relative;
+/*    position: relative;
     left: 20px;
-    padding-left: 5px;
-    padding-right: 20px;
-    font-weight: normal;
+*/    padding-left: 5px;
+/*    padding-right: 20px;
+    font-weight: normal;*/
 }
 
 .chkSingle {
@@ -541,7 +544,7 @@ pre {
 }
 
 .ajax__fileupload_selectFileButton:before {
-    /*content: url(../Images/add_16x16.gif) !Important;*/*/
+    /*content: url(../Images/add_16x16.gif) !Important;*/
 }
 
 .ajax__fileupload_selectFileButton:after {

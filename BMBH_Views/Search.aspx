@@ -1,4 +1,4 @@
-﻿<%@ Page Title="BMBH-Views - Suchformular" Language="C#" Debug="true" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Search.aspx.cs" Inherits="BMBH_View.Search" %>
+﻿<%@ Page Title="BMBH_Views - Suchformular" Language="C#" Debug="true" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Search.aspx.cs" Inherits="BMBHviews.Search" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 <asp:HiddenField ID="width" runat="server" />
@@ -267,5 +267,8 @@ function onModalPopupShown() {
     $get("<%=txtSearchName.ClientID%>").focus();
 }
 </script>
+
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+    </asp:UpdatePanel>
 
 </asp:Content>

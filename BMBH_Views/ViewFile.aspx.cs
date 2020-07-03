@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
-namespace BMBH_View
+namespace BMBHviews
 {
     public partial class ViewFile : System.Web.UI.Page
     {
@@ -18,9 +14,11 @@ namespace BMBH_View
             string sPath = Request.ApplicationPath;
 
             if (sPath[sPath.Length - 1] != '/') // append '/' if missing
+            {
                 sPath += "/";
+            }
 
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "redirect",
+            ScriptManager.RegisterStartupScript(this, GetType(), "redirect",
             "alert('" + message + "'); window.location='" +
             sPath + "';", true);
         }
@@ -37,7 +35,7 @@ namespace BMBH_View
 
             Response.AddHeader("Content-Disposition", "inline; name=" + file.Name + " filename=" + file.Name);
             string sFiletype = file.Extension.ToUpper();
-            
+
             switch (sFiletype)
             {
                 case ".PDF":

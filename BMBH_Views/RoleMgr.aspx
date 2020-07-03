@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Views- und Rollenverwaltung" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoleMgr.aspx.cs" Inherits="BMBH_View.UserMan" %>
+﻿<%@ Page Title="Views- und Rollenverwaltung" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoleMgr.aspx.cs" Inherits="BMBHviews.UserMan" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 <asp:HiddenField ID="HiddenField1" runat="server" />

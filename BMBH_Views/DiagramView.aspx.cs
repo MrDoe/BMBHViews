@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Web.UI.DataVisualization.Charting;
+using System.Web.UI.WebControls;
 
-namespace BMBH_View
+namespace BMBHviews
 {
     public partial class DiagramView : System.Web.UI.Page
     {
@@ -31,8 +27,10 @@ namespace BMBH_View
                 string sSQL = "Select [USERCOUNT], [TIMESTAMP] from CLIN106_DATA.dbo.USERCOUNT";
 
                 if (sFrom.Length > 0 && sTo.Length > 0)
+                {
                     sSQL += " where [TIMESTAMP] between '" + sFrom + "' and '" + sTo + "'";
-                
+                }
+
                 SqlCommand cmd = new SqlCommand(sSQL, con);
 
                 con.Open();
@@ -68,7 +66,7 @@ namespace BMBH_View
         {
             // Call Get ChartData() method when the user select a different chart type
             GetChartData(chkShowValues.Checked, txtCalFrom.Text, txtCalTo.Text);
-            this.Chart1.Series["Series1"].ChartType = (SeriesChartType)Enum.Parse(
+            Chart1.Series["Series1"].ChartType = (SeriesChartType)Enum.Parse(
                 typeof(SeriesChartType), DropDownList1.SelectedValue);
         }
 

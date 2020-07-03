@@ -7,7 +7,7 @@
 // </automatisch generiert>
 //------------------------------------------------------------------------------
 
-namespace BMBH_View {
+namespace BMBHviews {
     
     
     public partial class _Default {

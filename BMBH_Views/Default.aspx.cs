@@ -1,20 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Collections;
-using System.Data;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 //using System.Net;
 
-namespace BMBH_View
+namespace BMBHviews
 {
-    static class Utils
+    internal static class Utils
     {
         public static Control FindAnyControl(this Page page, string controlId)
         {
@@ -56,7 +52,7 @@ namespace BMBH_View
         //}
 
         // convert dataset to 2D string array
-        private string[][] StringArray3(DataSet ds)
+        private static string[][] StringArray3(DataSet ds)
         {
             int nRows = ds.Tables[0].Rows.Count;
             string[][] stringArray = new string[nRows][];
@@ -73,7 +69,7 @@ namespace BMBH_View
         }
 
         // convert dataset to 2D string array
-        private string[][] StringArray10(DataSet ds)
+        private static string[][] StringArray10(DataSet ds)
         {
             int nRows = ds.Tables[0].Rows.Count;
             string[][] stringArray = new string[nRows][];
@@ -96,118 +92,161 @@ namespace BMBH_View
             return stringArray;
         }
 
-        public String[][] GetUserPermissions()
+        public string[][] GetUserPermissions()
         {
             string sUser = (string)Session["UserName"];
             DataSet ds = new DataSet("Permissions");
 
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("GetPermittedViews", con);
-                cmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand("GetPermittedViews", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 cmd.Parameters.AddWithValue("@User", sUser);
-                SqlDataAdapter da = new SqlDataAdapter();
-                da.SelectCommand = cmd;
+                SqlDataAdapter da = new SqlDataAdapter
+                {
+                    SelectCommand = cmd
+                };
                 da.Fill(ds);
 
                 if (ds.Tables[0].Rows.Count > 0)
+                {
                     return StringArray3(ds);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
-        public String[][] GetDocPermissions()
+        public string[][] GetDocPermissions()
         {
             string sUser = (string)Session["UserName"];
             DataSet ds = new DataSet("Permissions");
 
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("GetPermittedDocs", con);
-                cmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand("GetPermittedDocs", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 cmd.Parameters.AddWithValue("@User", sUser);
-                SqlDataAdapter da = new SqlDataAdapter();
-                da.SelectCommand = cmd;
+                SqlDataAdapter da = new SqlDataAdapter
+                {
+                    SelectCommand = cmd
+                };
                 da.Fill(ds);
 
                 if (ds.Tables[0].Rows.Count > 0)
+                {
                     return StringArray3(ds);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
-        public String[][] GetPanels()
+        public static string[][] GetPanels()
         {
             DataSet ds = new DataSet("Panels");
 
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("GetPanels", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                SqlDataAdapter da = new SqlDataAdapter();
-                da.SelectCommand = cmd;
+                SqlCommand cmd = new SqlCommand("GetPanels", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                SqlDataAdapter da = new SqlDataAdapter
+                {
+                    SelectCommand = cmd
+                };
                 da.Fill(ds);
 
                 if (ds.Tables[0].Rows.Count > 0)
+                {
                     return StringArray10(ds);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
-        protected Panel GeneratePanel(string sPanelId, String[][] aProperties)
+        protected Panel GeneratePanel(string sPanelId, string[][] aProperties)
         {
+            if (aProperties == null)
+                throw new ArgumentNullException(nameof(aProperties));
+
             for (int i = 0; i < aProperties.Length; ++i)
             {
-                if(sPanelId == aProperties[i][0])
+                if (sPanelId == aProperties[i][0])
                 {
-                    Panel pnl = new Panel();
-                    pnl.ID = sPanelId;
-                    
-                    // set color, size and style
-                    pnl.BackColor = System.Drawing.ColorTranslator.FromHtml(aProperties[i][3]);
-                    pnl.ForeColor = System.Drawing.ColorTranslator.FromHtml(aProperties[i][4]);
-                    pnl.BorderColor = System.Drawing.ColorTranslator.FromHtml(aProperties[i][5]);
-                    pnl.Height = Convert.ToInt32(aProperties[i][6]);
-                    pnl.Width = Convert.ToInt32(aProperties[i][7]);
-                    pnl.BorderWidth = 3;
-                    pnl.CssClass = "inlineBlock";
-                    
+                    Panel pnl = new Panel
+                    {
+                        ID = sPanelId,
+
+                        // set color, size and style
+                        BackColor = ColorTranslator.FromHtml(aProperties[i][3]),
+                        ForeColor = ColorTranslator.FromHtml(aProperties[i][4]),
+                        BorderColor = ColorTranslator.FromHtml(aProperties[i][5]),
+                        Height = Convert.ToInt32(aProperties[i][6]),
+                        Width = Convert.ToInt32(aProperties[i][7]),
+                        BorderWidth = 3,
+                        CssClass = "inlineBlock"
+                    };
+
                     // add heading
-                    Label lblHeading = new Label();
-                    lblHeading.Text = "<h3>" + aProperties[i][1] + "</h3>";
+                    Label lblHeading = new Label
+                    {
+                        Text = "<h3>" + aProperties[i][1] + "</h3>"
+                    };
                     pnl.Controls.Add(lblHeading);
 
                     // add tab container
                     AjaxControlToolkit.TabContainer tcPnl = new AjaxControlToolkit.TabContainer();
 
                     // add first page (views panel)
-                    Panel pnlViews = new Panel();
-                    pnlViews.ID = sPanelId + "_views";
+                    Panel pnlViews = new Panel
+                    {
+                        ID = sPanelId + "_views"
+                    };
 
                     // add subheading
-                    Label lblSubHeading = new Label();
-                    lblSubHeading.Text = "<p>" + aProperties[i][2] + "</p>";
-                    lblSubHeading.ID = sPanelId + "_sub";
+                    Label lblSubHeading = new Label
+                    {
+                        Text = "<p>" + aProperties[i][2] + "</p>",
+                        ID = sPanelId + "_sub"
+                    };
                     pnlViews.Controls.Add(lblSubHeading);
 
                     // create views tab page
-                    AjaxControlToolkit.TabPanel tpViews = new AjaxControlToolkit.TabPanel();
-                    tpViews.HeaderText = "Views";
-                    tpViews.ForeColor = System.Drawing.Color.Black;
+                    AjaxControlToolkit.TabPanel tpViews = new AjaxControlToolkit.TabPanel
+                    {
+                        HeaderText = "Views",
+                        ForeColor = Color.Black
+                    };
 
                     // create empty documents tab page
-                    AjaxControlToolkit.TabPanel tpDocs = new AjaxControlToolkit.TabPanel();
-                    tpDocs.HeaderText = "Dokumente";
-                    Panel pnlDocuments = new Panel();
-                    pnlDocuments.ID = sPanelId + "_docs";
+                    AjaxControlToolkit.TabPanel tpDocs = new AjaxControlToolkit.TabPanel
+                    {
+                        HeaderText = "Dokumente"
+                    };
+                    Panel pnlDocuments = new Panel
+                    {
+                        ID = sPanelId + "_docs"
+                    };
 
                     // add subheading for documents (fixed)
-                    Label lblDocSubHeading = new Label();
-                    lblDocSubHeading.Text = "<p>Dokumente:</p>";
-                    lblDocSubHeading.ID = sPanelId + "_docsub";
+                    Label lblDocSubHeading = new Label
+                    {
+                        Text = "<p>Dokumente:</p>",
+                        ID = sPanelId + "_docsub"
+                    };
                     pnlDocuments.Controls.Add(lblDocSubHeading);
 
                     // add panels to tabs & tabs to tab control
@@ -220,13 +259,15 @@ namespace BMBH_View
 
                     if (aProperties[i][9] == "True") // show patient search button
                     {
-                        Button btn = new Button();
-                        btn.ID = "btn_" + aProperties[i][0];
-                        btn.BackColor = System.Drawing.ColorTranslator.FromHtml("#EDFDFE");
-                        btn.CssClass = "btn btn-default";
-                        btn.Height = 34;
-                        btn.Width = 170;
-                        btn.Text = "Patientensuche »";
+                        Button btn = new Button
+                        {
+                            ID = "btn_" + aProperties[i][0],
+                            BackColor = ColorTranslator.FromHtml("#EDFDFE"),
+                            CssClass = "btn btn-default",
+                            Height = 34,
+                            Width = 170,
+                            Text = "Patientensuche »"
+                        };
                         btn.Click += new EventHandler(btnPatientSearch_Click);
                         pnl.Controls.Add(new LiteralControl("<br />"));
                         pnl.Controls.Add(btn);
@@ -239,16 +280,21 @@ namespace BMBH_View
 
         protected void GenerateButton(string sView, string sCaption, Panel pnl, bool bIsDocButton)
         {
+            if (pnl == null)
+                throw new ArgumentNullException(nameof(pnl));
+
             Button btnNew = new Button();
             pnl.Visible = true;
-            
+
             btnNew.ControlStyle.CssClass = "btn btn-default";
             btnNew.Click += new EventHandler(btnGeneric_Click);
 
             if (!bIsDocButton)
             {
                 if (pnl.Parent.GetType().Equals(typeof(Panel))) // button in nested panel -> show parent panel
+                {
                     pnl.Parent.Visible = true;
+                }
 
                 btnNew.ID = "btn" + sView;
                 btnNew.ToolTip = "Suche in View \"" + sView + "\" starten";
@@ -265,12 +311,14 @@ namespace BMBH_View
             }
 
             if (btnNew.Text.Length < 25)
+            {
                 btnNew.Width = 170;
+            }
 
             pnl.Controls.Add(btnNew);
         }
 
-        protected void GenerateControls(String[][] aViewPerm, String[][] aDocPerm, String[][] aPanels)
+        protected void GenerateControls(string[][] aViewPerm, string[][] aDocPerm, string[][] aPanels)
         {
             if (aViewPerm != null) // generate main panel and tabs
             {
@@ -279,7 +327,7 @@ namespace BMBH_View
                     if (aViewPerm[i][2].Length > 0)
                     {
                         Panel pnlDept = (Panel)Utils.FindAnyControl(Page, aViewPerm[i][2]);
-                        if (pnlDept == null) 
+                        if (pnlDept == null)
                         {
                             // create main panel for department
                             pnlDept = GeneratePanel(aViewPerm[i][2], aPanels);
@@ -312,38 +360,45 @@ namespace BMBH_View
             }
         }
 
-        private void SQLexecute(string sSQL)
+        private static void SQLexecute(string sSQL)
         {
-            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(sConnString);
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = sSQL;
-            cmd.Connection = con;
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = sSQL,
+                Connection = con
+            };
+
+            // open connection
+            con.Open();
+
             try
             {
-                con.Open();
                 cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
             finally
             {
                 con.Close();
-                con.Dispose();
+
+                if(con != null)
+                    con.Dispose();
             }
         }
 
-        private string SQLexecute_SingleResult(string sSQL)
+        private static string SQLexecute_SingleResult(string sSQL)
         {
-            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(sConnString);
-            using (var command = new SqlCommand(sSQL, con))
+            using (SqlCommand command = new SqlCommand(sSQL, con))
             {
                 con.Open();
-                using (var reader = command.ExecuteReader())
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     reader.Read();
                     return reader.GetString(0);
@@ -354,23 +409,25 @@ namespace BMBH_View
         private void SetUser()
         {
             string sRealUserName = Context.User.Identity.Name.ToString();
-
-            if (sRealUserName == "W20005345\\christoph") // override username
-                sRealUserName = "KHD\\doellingerchristoph";
-            else
-                sRealUserName = Page.User.Identity.Name;
+             //RealUserName = Page.User.Identity.Name;
 
             if (Session["UserName"] == null)
+            {
                 Session["UserName"] = sRealUserName;
-            
+            }
+
             // get user role
             string sRoleId = SQLexecute_SingleResult("select RoleId from UserRoles where UserId = '" + sRealUserName + "'");
             Session["RoleId"] = sRoleId;
 
             if (sRoleId == "1")
+            {
                 Session["IsAdmin"] = true;
+            }
             else
+            {
                 Session["IsAdmin"] = false;
+            }
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -394,14 +451,17 @@ namespace BMBH_View
 
             SetUser();
 
-            String[][] aUserPerm = GetUserPermissions();
-            String[][] aPanels = GetPanels();
-            String[][] aDocPerm = GetDocPermissions();
+            string[][] aUserPerm = GetUserPermissions();
+            string[][] aPanels = GetPanels();
+            string[][] aDocPerm = GetDocPermissions();
             GenerateControls(aUserPerm, aDocPerm, aPanels);
         }
 
         protected void btnGeneric_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             Button btn = (Button)sender;
             if (btn.Attributes["VIEWNAME"] != null)
             {
@@ -425,20 +485,37 @@ namespace BMBH_View
 
         protected void btnPatientSearch_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             if (((Button)sender).ID == "btn_pnlTBB")
+            {
                 Session["OE"] = "NCT-Gewebebank";
+            }
             else if (((Button)sender).ID == "btn_pnlPraevOnk")
+            {
                 Session["OE"] = "Präv. Onkologie";
+            }
             else if (((Button)sender).ID == "btn_pnlLiquid")
+            {
                 Session["OE"] = "Präv. Onkologie";
+            }
             else if (((Button)sender).ID == "btn_pnlPanco")
+            {
                 Session["OE"] = "PancoBank-EPZ";
+            }
             else if (((Button)sender).ID == "btn_pnlMedV")
+            {
                 Session["OE"] = "Med. Klinik V";
+            }
             else if (((Button)sender).ID == "btn_pnlGyn")
+            {
                 Session["OE"] = "Frauenklinik";
+            }
             else
+            {
                 return;
+            }
 
             Response.Redirect("MultipleSearch.aspx");
         }

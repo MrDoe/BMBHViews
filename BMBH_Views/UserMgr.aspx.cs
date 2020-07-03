@@ -1,40 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.Services;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace BMBH_View
+namespace BMBHviews
 {
     public partial class RoleMan : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((Boolean)Session["IsAdmin"] == false) // no admin, go back to previous page
+            if ((bool)Session["IsAdmin"] == false) // no admin, go back to previous page
+            {
                 Response.Redirect(Request.UrlReferrer.ToString());
+            }
 
-            if (this.Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new user
+            if (Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new user
             {
                 string sUsername = txtUserName.Text.Trim();
                 SQLexecute("EXEC AddNewUser '" + sUsername + "'");
-                string eMail = (this.Master as SiteMaster).GetEmailFromUser(sUsername);
-                (this.Master as SiteMaster).SendEmail(eMail, "Sehr geehrter Nutzer,\n\nIhr Benutzerkonto wurde für das Datawarehouse BMBH-Views freigeschaltet.\nSie können sich im Klinikumsnetz unter http://pat03/views mit Ihrem Windows-Benutzernamen und Passwort anmelden.\n\nMit freundlichen Grüßen\n\nIhr BMBH-IT Team", "BMBH-Views Account-Freischaltung");
+                string eMail = (Master as SiteMaster).GetEmailFromUser(sUsername);
+                SiteMaster.SendEmail(eMail, "Sehr geehrter Nutzer,\n\nIhr Benutzerkonto wurde für das Datawarehouse BMBH_Views freigeschaltet.\nSie können sich im Klinikumsnetz unter http://pat03/views mit Ihrem Windows-Benutzernamen und Passwort anmelden.\n\nMit freundlichen Grüßen\n\nIhr BMBH-IT Team", "BMBH_Views Account-Freischaltung");
 
                 Response.Redirect("UserMgr.aspx");
             }
-            if (this.Request["__EVENTTARGET"] == updUsers.ClientID)
+            if (Request["__EVENTTARGET"] == updUsers.ClientID)
             {
-                string value = this.Request["__EVENTARGUMENT"];
+                string value = Request["__EVENTARGUMENT"];
 
                 if (value.Length > 0)
+                {
                     SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles] where UserId LIKE '%" + value + "%'";
+                }
                 else
+                {
                     SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles]";
+                }
 
                 dgdUsers.DataBind();
             }
@@ -45,30 +46,36 @@ namespace BMBH_View
             Response.Redirect("RoleMgr.aspx");
         }
 
-        private void SQLexecute(string sSQL)
+        private static void SQLexecute(string sSQL)
         {
-            String sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
             SqlConnection con = new SqlConnection(sConnString);
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = sSQL;
-            cmd.Connection = con;
-            cmd.CommandTimeout = 900;
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = sSQL,
+                Connection = con,
+                CommandTimeout = 900
+            };
+
+            con.Open();
 
             try
             {
-                con.Open();
                 cmd.ExecuteNonQuery();
                 //cmd.BeginExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
             finally
             {
-                con.Close();
-                con.Dispose();
+                if (con != null)
+                {
+                    con.Close();
+                    con.Dispose();
+                }
             }
         }
 
@@ -79,17 +86,23 @@ namespace BMBH_View
 
         protected void cboRole_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             DropDownList cboRole = (DropDownList)sender;
             GridViewRow row = (GridViewRow)cboRole.NamingContainer;
-            var sUserName = row.Cells[0].Text;
-            var nRoleId = cboRole.SelectedValue;
+            string sUserName = row.Cells[0].Text;
+            string nRoleId = cboRole.SelectedValue;
             string sSQL;
             sSQL = "EXEC SetUserRole '" + sUserName + "','" + nRoleId.ToString() + "'";
-            try { SQLexecute(sSQL); } catch (Exception ex) { }
+            try { SQLexecute(sSQL); } catch (Exception) { }
         }
 
         protected void btnChangeToUser_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
             Session["UserName"] = row.Cells[0].Text;
@@ -98,19 +111,22 @@ namespace BMBH_View
 
         protected void chkPatientSearch_CheckedChanged(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             CheckBox chk = (CheckBox)sender;
             GridViewRow row = (GridViewRow)chk.NamingContainer;
-            var sUserName = row.Cells[0].Text;
+            string sUserName = row.Cells[0].Text;
             string sSQL;
             if (chk.Checked)
             {
                 sSQL = "EXEC GrantPatientSearch '" + sUserName + "'";
-                try { SQLexecute(sSQL); } catch (Exception ex) { }
+                try { SQLexecute(sSQL); } catch (Exception) { }
             }
             else
             {
                 sSQL = "EXEC DenyPatientSearch '" + sUserName + "'";
-                try { SQLexecute(sSQL); } catch (Exception ex) { }
+                try { SQLexecute(sSQL); } catch (Exception) { }
             }
         }
 
@@ -120,14 +136,17 @@ namespace BMBH_View
 
         protected void btnDeleteUser_Click(object sender, EventArgs e)
         {
+            if (sender == null)
+                throw new ArgumentNullException(nameof(sender));
+
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
-            var sUserName = row.Cells[0].Text;
+            string sUserName = row.Cells[0].Text;
             try
             {
                 SQLexecute("delete from UserRoles where UserId='" + sUserName + "'");
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
         }
     }
 }

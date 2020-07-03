@@ -1,7 +1,7 @@
-﻿<%@ Page Title="Hilfe" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Help.aspx.cs" Inherits="BMBH_View.Contact" %>
+﻿<%@ Page Title="Hilfe" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Help.aspx.cs" Inherits="BMBHviews.Contact" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-<h1>BMBH-Views</h1>
+<h1>BMBH_Views</h1>
 <h4>Web-Applikation zur QBE-Datenabfrage von Biomaterialbanken</h4>
 <address>
 Copyright © 2017 Christoph Döllinger<br />

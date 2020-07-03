@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BMBH_View {
+namespace BMBHviews {
     
     
     public partial class Site_Mobile {
