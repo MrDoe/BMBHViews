@@ -37,7 +37,7 @@ namespace BMBHviews
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -51,7 +51,9 @@ namespace BMBHviews
         protected void AjaxFileUpload1_UploadComplete(object sender, AjaxControlToolkit.AjaxFileUploadEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             string sFileName = e.FileName.ToString();
             string sServerPath = Server.MapPath("~/Documents/") + sFileName;
@@ -64,7 +66,9 @@ namespace BMBHviews
         protected void dgdDocs_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             TableCell cell = dgdDocs.Rows[e.RowIndex].Cells[6];
             string sPath = cell.Text;
@@ -93,7 +97,9 @@ namespace BMBHviews
         protected void btnView_Click(object sender, ImageClickEventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             ImageButton btnView = (ImageButton)sender;
             GridViewRow row = (GridViewRow)btnView.NamingContainer;
@@ -111,7 +117,9 @@ namespace BMBHviews
         protected void chkPermission_CheckedChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             string sRoleId = cboRole.SelectedValue;
             CheckBox chkPermission = (CheckBox)sender;
@@ -146,7 +154,9 @@ namespace BMBHviews
         protected void btnPDF_Click(object sender, ImageClickEventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             ImageButton btnPDF = (ImageButton)sender;
             GridViewRow row = (GridViewRow)btnPDF.NamingContainer;

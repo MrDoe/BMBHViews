@@ -24,7 +24,7 @@ namespace BMBHviews
         }
 
         // POST api/<controller>
-        public static void Post([FromBody]string value)
+        public static void Post([FromBody] string value)
         {
             HttpRequest httpRequest = HttpContext.Current.Request;
             string sFilePath = HttpContext.Current.Server.MapPath("~/Documents/test.log");
@@ -32,7 +32,7 @@ namespace BMBHviews
         }
 
         // PUT api/<controller>/5
-        public static void Put(int id, [FromBody]string value)
+        public static void Put(int id, [FromBody] string value)
         {
         }
 

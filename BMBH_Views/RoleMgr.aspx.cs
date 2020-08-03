@@ -119,7 +119,7 @@ namespace BMBHviews
                 cmd.ExecuteNonQuery();
                 //cmd.BeginExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -139,9 +139,14 @@ namespace BMBHviews
         protected void chkPermission_CheckedChanged(object sender, EventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
+
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             CheckBox chk = (CheckBox)sender;
             GridViewRow row = (GridViewRow)chk.NamingContainer;
@@ -165,7 +170,9 @@ namespace BMBHviews
         protected void btnShowView_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
@@ -178,7 +185,9 @@ namespace BMBHviews
         protected void btnValueCnt_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
@@ -191,7 +200,9 @@ namespace BMBHviews
         protected void btnOK_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sCaption = ((TextBox)row.FindControl("txtCaption")).Text;
@@ -205,7 +216,9 @@ namespace BMBHviews
         protected void btnOK_Sorter_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sSorter = ((TextBox)row.FindControl("txtSorter")).Text;
@@ -218,7 +231,9 @@ namespace BMBHviews
         protected void cboPanel_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)((DropDownList)sender).NamingContainer;
             string sPanel = ((DropDownList)row.FindControl("cboPanel")).SelectedValue;
@@ -256,7 +271,9 @@ namespace BMBHviews
         protected void btnEditView_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sView = row.Cells[0].Text;
@@ -293,7 +310,9 @@ namespace BMBHviews
         protected void btnUpdateLookups_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sView = row.Cells[0].Text;
@@ -305,7 +324,9 @@ namespace BMBHviews
         protected void chkUseLookups_CheckedChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)((CheckBox)sender).NamingContainer;
             string sView = row.Cells[0].Text;
@@ -316,12 +337,31 @@ namespace BMBHviews
         protected void btnDelView_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sView = row.Cells[0].Text;
             SQLexecute("delete from RoleViews where ViewName='" + sView + "'");
             dgdViewPermissions.DataBind();
+        }
+
+        protected void dgdViewPermissions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        protected void chkUseTempTable_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender == null)
+            {
+                throw new ArgumentNullException(nameof(sender));
+            }
+
+            GridViewRow row = (GridViewRow)((CheckBox)sender).NamingContainer;
+            string sView = row.Cells[0].Text;
+            string sUseTempTable = ((CheckBox)sender).Checked ? "1" : "0";
+            SQLexecute("update VIEW_SETTINGS set USE_TEMPTABLE = " + sUseTempTable + " where View_Name = '" + sView + "'");
         }
     }
 }

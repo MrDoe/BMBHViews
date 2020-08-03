@@ -65,7 +65,7 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
 </asp:Panel>
 <asp:UpdatePanel ID="updViews" runat="server" ClientIDMode="Static" ChildrenAsTriggers="true" UpdateMode="Always">
 <ContentTemplate>
-    <asp:GridView ID="dgdViewPermissions" runat="server" AutoGenerateColumns="False" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333">
+    <asp:GridView ID="dgdViewPermissions" runat="server" AutoGenerateColumns="False" CellPadding="4" DataSourceID="SqlDataSource2" ForeColor="#333333" OnSelectedIndexChanged="dgdViewPermissions_SelectedIndexChanged">
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
         <Columns>
             <asp:BoundField DataField="ViewName" HeaderText="View" ReadOnly="True" SortExpression="ViewName" />
@@ -94,6 +94,11 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
                 <ItemTemplate>
                     <asp:CheckBox ID="chkUseLookups" runat="server" Checked='<%# Eval("USE_LOOKUPS").ToString().Equals("True") %>' CssClass="chkChoice" AutoPostBack="True" Text=" " OnCheckedChanged="chkUseLookups_CheckedChanged" ToolTip="Lookup-Cache für DropDowns verwenden"/>
                     <asp:Button ID="btnUpdateLookups" runat="server" CssClass="btn btn-default btn-small" OnClick="btnUpdateLookups_Click" Text="Aktualisieren" ToolTip="Lookup-Cache aktualisieren" />
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Temp-Tabelle">
+                <ItemTemplate>
+                    <asp:CheckBox ID="chkUseTempTable" Checked='<%# Eval("USE_TEMPTABLE").ToString().Equals("True") %>' runat="server" CssClass="chkChoice" AutoPostBack="True" Text=" " OnCheckedChanged="chkUseTempTable_CheckedChanged" ToolTip="Temp-Tabelle für View verwenden"/>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Beschriftung">
@@ -143,9 +148,10 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
 
 <%--Data sources--%>
 <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
-<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>">
+<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="GetPermittedViewsByRole" SelectCommandType="StoredProcedure">
 <SelectParameters>
-    <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" />
+    <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" DefaultValue="Administrator" />
+    <asp:Parameter Name="ViewName" Type="String" />
 </SelectParameters>
 </asp:SqlDataSource>
 <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select '' as PanelId union select PanelID from Panels">

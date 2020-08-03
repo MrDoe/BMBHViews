@@ -9,7 +9,9 @@ namespace BMBHviews
         public static void RegisterBundles(BundleCollection bundles)
         {
             if (bundles == null)
+            {
                 throw new System.ArgumentNullException();
+            }
 
             bundles.Add(new ScriptBundle("~/bundles/WebFormsJs").Include(
                             "~/Scripts/WebForms/WebForms.js",

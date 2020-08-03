@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
+using System.Resources;
 using System.Runtime.InteropServices;
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die
 // Assemblyinformationen zu ändern.
-[assembly: AssemblyTitle("BMBHviews")]
+[assembly: AssemblyTitle("BMBH-Views")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KHD")]
-[assembly: AssemblyProduct("BMBHviews")]
+[assembly: AssemblyProduct("BMBH-Views")]
 [assembly: AssemblyCopyright("Copyright © KHD 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,3 +33,4 @@ using System.Runtime.InteropServices;
 // übernehmen, indem Sie "*" wie folgt verwenden:
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: NeutralResourcesLanguage("")]

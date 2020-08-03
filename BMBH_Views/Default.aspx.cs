@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
+﻿using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -180,7 +179,9 @@ namespace BMBHviews
         protected Panel GeneratePanel(string sPanelId, string[][] aProperties)
         {
             if (aProperties == null)
+            {
                 throw new ArgumentNullException(nameof(aProperties));
+            }
 
             for (int i = 0; i < aProperties.Length; ++i)
             {
@@ -281,7 +282,9 @@ namespace BMBHviews
         protected void GenerateButton(string sView, string sCaption, Panel pnl, bool bIsDocButton)
         {
             if (pnl == null)
+            {
                 throw new ArgumentNullException(nameof(pnl));
+            }
 
             Button btnNew = new Button();
             pnl.Visible = true;
@@ -378,7 +381,7 @@ namespace BMBHviews
             {
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -386,8 +389,10 @@ namespace BMBHviews
             {
                 con.Close();
 
-                if(con != null)
+                if (con != null)
+                {
                     con.Dispose();
+                }
             }
         }
 
@@ -409,7 +414,7 @@ namespace BMBHviews
         private void SetUser()
         {
             string sRealUserName = Context.User.Identity.Name.ToString();
-             //RealUserName = Page.User.Identity.Name;
+            //RealUserName = Page.User.Identity.Name;
 
             if (Session["UserName"] == null)
             {
@@ -460,7 +465,9 @@ namespace BMBHviews
         protected void btnGeneric_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Button btn = (Button)sender;
             if (btn.Attributes["VIEWNAME"] != null)
@@ -486,7 +493,9 @@ namespace BMBHviews
         protected void btnPatientSearch_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             if (((Button)sender).ID == "btn_pnlTBB")
             {

@@ -71,7 +71,7 @@ namespace BMBHviews
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

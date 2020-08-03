@@ -104,6 +104,7 @@ namespace BMBHviews
                 System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("de-DE");
 
                 Session["UseLookups"] = SQLexecute_SingleResult("select CAST(USE_LOOKUPS as Char(1)) from VIEW_SETTINGS where VIEW_NAME='" + Session["View"] + "'");
+                Session["UseTempTable"] = SQLexecute_SingleResult("select CAST(USE_TEMPTABLE as Char(1)) from VIEW_SETTINGS where VIEW_NAME='" + Session["View"] + "'");
             }
 
             SetDataSource();
@@ -165,7 +166,7 @@ namespace BMBHviews
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -217,7 +218,9 @@ namespace BMBHviews
         protected string EscapeSQL(string SQL)
         {
             if (SQL == null)
+            {
                 throw new ArgumentNullException(nameof(SQL));
+            }
 
             SQL = SQL.Replace("'", "''")
                       .Replace("[", "")
@@ -519,7 +522,16 @@ namespace BMBHviews
                     sWhere = " WHERE " + sWhere;
                 }
 
+                if (Session["UseTempTable"].ToString() == "1")
+                {
+                    string sTempTable = "TT_" + Session["View"].ToString();
+                    SQLexecute("IF OBJECT_ID('dbo." + sTempTable + "', 'U') IS NOT NULL DROP TABLE " + sTempTable);
+                    SQLexecute("select * into " + sTempTable + " " + sFrom);
+                    sFrom = sFrom.Replace(Session["View"].ToString(), sTempTable);
+                }
+
                 string sSQL = Server.HtmlDecode(sSelect + sFrom + sWhere);
+
                 Session["LastQuery"] = sSQL;
 
                 if ((bool)Session["JumpedBack"] == false) // save result to temporary table
@@ -584,7 +596,9 @@ namespace BMBHviews
         protected void dgdSearch_RowEditing(object sender, GridViewEditEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             GridViewRow newRow = dgdSearch.Rows[e.NewEditIndex];
             string sCurrentField = newRow.Cells[2].Text;
@@ -595,7 +609,9 @@ namespace BMBHviews
         protected void btnOK_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
@@ -702,7 +718,9 @@ namespace BMBHviews
         protected void cboOperator_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             DropDownList cboOperator = (DropDownList)sender;
             GridViewRow row = (GridViewRow)cboOperator.NamingContainer;
@@ -736,7 +754,9 @@ namespace BMBHviews
         public void EnableControls(GridViewRow row, bool bLoadOperators)
         {
             if (row == null)
+            {
                 throw new ArgumentNullException(nameof(row));
+            }
 
             // get controls
             DropDownList cboValue = (DropDownList)row.FindControl("cboValue");
@@ -1015,7 +1035,9 @@ namespace BMBHviews
         protected void dgdSearch_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -1084,7 +1106,9 @@ namespace BMBHviews
         protected void cboControltype_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             DropDownList cboOperator = (DropDownList)sender;
             GridViewRow row = (GridViewRow)cboOperator.NamingContainer;
@@ -1094,7 +1118,9 @@ namespace BMBHviews
         protected void chkAdditive_CheckedChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             bool bChecked = ((CheckBox)sender).Checked;
             Session["Additive"] = bChecked;
@@ -1111,7 +1137,9 @@ namespace BMBHviews
         protected void chkRecursive_CheckedChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             bool bChecked = ((CheckBox)sender).Checked;
             Session["Recursive"] = bChecked;
@@ -1128,7 +1156,9 @@ namespace BMBHviews
         private void SaveSearch(string sSearchName)
         {
             if (sSearchName == null)
+            {
                 throw new ArgumentNullException(nameof(sSearchName));
+            }
 
             // clear previous search
             DeleteSearch(sSearchName);
@@ -1221,7 +1251,9 @@ namespace BMBHviews
         protected void btnJumpBack_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Button btnJumpBack = (Button)sender;
             GridViewRow row = (GridViewRow)btnJumpBack.NamingContainer;
@@ -1243,7 +1275,9 @@ namespace BMBHviews
         protected void btnClearValue_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             ImageButton btnClearValue = (ImageButton)sender;
             GridViewRow row = (GridViewRow)btnClearValue.NamingContainer;
@@ -1256,7 +1290,9 @@ namespace BMBHviews
         protected void chkSingleValue_CheckedChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             CheckBox chkSingleValue = (CheckBox)sender;
             GridViewRow row = (GridViewRow)chkSingleValue.NamingContainer;
@@ -1275,7 +1311,9 @@ namespace BMBHviews
         protected void txtValue_TextChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)((TextBox)sender).NamingContainer;
             DropDownList cboLogic = (DropDownList)row.FindControl("cboLogic");
@@ -1289,7 +1327,9 @@ namespace BMBHviews
         protected void dgdSearch_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             if (e.CommandName == "Edit")
             {
@@ -1319,7 +1359,9 @@ namespace BMBHviews
         protected void chkExpertMode_CheckedChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             if (((CheckBox)sender).Checked)
             {
@@ -1337,7 +1379,9 @@ namespace BMBHviews
         protected void btnDown_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
             string sID = row.Cells[0].Text;
@@ -1354,7 +1398,9 @@ namespace BMBHviews
         protected void btnUp_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
             string sID = row.Cells[0].Text;
@@ -1371,7 +1417,9 @@ namespace BMBHviews
         protected void dgdSearch_RowCreated(object sender, GridViewRowEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             e.Row.Cells[0].Visible = false; // hide id column
             e.Row.Cells[11].Visible = false; // hide sorter column
@@ -1409,7 +1457,9 @@ namespace BMBHviews
         protected void btnBracket1_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
 
@@ -1435,7 +1485,9 @@ namespace BMBHviews
         protected void btnBracket2_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
 
@@ -1460,7 +1512,9 @@ namespace BMBHviews
         protected void btnCopyRow_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sID = row.Cells[0].Text;

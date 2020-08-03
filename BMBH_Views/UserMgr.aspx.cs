@@ -65,7 +65,7 @@ namespace BMBHviews
                 cmd.ExecuteNonQuery();
                 //cmd.BeginExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -87,7 +87,9 @@ namespace BMBHviews
         protected void cboRole_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             DropDownList cboRole = (DropDownList)sender;
             GridViewRow row = (GridViewRow)cboRole.NamingContainer;
@@ -101,7 +103,9 @@ namespace BMBHviews
         protected void btnChangeToUser_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
@@ -112,7 +116,9 @@ namespace BMBHviews
         protected void chkPatientSearch_CheckedChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             CheckBox chk = (CheckBox)sender;
             GridViewRow row = (GridViewRow)chk.NamingContainer;
@@ -137,7 +143,9 @@ namespace BMBHviews
         protected void btnDeleteUser_Click(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;

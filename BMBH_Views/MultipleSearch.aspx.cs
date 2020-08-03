@@ -94,7 +94,7 @@ namespace BMBHviews
                 con.Open();
                 return Convert.ToInt32(cmd.ExecuteScalar());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -118,7 +118,9 @@ namespace BMBHviews
         protected void GeneratePseudonym(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Button btn = (Button)sender;
 
@@ -232,7 +234,9 @@ namespace BMBHviews
         protected void ShowSimilarPatients(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Button btn = (Button)sender;
 
@@ -472,7 +476,9 @@ namespace BMBHviews
         protected void NameChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             TextBox btn = (TextBox)sender;
             string id = btn.ID;
@@ -674,10 +680,14 @@ namespace BMBHviews
         protected void DgdSimPatients_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -735,7 +745,9 @@ namespace BMBHviews
         protected void DgdPatients_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             if (e.Row.RowType == DataControlRowType.Header)
             {
@@ -915,7 +927,9 @@ namespace BMBHviews
         protected void DsPatientSearch_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             e.Command.CommandTimeout = 900;
         }

@@ -19,7 +19,7 @@ namespace BMBHviews
             }
             else
             {
-                Response.Redirect("~/");
+                //Response.Redirect("~/");
             }
 
             if ((bool)Session["IsAdmin"] == true)
@@ -35,7 +35,9 @@ namespace BMBHviews
         protected void AsyncError(object sender, AsyncPostBackErrorEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             ScriptManager.GetCurrent(Page).AsyncPostBackErrorMessage =
                 "Fehler: " +
@@ -116,7 +118,9 @@ namespace BMBHviews
         public string GetEmailFromUser(string sUsername)
         {
             if (sUsername == null)
+            {
                 throw new ArgumentNullException(nameof(sUsername));
+            }
 
             if (sUsername.Contains('\\'))
             {

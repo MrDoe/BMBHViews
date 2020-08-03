@@ -44,7 +44,7 @@ namespace BMBHviews
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -58,10 +58,14 @@ namespace BMBHviews
         protected void dgdPanels_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             Label lblBackColor = (Label)e.Row.FindControl("lblBackColor");
             Label lblTextColor = (Label)e.Row.FindControl("lblTextColor");

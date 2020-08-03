@@ -218,7 +218,9 @@ namespace BMBHviews
         protected void dgdNCT_Sorting(object sender, GridViewSortEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             //Retrieve the table from the session object.
             DataTable dt = Session["MainTable"] as DataTable;
@@ -295,7 +297,7 @@ namespace BMBHviews
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -331,7 +333,9 @@ namespace BMBHviews
         protected void dgdNCT_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
