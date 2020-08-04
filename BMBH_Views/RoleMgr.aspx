@@ -148,10 +148,9 @@ Suche: <asp:TextBox ID="txtSearch" runat="server" onkeyup="ReloadUpdPanel(this.v
 
 <%--Data sources--%>
 <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="EXEC GetAllRoles"></asp:SqlDataSource>
-<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="GetPermittedViewsByRole" SelectCommandType="StoredProcedure">
+<asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>">
 <SelectParameters>
     <asp:ControlParameter ControlID="cboRole" Name="RoleId" PropertyName="SelectedValue" DefaultValue="Administrator" />
-    <asp:Parameter Name="ViewName" Type="String" />
 </SelectParameters>
 </asp:SqlDataSource>
 <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" SelectCommand="select '' as PanelId union select PanelID from Panels">

@@ -15,18 +15,14 @@ body {
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input {
-    /*max-width: 480px;*/
-/*    position: relative;
-    top: -1px;
-*/    border: 1px solid rgb(96, 119, 165);
+    border: 1px solid rgb(96, 119, 165);
     border-radius: 5px;
     box-sizing: border-box;
     outline: none;
     padding: 3px;
-/*    left: -2px;
-    height: 29px;
+    height: auto;
     width: auto;
-*/}
+}
 
 textarea {
     /*max-width: 480px;*/
@@ -202,22 +198,13 @@ td {
    padding: 0px 10px 0px 10px;
 }
 
-.chkChoice input {
-/*    position: relative;
-    left: 20px;
-    margin-left: -20px;
-*/}
-
-.chkChoice td {
-/*    padding-left: 20px;*/
+.chkChoice label {
+   padding-left: 5px;
 }
 
-.chkChoice label {
-/*    position: relative;
-    left: 20px;
-*/    padding-left: 5px;
-/*    padding-right: 20px;
-    font-weight: normal;*/
+.chkChoice input {
+    height: auto !important;
+    width: auto !important;
 }
 
 .chkSingle {
@@ -244,7 +231,6 @@ td {
 
 .inlineBlock {
     position: relative;
-    /*height: 410px !important;*/
     width: 460px;
     float: left;
     padding: 10px;
@@ -377,10 +363,6 @@ td {
     background: transparent;
     width: 309px;
     padding: 4px 7px 4px 0px;
-/*    padding-right: 4px;
-    padding-bottom: 7px;
-    padding-left: 4px;
-    padding-top: 0px; */
     font-size: 12px;
     line-height: 1;
     border: none;
@@ -401,15 +383,6 @@ td {
 .SearchBox::-webkit-search-results-decoration {
     display: none;
 }
-
-/*@media (min-width: 768px) {
-    .navbar-nav {
-        margin: 0 auto;
-        display: table;
-        table-layout: fixed;
-        float: left;
-    }*/
-/*}*/
 
 .nav-item {
     background: transparent;
@@ -451,12 +424,6 @@ td {
     margin-top: 3px;
     margin-left: 30px;
     width: 150px !important;
-    /*position: absolute;*/
-    /*top: 1px;*/
-    /*height: 35px;*/
-    /*padding: 2px;*/
-    /*margin: 2px;*/
-    /*display: block;*/
 }
 
 .txtValue2 {
@@ -539,16 +506,7 @@ pre {
     cursor: pointer;
     margin-right: 0px !important;
     font-size: 0px !Important;
-    /*content: url(Images/add_16x16.gif) !Important;*/
     background-image: url('../images/button_add.png');
-}
-
-.ajax__fileupload_selectFileButton:before {
-    /*content: url(../Images/add_16x16.gif) !Important;*/
-}
-
-.ajax__fileupload_selectFileButton:after {
-    /*content: url('../images/add_16x16.gif') !Important;*/
 }
 
 .ajax__fileupload_dropzone {
