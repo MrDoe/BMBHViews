@@ -956,7 +956,7 @@ namespace BMBHviews
                         chkSingleValue.Visible = true;
                         btnClearValue.Visible = true;
                         cboControltype.Enabled = false;
-                        chkSingleValue.Checked = (txtValue.Text == "") ? false : Convert.ToBoolean(Convert.ToInt32(txtValue.Text));
+                        chkSingleValue.Checked = txtValue.Text != "" && Convert.ToBoolean(Convert.ToInt32(txtValue.Text));
                         break;
                     }
                     else // int, nvarchar, etc. ...
