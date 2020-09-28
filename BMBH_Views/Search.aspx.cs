@@ -157,6 +157,7 @@ namespace BMBHviews
             SqlConnection con = new SqlConnection(sConnString);
             SqlCommand cmd = new SqlCommand
             {
+                CommandTimeout = 300,
                 CommandType = CommandType.Text,
                 CommandText = sSQL,
                 Connection = con
@@ -287,8 +288,8 @@ namespace BMBHviews
                     string sOperator = row.Cells[3].Text;
                     string sValue = row.Cells[4].Text;
                     string sDatatype = row.Cells[6].Text;
-                    bool bLeadingBracket = row.Cells[1].BackColor == Color.Aquamarine ? true : false;
-                    bool bEndingBracket = row.Cells[12].BackColor == Color.Aquamarine ? true : false;
+                    bool bLeadingBracket = row.Cells[1].BackColor == Color.Aquamarine;
+                    bool bEndingBracket = row.Cells[12].BackColor == Color.Aquamarine;
 
                     if (row.FindControl("lblValue") != null)
                     {
@@ -305,7 +306,6 @@ namespace BMBHviews
                                 {
                                     sValue = ((TextBox)row.FindControl("txtValue")).Text;
                                 }
-
                                 break;
                             case "DropDownList":
                                 if (row.FindControl("cboValue") != null)
@@ -317,19 +317,23 @@ namespace BMBHviews
                                 {
                                     sValue = ((TextBox)row.FindControl("txtValue")).Text;
                                 }
-
                                 break;
                             case "Calendar":
                                 if (row.FindControl("txtCalFrom") != null)
                                 {
                                     sValue = ((TextBox)row.FindControl("txtCalFrom")).Text;
+
+                                    if (sValue == "") // used IN operator
+                                    {
+                                        sValue = ((TextBox)row.FindControl("txtValue")).Text;
+                                    }
+                                    break;
                                 }
 
                                 if (row.FindControl("txtCalFrom") != null && ((TextBox)row.FindControl("txtCalTo")).Text != "")
                                 {
                                     sValue = ((TextBox)row.FindControl("txtCalFrom")).Text + ',' + ((TextBox)row.FindControl("txtCalTo")).Text;
                                 }
-
                                 break;
                         }
                     }
@@ -411,8 +415,6 @@ namespace BMBHviews
                                 {
                                     sValue = sValue.Replace("'", "");
                                 }
-
-                                //sValue = sValue.Replace("('", "").Replace("')", "");
 
                                 switch (sDatatype)
                                 {
@@ -631,23 +633,18 @@ namespace BMBHviews
                 txtValue.Text = cboValue.SelectedValue;
             }
 
-            if (chkValue.Visible) // handle checklist for IN operator
-            {
-                string sSelected = string.Join("','", chkValue.Items.OfType<ListItem>().Where(r => r.Selected).Select(r => r.Text));
-                txtValue.Text = "('" + sSelected + "')";
-            }
 
-            if (cboOperator.SelectedValue == "IN" && cboControltype.SelectedValue == "TextBox") // handle copied lists from excel
-            {
-                if (sDatatype.Contains("int") || sDatatype == "decimal" || sDatatype == "float" || sDatatype == "numeric" || sDatatype == "real" || sDatatype == "bit")
-                {
-                    txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", ",") + ")";
-                }
-                else
-                {
-                    txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
-                }
-            }
+            //if (cboOperator.SelectedValue == "IN") // handle copied lists from excel
+            //{
+            //    if (sDatatype.Contains("int") || sDatatype == "decimal" || sDatatype == "float" || sDatatype == "numeric" || sDatatype == "real" || sDatatype == "bit")
+            //    {
+            //        txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", ",") + ")";
+            //    }
+            //    else
+            //    {
+            //        txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
+            //    }
+            //}
 
             switch (sDatatype)
             {
@@ -665,6 +662,10 @@ namespace BMBHviews
                         {
                             txtValue.Text = "";
                         }
+                    }
+                    else if (sOperator == "IN")
+                    {
+                        txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
                     }
                     else // Operator >, <, =
                     {
@@ -698,10 +699,19 @@ namespace BMBHviews
                             txtValue.Text = "";
                         }
                     }
+                    else if (sOperator == "IN")
+                    {
+                        txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", ",") + ")";
+                    }
                     break;
 
                 case "bit":
-                    if (txtValue.Text != " ")
+                    if (sOperator == "IN")
+                    {
+                        string sSelected = string.Join("','", chkValue.Items.OfType<ListItem>().Where(r => r.Selected).Select(r => r.Text));
+                        txtValue.Text = "('" + sSelected + "')";
+                    }
+                    else if (txtValue.Text != " ")
                     {
                         txtValue.Text = chkSingleValue.Checked == true ? "1" : "0";
                     }
@@ -709,7 +719,13 @@ namespace BMBHviews
                     {
                         txtValue.Text = "";
                     }
+                    break;
 
+                default:
+                    if (sOperator == "IN")
+                    {
+                        txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
+                    }
                     break;
             }
             GenerateSQL(false);
@@ -814,6 +830,7 @@ namespace BMBHviews
                         cboOperator.Items.Add(new ListItem("<"));
                         cboOperator.Items.Add(new ListItem(">"));
                         cboOperator.Items.Add(new ListItem("ZWISCHEN"));
+                        cboOperator.Items.Add(new ListItem("IN"));
                         cboOperator.Items.Add(new ListItem("IST LEER"));
                         cboOperator.Items.Add(new ListItem("IST NICHT LEER"));
                         cboOperator.SelectedValue = sSelectedOperator;
@@ -997,6 +1014,17 @@ namespace BMBHviews
 
                     switch (sOperator)
                     {
+                        case "IN":
+                            btnCalFrom.Visible = false;
+                            txtCalFrom.Visible = false;
+                            lblFrom.Visible = false;
+                            calFrom.Enabled = false;
+                            txtValue.Visible = true;
+                            txtValue.TextMode = TextBoxMode.MultiLine;
+                            txtValue.Height = 150;
+                            lblInsertValues.Visible = true;
+                            break;
+
                         case "ZWISCHEN":
                             string sDate = txtValue.Text;
                             int nSplitPos = sDate.IndexOf(",");

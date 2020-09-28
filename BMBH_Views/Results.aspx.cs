@@ -71,7 +71,7 @@ namespace BMBHviews
             }
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
-            using (SqlCommand cmd = new SqlCommand(sSQL, conn))
+            using (SqlCommand cmd = new SqlCommand(sSQL, conn) { CommandTimeout = 300 })
             using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
             {
                 DataTable dt = new DataTable();
