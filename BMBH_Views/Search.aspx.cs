@@ -319,9 +319,11 @@ namespace BMBHviews
                                 }
                                 break;
                             case "Calendar":
-                                if (row.FindControl("txtCalFrom") != null)
+                                string txtFrom = ((TextBox)row.FindControl("txtCalFrom")).Text;
+                                string txtTo = ((TextBox)row.FindControl("txtCalTo")).Text;
+                                if (txtFrom.Length > 0 && txtTo.Length == 0)
                                 {
-                                    sValue = ((TextBox)row.FindControl("txtCalFrom")).Text;
+                                    sValue = txtFrom;
 
                                     if (sValue == "") // used IN operator
                                     {
@@ -329,10 +331,9 @@ namespace BMBHviews
                                     }
                                     break;
                                 }
-
-                                if (row.FindControl("txtCalFrom") != null && ((TextBox)row.FindControl("txtCalTo")).Text != "")
+                                else if (txtFrom.Length > 0 && txtTo.Length > 0)
                                 {
-                                    sValue = ((TextBox)row.FindControl("txtCalFrom")).Text + ',' + ((TextBox)row.FindControl("txtCalTo")).Text;
+                                    sValue = txtFrom + ',' + txtTo;
                                 }
                                 break;
                         }

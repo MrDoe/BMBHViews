@@ -37,10 +37,10 @@ namespace BMBHviews
 
     public partial class _Default : Page
     {
-        private void ShowMsg(string message)
-        {
-            Response.Write("<script>alert(\"" + message + "\");</script>");
-        }
+        //private void ShowMsg(string message)
+        //{
+        //    Response.Write("<script>alert(\"" + message + "\");</script>");
+        //}
 
         //// Show dataset contents (for debugging reasons)
         //private void ShowDataSet(DataSet ds)
