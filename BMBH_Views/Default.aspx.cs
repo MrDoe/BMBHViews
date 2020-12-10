@@ -521,6 +521,10 @@ namespace BMBHviews
             {
                 Session["OE"] = "Frauenklinik";
             }
+            else if (((Button)sender).ID == "btn_pnlKinder")
+            {
+                Session["OE"] = "Kinderklinik";
+            }
             else
             {
                 return;

@@ -528,7 +528,7 @@ namespace BMBHviews
                 if (Session["UseTempTable"].ToString() == "1")
                 {
                     string sTempTable = "TT_" + Session["View"].ToString();
-                    SQLexecute("IF OBJECT_ID('dbo." + sTempTable + "', 'U') IS NOT NULL DROP TABLE " + sTempTable);
+                    SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
                     SQLexecute("select * into " + sTempTable + " " + sFrom);
                     sFrom = sFrom.Replace(Session["View"].ToString(), sTempTable);
                 }
