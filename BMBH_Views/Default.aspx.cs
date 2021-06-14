@@ -413,8 +413,9 @@ namespace BMBHviews
 
         private void SetUser()
         {
-            string sRealUserName = Context.User.Identity.Name.ToString();
+            //string sRealUserName = Context.User.Identity.Name.ToString();
             //RealUserName = Page.User.Identity.Name;
+            string sRealUserName = "KHD\\doellingerchristoph";
 
             if (Session["UserName"] == null)
             {

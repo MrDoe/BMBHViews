@@ -725,7 +725,13 @@ namespace BMBHviews
                 default:
                     if (sOperator == "IN")
                     {
-                        txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
+                        if (chkValue.Visible == false)
+                            txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";                        
+                        else
+                        {
+                            string sSelected = string.Join("','", chkValue.Items.OfType<ListItem>().Where(r => r.Selected).Select(r => r.Text));
+                            txtValue.Text = "('" + sSelected + "')";
+                        }
                     }
                     break;
             }
