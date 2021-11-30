@@ -339,13 +339,13 @@ namespace BMBHviews
                         }
                     }
 
-                    if (sValue.ToLower().Contains("select") || sValue.ToLower().Contains("delete") ||
-                       sValue.ToLower().Contains("drop") || sValue.ToLower().Contains("truncate") ||
-                       sValue.ToLower().Contains("alter") || sValue.ToLower().Contains("execute") ||
-                       sValue.ToLower().Contains("call") || sValue.ToLower().Contains("updatexml") ||
+                    if (sValue.ToLower().Contains("select ") || sValue.ToLower().Contains("delete ") ||
+                       sValue.ToLower().Contains("drop ") || sValue.ToLower().Contains("truncate ") ||
+                       sValue.ToLower().Contains("alter ") || sValue.ToLower().Contains("execute ") ||
+                       sValue.ToLower().Contains("call ") || sValue.ToLower().Contains("updatexml") ||
                        sValue.ToLower().Contains("extractvalue") || sValue.ToLower().Contains("--") ||
                        sValue.ToLower().Contains("/*") || sValue.ToLower().Contains("*/") ||
-                       sValue.ToLower().Contains("grant") || sValue.ToLower().Contains("update"))
+                       sValue.ToLower().Contains("grant ") || sValue.ToLower().Contains("update "))
                     {
                         ShowMsg("Fehler: Kann die Abfrage nicht ausführen! Nicht erlaubte Schlüsselwörter verwendet. Bitte ändern und noch einmal versuchen.");
                         return;
