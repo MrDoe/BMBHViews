@@ -422,7 +422,7 @@ namespace BMBHviews
             string sRoleId = SQLexecute_SingleResult($"select RoleId from UserRoles where UserId = '{sRealUserName}'");
 
             // set login date
-            SQLexecute($"update UserRoles set LastLogin = '{DateTime.Now}' where UserId = '{sRealUserName}'");
+            SQLexecute("update UserRoles set LastLogin = '" + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + "' where UserId = '" + sRealUserName + "'");
             Session["RoleId"] = sRoleId;
 
             if (sRoleId == "1")
