@@ -6,38 +6,41 @@ using System.Web.UI.WebControls;
 
 namespace BMBHviews
 {
-    public partial class RoleMan : System.Web.UI.Page
+    public partial class UserManager : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((bool)Session["IsAdmin"] == false) // no admin, go back to previous page
+            if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"] == false) // no admin, go back to previous page
             {
                 Response.Redirect(Request.UrlReferrer.ToString());
             }
 
-            if (Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new user
+            if (Request["__EVENTARGUMENT"] != null)
             {
-                string sUsername = txtUserName.Text.Trim();
-                SQLexecute("EXEC AddNewUser '" + sUsername + "'");
-                string eMail = (Master as SiteMaster).GetEmailFromUser(sUsername);
-                SiteMaster.SendEmail(eMail, "Sehr geehrter Nutzer,\n\nIhr Benutzerkonto wurde für das Datawarehouse BMBH_Views freigeschaltet.\nSie können sich im Klinikumsnetz unter http://pat03/views mit Ihrem Windows-Benutzernamen und Passwort anmelden.\n\nMit freundlichen Grüßen\n\nIhr BMBH-IT Team", "BMBH_Views Account-Freischaltung");
-
-                Response.Redirect("UserMgr.aspx");
-            }
-            if (Request["__EVENTTARGET"] == updUsers.ClientID)
-            {
-                string value = Request["__EVENTARGUMENT"];
-
-                if (value.Length > 0)
+                if (Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new user
                 {
-                    SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles] where UserId LIKE '%" + value + "%'";
-                }
-                else
-                {
-                    SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles]";
-                }
+                    string sUsername = txtUserName.Text.Trim();
+                    SQLexecute("EXEC AddNewUser '" + sUsername + "'");
+                    string eMail = (Master as SiteMaster).GetEmailFromUser(sUsername);
+                    SiteMaster.SendEmail(eMail, "Sehr geehrter Nutzer,\n\nIhr Benutzerkonto wurde für das Datawarehouse BMBH_Views freigeschaltet.\nSie können sich im Klinikumsnetz unter http://pat03/views mit Ihrem Windows-Benutzernamen und Passwort anmelden.\n\nMit freundlichen Grüßen\n\nIhr BMBH-IT Team", "BMBH_Views Account-Freischaltung");
 
-                dgdUsers.DataBind();
+                    Response.Redirect("UserMgr.aspx");
+                }
+                if (Request["__EVENTTARGET"] != null && Request["__EVENTTARGET"] == updUsers.ClientID)
+                {
+                    string value = Request["__EVENTARGUMENT"];
+
+                    if (value.Length > 0)
+                    {
+                        SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles] where UserId LIKE '%" + value + "%'";
+                    }
+                    else
+                    {
+                        SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles]";
+                    }
+
+                    dgdUsers.DataBind();
+                }
             }
         }
 
@@ -63,7 +66,6 @@ namespace BMBHviews
             try
             {
                 cmd.ExecuteNonQuery();
-                //cmd.BeginExecuteNonQuery();
             }
             catch (Exception)
             {
@@ -79,17 +81,10 @@ namespace BMBHviews
             }
         }
 
-        //private void ShowMsg(string message)
-        //{
-        //    Response.Write("<script>alert(\"" + message + "\");</script>");
-        //}
-
         protected void cboRole_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender == null)
-            {
                 throw new ArgumentNullException(nameof(sender));
-            }
 
             DropDownList cboRole = (DropDownList)sender;
             GridViewRow row = (GridViewRow)cboRole.NamingContainer;

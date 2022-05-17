@@ -10,7 +10,7 @@
 namespace BMBHviews {
     
     
-    public partial class RoleMan {
+    public partial class UserManager {
         
         /// <summary>
         /// btnNewUser-Steuerelement

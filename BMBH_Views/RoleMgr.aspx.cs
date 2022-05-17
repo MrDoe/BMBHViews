@@ -11,10 +11,8 @@ using System.Web.UI.WebControls;
 
 namespace BMBHviews
 {
-    public partial class UserMan : Page
+    public partial class RoleManager : Page
     {
-        //private static readonly string prevPage = string.Empty;
-
         public static string Base64Decode(string base64EncodedData)
         {
             byte[] base64EncodedBytes = Convert.FromBase64String(base64EncodedData);

@@ -10,7 +10,7 @@
 namespace BMBHviews {
     
     
-    public partial class UserMan {
+    public partial class RoleManager {
         
         /// <summary>
         /// HiddenField1-Steuerelement
