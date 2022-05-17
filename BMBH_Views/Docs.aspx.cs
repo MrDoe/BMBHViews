@@ -86,7 +86,7 @@ namespace BMBHviews
         public void DownloadFile(string fileName)
         {
             Response.Clear();
-            System.IO.FileInfo file = new System.IO.FileInfo(Server.MapPath(fileName));
+            FileInfo file = new FileInfo(Server.MapPath(fileName));
             Response.AddHeader("Content-Disposition", "attachment; filename=" + file.Name);
             Response.AddHeader("Content-Length", file.Length.ToString());
             Response.ContentType = "application/octet-stream";

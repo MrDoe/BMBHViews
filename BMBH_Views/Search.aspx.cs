@@ -30,7 +30,7 @@ namespace BMBHviews
         {
             if (!Page.IsPostBack)
             {
-                //Session["UserName"] = Page.User.Identity.Name;
+                Session["UserName"] = Context.User.Identity.Name.ToString();
                 Session["JumpedBack"] = false;
                 Session["ShowListDialog"] = null;
                 Session["PreviousIndex"] = null;
@@ -169,7 +169,7 @@ namespace BMBHviews
             }
             catch (Exception)
             {
-                throw;
+                //throw;
             }
             finally
             {

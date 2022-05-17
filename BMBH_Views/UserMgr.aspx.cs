@@ -79,10 +79,10 @@ namespace BMBHviews
             }
         }
 
-        private void ShowMsg(string message)
-        {
-            Response.Write("<script>alert(\"" + message + "\");</script>");
-        }
+        //private void ShowMsg(string message)
+        //{
+        //    Response.Write("<script>alert(\"" + message + "\");</script>");
+        //}
 
         protected void cboRole_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -152,9 +152,11 @@ namespace BMBHviews
             string sUserName = row.Cells[0].Text;
             try
             {
-                SQLexecute("delete from UserRoles where UserId='" + sUserName + "'");
+                SQLexecute("EXEC DeleteUser '" + sUserName + "'");
             }
-            catch (Exception) { }
+            catch (Exception) {}
+
+            Response.Redirect("UserMgr.aspx");
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Web.UI;
 
 namespace BMBHviews
 {
-    public partial class Config : System.Web.UI.Page
+    public partial class Config : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

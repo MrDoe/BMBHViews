@@ -3,7 +3,7 @@ using System.Web.UI;
 
 namespace BMBHviews
 {
-    public partial class ViewFile : System.Web.UI.Page
+    public partial class ViewFile : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -19,10 +19,11 @@ namespace BMBHviews
             }
             else
             {
-                //Response.Redirect("~/");
+                Session["UserName"] = Context.User.Identity.Name.ToString();
+                lblUserName.Text = (string)Session["UserName"];
             }
 
-            if ((bool)Session["IsAdmin"] == true)
+            if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"] == true)
             {
                 lnkUserMan.Visible = true;
             }

@@ -414,26 +414,21 @@ namespace BMBHviews
         private void SetUser()
         {
             string sRealUserName = Context.User.Identity.Name.ToString();
-            //RealUserName = Page.User.Identity.Name;
-            //string sRealUserName = "KHD\\doellingerchristoph";
 
             if (Session["UserName"] == null)
-            {
                 Session["UserName"] = sRealUserName;
-            }
 
             // get user role
-            string sRoleId = SQLexecute_SingleResult("select RoleId from UserRoles where UserId = '" + sRealUserName + "'");
+            string sRoleId = SQLexecute_SingleResult($"select RoleId from UserRoles where UserId = '{sRealUserName}'");
+
+            // set login date
+            SQLexecute($"update UserRoles set LastLogin = '{DateTime.Now}' where UserId = '{sRealUserName}'");
             Session["RoleId"] = sRoleId;
 
             if (sRoleId == "1")
-            {
                 Session["IsAdmin"] = true;
-            }
             else
-            {
                 Session["IsAdmin"] = false;
-            }
         }
 
         protected void Page_Load(object sender, EventArgs e)

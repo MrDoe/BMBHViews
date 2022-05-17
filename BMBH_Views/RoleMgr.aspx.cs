@@ -11,7 +11,7 @@ using System.Web.UI.WebControls;
 
 namespace BMBHviews
 {
-    public partial class UserMan : System.Web.UI.Page
+    public partial class UserMan : Page
     {
         //private static readonly string prevPage = string.Empty;
 
@@ -25,81 +25,41 @@ namespace BMBHviews
         {
             if (!Page.IsPostBack) // on first load
             {
-                cboRole.SelectedValue = (string)Session["RoleId"];
-                //                SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,''";
+                if(Session["RoleId"] != null)
+                    cboRole.SelectedValue = (string)Session["RoleId"];
             }
 
-            if (Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new role
+            if (Request["__EVENTARGUMENT"] != null)
             {
-                SQLexecute("insert into Roles (RoleName) VALUES ('" + txtRoleName.Text.Trim() + "')");
-                Response.Redirect("RoleMgr.aspx");
-            }
+                if (Request["__EVENTARGUMENT"] == "PostFromNew_Send") // add new role
+                {
+                    SQLexecute("insert into Roles (RoleName) VALUES ('" + txtRoleName.Text.Trim() + "')");
+                    Response.Redirect("RoleMgr.aspx");
+                }
 
-            if (Request["__EVENTARGUMENT"] == "EditView_OK") // confirm edit view
-            {
-                string sViewDefinition = Server.UrlDecode(Base64Decode(HiddenField1.Value));
-                SQLexecute(GetTextOnly(sViewDefinition));
-                //Response.Redirect("RoleMgr.aspx");
-            }
+                if (Request["__EVENTARGUMENT"] == "EditView_OK") // confirm edit view
+                {
+                    string sViewDefinition = Server.UrlDecode(Base64Decode(HiddenField1.Value));
+                    SQLexecute(GetTextOnly(sViewDefinition));
+                    //Response.Redirect("RoleMgr.aspx");
+                }
 
-            if (Request["__EVENTTARGET"] == updViews.ClientID) // search views by filter textbox
-            {
-                string value = Request["__EVENTARGUMENT"];
-                SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,'" + value + "'";
-                dgdViewPermissions.DataBind();
+                if (Request["__EVENTTARGET"] != null && Request["__EVENTTARGET"] == updViews.ClientID) // search views by filter textbox
+                {
+                    string value = Request["__EVENTARGUMENT"];
+                    SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,'" + value + "'";
+                    dgdViewPermissions.DataBind();
+                }
+                else // just show all views from role
+                {
+                    SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,''";
+                }
             }
             else
             {
                 SqlDataSource2.SelectCommand = "GetPermittedViewsByRole @RoleId,''";
             }
         }
-
-        //private void SQLexecute_async(string sSQL)
-        //{
-        //    // Given command text and connection string, asynchronously execute
-        //    // the specified command against the connection. For this example,
-        //    // the code displays an indicator as it is working, verifying the 
-        //    // asynchronous behavior. 
-        //    string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
-        //    using (SqlConnection connection = new SqlConnection(sConnString))
-        //    {
-        //        try
-        //        {
-        //            //int count = 0;
-        //            SqlCommand command = new SqlCommand(sSQL, connection)
-        //            {
-        //                CommandTimeout = 300
-        //            };
-        //            connection.Open();
-
-        //            IAsyncResult result = command.BeginExecuteNonQuery();
-        //            while (!result.IsCompleted)
-        //            {
-        //                //Console.WriteLine("Waiting ({0})", count++);
-        //                // Wait for 1/10 second, so the counter
-        //                // does not consume all available resources 
-        //                // on the main thread.
-        //                System.Threading.Thread.Sleep(100);
-        //            }
-        //            //Console.WriteLine("Command complete. Affected {0} rows.",
-        //            command.EndExecuteNonQuery(result);
-        //        }
-        //        catch (SqlException ex)
-        //        {
-        //            ShowMsg(ex.Message);
-        //        }
-        //        catch (InvalidOperationException ex)
-        //        {
-        //            ShowMsg(ex.Message);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // You might want to pass these errors
-        //            // back out to the caller.
-        //            ShowMsg(ex.Message);
-        //        }
-        //    }
-        //}
 
         private static void SQLexecute(string sSQL)
         {
@@ -117,11 +77,10 @@ namespace BMBHviews
             {
                 con.Open();
                 cmd.ExecuteNonQuery();
-                //cmd.BeginExecuteNonQuery();
             }
             catch (Exception)
             {
-                throw;
+                //throw;
             }
             finally
             {
