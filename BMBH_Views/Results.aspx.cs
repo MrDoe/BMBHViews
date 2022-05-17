@@ -86,6 +86,7 @@ namespace BMBHviews
         protected void btnExcel_Click(object sender, EventArgs e)
         {
             DataTable datatable = (Session["MainTable"] as DataTable).DefaultView.ToTable();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             ExcelPackage excel = new ExcelPackage();
             ExcelWorksheet workSheet = excel.Workbook.Worksheets.Add("Exportierte Daten");
             int totalCols = datatable.Columns.Count;
