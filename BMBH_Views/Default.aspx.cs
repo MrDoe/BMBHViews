@@ -5,7 +5,6 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-//using System.Net;
 
 namespace BMBHviews
 {
@@ -37,10 +36,10 @@ namespace BMBHviews
 
     public partial class _Default : Page
     {
-        //private void ShowMsg(string message)
-        //{
-        //    Response.Write("<script>alert(\"" + message + "\");</script>");
-        //}
+        private void ShowMsg(string message)
+        {
+            Response.Write("<script>alert(\"" + message + "\");</script>");
+        }
 
         //// Show dataset contents (for debugging reasons)
         //private void ShowDataSet(DataSet ds)
@@ -396,20 +395,34 @@ namespace BMBHviews
             }
         }
 
-        private static string SQLexecute_SingleResult(string sSQL)
+        private string SQLexecute_SingleResult(string sSQL)
         {
-            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
-            SqlConnection con = new SqlConnection(sConnString);
-            using (SqlCommand command = new SqlCommand(sSQL, con))
+            try
             {
-                con.Open();
-                using (SqlDataReader reader = command.ExecuteReader())
+                string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+                SqlConnection con = new SqlConnection(sConnString);
+                using (SqlCommand command = new SqlCommand(sSQL, con))
                 {
-                    reader.Read();
-                    return reader.GetString(0);
+                    con.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        reader.Read();
+                        return reader.GetString(0);
+                    }
                 }
             }
+            catch(Exception ex)
+            {
+                ShowMsg("SQL-Fehler: " + ex.Message);
+                return "";
+            }
         }
+
+        //private void ShowMsg(string message)
+        //{
+        //    message = "alert('" + message + "')";
+        //    ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "alert", message, true);
+        //}
 
         private void SetUser()
         {
@@ -422,7 +435,7 @@ namespace BMBHviews
             string sRoleId = SQLexecute_SingleResult($"select RoleId from UserRoles where UserId = '{sRealUserName}'");
 
             // set login date
-            SQLexecute("update UserRoles set LastLogin = '" + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + "' where UserId = '" + sRealUserName + "'");
+            SQLexecute("update UserRoles set LastLogin = CONVERT(datetime, '" + DateTime.Now.ToString() + "', 104) where UserId = '" + sRealUserName + "'");
             Session["RoleId"] = sRoleId;
 
             if (sRoleId == "1")

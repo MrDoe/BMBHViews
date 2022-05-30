@@ -1,103 +1,101 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MultipleSearch.aspx.cs" Inherits="BMBHviews.MultipleSearch" %>
-
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="AjaxControlToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <h2>Patientensuche und Depseudonymisierung</h2>
-    <p>Benutzungshinweise: Jeweils eine Spalte mit den Quelldaten in Excel markieren und in die Zwischenablage kopieren. Anschließend in der folgenden Tabelle  den zugehörigen Spaltentitel anklicken. Wenn alle Daten in der Tabelle sind, auf &quot;Suche starten&quot; klicken.</p>
-    <asp:Button ID="btnSearch" Visible="false" runat="server" CssClass="btn btn-default btn-small" Text="Suche starten" Width="92px" OnClick="BtnSearch_Click" />
-    <asp:Button ID="btnNew" runat="server" CssClass="btn btn-default btn-small" Text="Neue Suche" OnClick="BtnNew_Click" />
-    <asp:Button ID="btnExcel" Visible="false" runat="server" CssClass="btn btn-default btn-small" OnClick="BtnExcel_Click" Text="Excel-Export" />
-
+    <h2>Patientensuche und Pseudonymisierung</h2>
+    <p>Benutzungshinweise: Jeweils eine Spalte mit den Quelldaten in Excel markieren und in die Zwischenablage kopieren. Anschließend die Daten in der folgenden Tabelle unter der jeweiligen Spalte einfügen. Wenn alle Daten in der Tabelle sind, auf &quot;Suche starten&quot; klicken.</p>
     <div style="display: block; float: right; position: relative; top: 5px;">
         <asp:HiddenField ID="hfTarget" runat="server" />
         <AjaxControlToolkit:ModalPopupExtender ID="MPE" runat="server" TargetControlID="hfTarget" PopupControlID="pnlList" PopupDragHandleControlID="pnlListHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
-
     </div>
-    <br />
-    <br>
+    <asp:Panel ID="Panel1" runat="server">
+        <asp:Label ID="Label1" runat="server" CssClass="mr-2 font-weight-bold" Text="Modus:"></asp:Label>
+        <asp:RadioButton ID="rbSearch" runat="server" Checked="True" Text="Suchen" CssClass="my-2" GroupName="Mode" OnCheckedChanged="rb_CheckedChanged" AutoPostBack="True"/>
+        <asp:RadioButton ID="rbPseudo" runat="server" Text="Pseudonymisieren" CssClass="my-2" GroupName="Mode" OnCheckedChanged="rb_CheckedChanged" AutoPostBack="True"/>
+        <asp:Button ID="btnNew" runat="server" CssClass="btn btn-default btn-small" OnClick="BtnNew_Click" Text="Neu" />
+        <asp:Button ID="btnSearch" Visible="false" runat="server" CssClass="btn btn-default btn-small" Text="Suche starten" Width="92px" OnClick="BtnSearch_Click" />
+        <asp:Button ID="btnExcel" Visible="false" runat="server" CssClass="btn btn-default btn-small" OnClick="BtnExcel_Click" Text="Excel-Export" />
+    </asp:Panel>
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
-            <asp:Timer ID="Timer1" runat="server" OnTick="TimerTick" Interval="10" Enabled="false">
-            </asp:Timer>
             <asp:GridView ID="dgdPatients" runat="server" AutoGenerateColumns="False" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="3" DataKeyNames="ID" OnRowDataBound="DgdPatients_RowDataBound" Width="769px">
                 <AlternatingRowStyle BackColor="#E7EEFA" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" />
                 <Columns>
                     <asp:BoundField DataField="ID" HeaderText="ID" Visible="false" InsertVisible="False" ReadOnly="True" SortExpression="ID" />
                     <asp:TemplateField HeaderText="Name" SortExpression="Name">
                         <HeaderTemplate>
-                            <asp:Button ID="btnName" runat="server" CssClass="btn btn-default btn-small btn-header" ClientIDMode="Static" OnClientClick="pasteToGrid('Name');" Text="Name" />
-                            <asp:Label ID="lblName" runat="server" Visible="false" Text="Name" />
+                            <asp:Label ID="lblName" runat="server" Visible="true" Text="Name" />
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label ID="lblNameVal" runat="server" Text='<%# Bind("Name") %>'></asp:Label>
-                            <asp:TextBox ID="txtNameVal" runat="server" onchange="javascript: Changed( this );" Text='<%# Bind("Name") %>'></asp:TextBox>
+                            <asp:TextBox ID="txtNameVal" runat="server" Visible="false" onchange="javascript: Changed( this );" Text='<%# Bind("Name") %>'></asp:TextBox>
+                            <asp:TextBox ID="btnName" runat="server" Font-Size="Smaller" TextMode="MultiLine" onchange="pasteToGrid('Name', this);" ClientIDMode="Static" placeholder="Spalte hier einfügen..."></asp:TextBox>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Vorname" SortExpression="Vorname">
                         <HeaderTemplate>
-                            <asp:Button ID="btnPrename" runat="server" CssClass="btn btn-default btn-small btn-header" Text="Vorname" ClientIDMode="Static" OnClientClick="pasteToGrid('Vorname');" />
-                            <asp:Label ID="lblPrename" runat="server" Visible="false" Text="Vorname" />
+                            <asp:Label ID="lblPrename" runat="server" Text="Vorname" />
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label ID="lblPrenameVal" runat="server" Text='<%# Bind("Vorname") %>'></asp:Label>
-                            <asp:TextBox ID="txtPrenameVal" runat="server" onchange="javascript: Changed( this );" Text='<%# Bind("Vorname") %>'></asp:TextBox>
+                            <asp:TextBox ID="txtPrenameVal" runat="server" Visible="false" onchange="javascript: Changed( this );" Text='<%# Bind("Vorname") %>'></asp:TextBox>
+                            <asp:TextBox ID="btnPrename" runat="server" Font-Size="Smaller" TextMode="MultiLine" onchange="pasteToGrid('Vorname', this);" ClientIDMode="Static" placeholder="Spalte hier einfügen..."></asp:TextBox>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Geburtsdatum" SortExpression="Geburtsdatum">
                         <HeaderTemplate>
-                            <asp:Button ID="btnBirthdate" runat="server" CssClass="btn btn-default btn-small btn-header" Text="Geburtsdatum" Width="95px" ClientIDMode="Static" OnClientClick="pasteToGrid('Geburtsdatum');" />
-                            <asp:Label ID="lblBirthdate" runat="server" Visible="false" Text="Geburtsdatum" />
+                            <asp:Label ID="lblBirthdate" runat="server" Text="Geburtsdatum" />
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label ID="lblBirthdateVal" runat="server" Text='<%# Bind("Geburtsdatum", "{0:dd.MM.yyyy}") %>'></asp:Label>
-                            <asp:TextBox ID="txtBirthdateVal" runat="server" onchange="javascript: Changed( this );" Text='<%# Bind("Geburtsdatum", "{0:dd.MM.yyyy}") %>'></asp:TextBox>
+                            <asp:TextBox ID="txtBirthdateVal" runat="server" Visible="false" onchange="javascript: Changed( this );" Text='<%# Bind("Geburtsdatum", "{0:dd.MM.yyyy}") %>'></asp:TextBox>
+                            <asp:TextBox ID="btnBirthdate" runat="server" Font-Size="Smaller" TextMode="MultiLine" onchange="pasteToGrid('Geburtsdatum', this);" ClientIDMode="Static" placeholder="Spalte hier einfügen..."></asp:TextBox>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="ISH_PID" SortExpression="ISH_PID">
                         <HeaderTemplate>
-                            <asp:Button ID="btnISHPID" runat="server" CssClass="btn btn-default btn-small btn-header" Text="ISH_PID" Width="69px" ClientIDMode="Static" OnClientClick="pasteToGrid('ISH_PID');" />
-                            <asp:Label ID="lblISHPID" runat="server" Visible="false" Text="ISH-PID" />
+                            <asp:Label ID="lblISHPID" runat="server" Text="ISH-PID" />
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label ID="lblISHPIDVal" runat="server" Text='<%# Bind("ISH_PID") %>'></asp:Label>
-                            <asp:TextBox ID="txtISHPIDVal" runat="server" onchange="javascript: Changed( this );" Text='<%# Bind("ISH_PID") %>'></asp:TextBox>
+                            <asp:TextBox ID="txtISHPIDVal" runat="server" Visible="false" onchange="javascript: Changed( this );" Text='<%# Bind("ISH_PID") %>'></asp:TextBox>
+                            <asp:TextBox ID="btnISHPID" runat="server" Font-Size="Smaller" TextMode="MultiLine" onchange="pasteToGrid('ISH_PID', this);" ClientIDMode="Static" placeholder="Spalte hier einfügen..."></asp:TextBox>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="ISH_FID" SortExpression="ISH_FID">
                         <HeaderTemplate>
-                            <asp:Button ID="btnISHFID" runat="server" CssClass="btn btn-default btn-small btn-header" Text="ISH_FID" Width="66px" ClientIDMode="Static" OnClientClick="pasteToGrid('ISH_FID');" />
-                            <asp:Label ID="lblISHFID" runat="server" Visible="false" Text="ISH-FID" />
+                            <asp:Label ID="lblISHFID" runat="server" Text="ISH-FID" />
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label ID="lblISHFIDVal" runat="server" Text='<%# Bind("ISH_FID") %>'></asp:Label>
-                            <asp:TextBox ID="txtISHFIDVal" runat="server" onchange="javascript: Changed( this );" Text='<%# Bind("ISH_FID") %>'></asp:TextBox>
+                            <asp:TextBox ID="txtISHFIDVal" runat="server" Visible="false" onchange="javascript: Changed( this );" Text='<%# Bind("ISH_FID") %>'></asp:TextBox>
+                            <asp:TextBox ID="btnISHFID" runat="server" Font-Size="Smaller" TextMode="MultiLine" onchange="pasteToGrid('ISH_FID', this);" ClientIDMode="Static" placeholder="Spalte hier einfügen..."></asp:TextBox>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="BMBH_PID" SortExpression="BMBH_PID">
                         <HeaderTemplate>
-                            <asp:Button ID="btnBMBHPID" runat="server" CssClass="btn btn-default btn-small btn-header" Text="BMBH-PID" Width="87px" ClientIDMode="Static" OnClientClick="pasteToGrid('BMBH_PID');" />
-                            <asp:Label ID="lblBMBHPID" runat="server" Visible="false" Text="BMBH-PID" />
+                            <asp:Label ID="lblBMBHPID" runat="server" Text="BMBH-PID" />
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label ID="lblBMBHPIDVal" runat="server" Text='<%# Bind("BMBH_PID") %>'></asp:Label>
-                            <asp:TextBox ID="txtBMBHPIDVal" runat="server" onchange="javascript: Changed( this );" Text='<%# Bind("BMBH_PID") %>'></asp:TextBox>
+                            <asp:TextBox ID="txtBMBHPIDVal" runat="server" Visible="false" onchange="javascript: Changed( this );" Text='<%# Bind("BMBH_PID") %>'></asp:TextBox>
+                            <asp:TextBox ID="btnBMBHPID" runat="server" Font-Size="Smaller" TextMode="MultiLine" onchange="pasteToGrid('BMBH_PID', this);" ClientIDMode="Static" placeholder="Spalte hier einfügen..."></asp:TextBox>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:BoundField DataField="GUID" HeaderText="GUID" SortExpression="GUID" Visible="False" />
                     <asp:TemplateField HeaderText="Histo_Nr">
                         <HeaderTemplate>
-                            <asp:Button ID="btnHistoNr" runat="server" CssClass="btn btn-default btn-small btn-header" Text="Histo_Nr" Width="87px" ClientIDMode="Static" OnClientClick="pasteToGrid('Histo_Nr');" />
-                            <asp:Label ID="lblHistoNr" runat="server" Text="Histo_Nr" Visible="False"></asp:Label>
+                            <asp:Label ID="lblHistoNr" runat="server" Text="Histo_Nr"></asp:Label>
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label ID="lblHistoNrVal" runat="server" Text='<%# Bind("Histo_Nr") %>'></asp:Label>
-                            <asp:TextBox ID="txtHistoNrVal" runat="server" AutoPostBack="true" OnTextChanged="NameChanged" Text='<%# Bind("Histo_Nr") %>'></asp:TextBox>
+                            <%--<asp:TextBox ID="txtHistoNrVal" runat="server" AutoPostBack="true" Visible="false" OnTextChanged="NameChanged" Text='<%# Bind("Histo_Nr") %>'></asp:TextBox>--%>
+                            <asp:TextBox ID="btnHistoNr" runat="server" Font-Size="Smaller" TextMode="MultiLine" onchange="pasteToGrid('Histo_Nr', this);" ClientIDMode="Static" placeholder="Spalte hier einfügen..."></asp:TextBox>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:BoundField DataField="Status" HeaderText="Einwilligungsstatus" ReadOnly="True" />
                     <asp:TemplateField HeaderText="Pseudonym">
                         <ItemTemplate>
-                            <asp:Button ID="btnPseudo" runat="server" Text='Generieren' OnClick="ShowSimilarPatients"></asp:Button>
+                            <asp:Button ID="btnPseudo" runat="server" CssClass="btn btn-default btn-small" Text="Generieren" OnClick="ShowSimilarPatients"></asp:Button>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
@@ -113,11 +111,8 @@
                 <SortedDescendingCellStyle BackColor="#CAC9C9" />
                 <SortedDescendingHeaderStyle BackColor="#00547E" />
             </asp:GridView>
-
         </ContentTemplate>
-
     </asp:UpdatePanel>
-
 
     <asp:Panel ID="pnlList" runat="server" CssClass="modalPopup" align="center" Style="background-color: white; width: 700px; height: 300px; top: 0px; left: 0px;" TabIndex="0">
         <asp:Panel ID="pnlListHeader" runat="server" CssClass="modalHeader" Style="width: 712px;" HorizontalAlign="center" TabIndex="0">
@@ -213,13 +208,13 @@
 
     </asp:Panel>
 
-    <asp:SqlDataSource ID="dsPatientSearch" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>" 
+    <asp:SqlDataSource ID="dsPatientSearch" runat="server" ConnectionString="<%$ ConnectionStrings:BMBHViewsConnectionString %>"
         SelectCommand="SELECT * FROM [PatientSearch] WHERE [GUID] = @GUID" OnSelecting="DsPatientSearch_Selecting">
         <SelectParameters>
             <asp:SessionParameter Name="GUID" SessionField="GUID" />
         </SelectParameters>
     </asp:SqlDataSource>
-    <asp:HiddenField ID="HiddenInputBox" runat="server" />
+    <asp:HiddenField ID="HiddenInputBox" runat="server" ClientIDMode="Static" />
     <asp:HiddenField ID="HiddenSearchMode" runat="server" />
 
     <script>
@@ -227,9 +222,7 @@
             var row = lnk.parentNode.parentNode;
             var text = lnk.value;
             var id = lnk.id;
-
             var show = text === "";
-
 
             if (id.indexOf("txtPrenameVal") > -1 || id.indexOf("txtNameVal") > -1 || id.indexOf("txtBirthdateVal") > -1) {
                 var lName = row.cells[0].getElementsByTagName("input")[0].value;
@@ -243,34 +236,34 @@
 
                 document.getElementById('<%= HiddenSearchMode.ClientID %>').value = show ? 4 : 0;
 
-    } else if (id.indexOf("txtISHPIDVal") > -1) {
-        row.cells[0].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[1].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[2].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[4].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[5].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+            } else if (id.indexOf("txtISHPIDVal") > -1) {
+                row.cells[0].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[1].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[2].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[4].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[5].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
 
-        document.getElementById('<%= HiddenSearchMode.ClientID %>').value = show ? 4 : 1;
+                document.getElementById('<%= HiddenSearchMode.ClientID %>').value = show ? 4 : 1;
 
-    } else if (id.indexOf("txtISHFIDVal") > -1) {
-        row.cells[0].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[1].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[2].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[3].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[5].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+            } else if (id.indexOf("txtISHFIDVal") > -1) {
+                row.cells[0].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[1].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[2].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[3].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[5].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
 
-        document.getElementById('<%= HiddenSearchMode.ClientID %>').value = show ? 4 : 2;
+                document.getElementById('<%= HiddenSearchMode.ClientID %>').value = show ? 4 : 2;
 
-    } else if (id.indexOf("txtBMBHPIDVal") > -1) {
-        row.cells[0].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[1].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[2].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[3].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
-        row.cells[4].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+            } else if (id.indexOf("txtBMBHPIDVal") > -1) {
+                row.cells[0].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[1].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[2].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[3].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
+                row.cells[4].getElementsByTagName("input")[0].style.display = show ? 'inline' : 'none';
 
-        document.getElementById('<%= HiddenSearchMode.ClientID %>').value = show ? 4 : 3;
-    } else {
-        document.getElementById('<%= HiddenSearchMode.ClientID %>').value = show ? 4 : 5;
+                document.getElementById('<%= HiddenSearchMode.ClientID %>').value = show ? 4 : 3;
+            } else {
+                document.getElementById('<%= HiddenSearchMode.ClientID %>').value = show ? 4 : 5;
             }
         }
     </script>

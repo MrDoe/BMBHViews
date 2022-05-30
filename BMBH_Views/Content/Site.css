@@ -38,6 +38,11 @@ td {
     padding-left: 8px
 }
 
+input[type="radio"],
+input[type="checkbox"] {
+    margin: 5px;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
     .jumbotron {
@@ -160,7 +165,7 @@ td {
 }
 .btn-default {
     background-color: rgb(253, 254, 255);
-    padding: 5px 5px;
+    padding: 5px;
     border-width: 1px;
     border-style: outset;
     border-color: rgb(220,240,255);
@@ -175,10 +180,7 @@ td {
 
 .btn-small {
     background-color: rgb(245, 250, 255);
-    position: relative;
-    left: -2px;
-    top: 2px;
-    padding: 2px 5px 0px 5px;
+    padding: 0px 10px 0px 10px;
     margin: 0px;
     font-size: 9pt;
     height: 26px;

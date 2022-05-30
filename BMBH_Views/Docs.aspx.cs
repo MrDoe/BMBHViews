@@ -1,6 +1,4 @@
-﻿using iTextSharp.text.pdf;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -16,11 +14,6 @@ namespace BMBHviews
         {
             Session["DocRoleId"] = "1";
         }
-
-        //private void ShowMsg(string message)
-        //{
-        //    Response.Write("<script>alert(\"" + message + "\");</script>");
-        //}
 
         private static void SQLexecute(string sSQL)
         {
@@ -130,40 +123,8 @@ namespace BMBHviews
             SQLexecute("EXEC SetDocPermission " + sRoleId + "," + sDocId + "," + sPermission);
         }
 
-        public static string ReadPdfFile(string fileName)
-        {
-            string text = "";
-
-            if (File.Exists(fileName))
-            {
-                PdfReader pdfReader = new PdfReader(fileName);
-                FdfWriter fdfWriter = new FdfWriter();
-                AcroFields pdfFormFields = pdfReader.AcroFields;
-                pdfFormFields.ExportAsFdf(fdfWriter);
-                Dictionary<string, object> ff = fdfWriter.GetFields();
-                pdfReader.Close();
-
-                foreach (KeyValuePair<string, object> field in ff)
-                {
-                    text += field.Key + "  :  " + field.Value + "\n";
-                }
-            }
-            return text;
-        }
-
         protected void btnPDF_Click(object sender, ImageClickEventArgs e)
         {
-            if (sender == null)
-            {
-                throw new ArgumentNullException(nameof(sender));
-            }
-
-            ImageButton btnPDF = (ImageButton)sender;
-            GridViewRow row = (GridViewRow)btnPDF.NamingContainer;
-            string sFileName = row.Cells[6].Text;
-            sFileName = Server.MapPath(sFileName);
-            string sContent = ReadPdfFile(sFileName);
-            txtResult.Text = sContent;
         }
     }
 }

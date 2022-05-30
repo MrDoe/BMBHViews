@@ -56,19 +56,10 @@ namespace BMBHviews
             string sSQL;
             string sOrderBy = "";
 
-            //if (Session["SortCriteria"] != null && Session["SortDirection"] != null)
-            //    sOrderBy = "order by v.[" + Session["SortCriteria"].ToString() + "], ID " + Session["SortDirection"].ToString();
-            //else
-            //    sOrderBy = "order by v.[ID]";
-
             if (Session["LastQuery"] == null)
-            {
                 sSQL = "SELECT * FROM [" + Session["View"] + "] v " + sOrderBy;
-            }
             else
-            {
                 sSQL = Session["LastQuery"].ToString() + " " + sOrderBy;
-            }
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(sSQL, conn) { CommandTimeout = 300 })

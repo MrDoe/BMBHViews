@@ -118,12 +118,11 @@ namespace BMBHviews
         protected void GeneratePseudonym(object sender, EventArgs e)
         {
             if (sender == null)
-            {
                 throw new ArgumentNullException(nameof(sender));
-            }
+
+            Session["PSDMode"] = false;
 
             Button btn = (Button)sender;
-
             GridViewRow gvr2 = (GridViewRow)btn.NamingContainer;
 
             Label lN = (Label)gvr2.FindControl("lblpLNameVal");
@@ -201,42 +200,14 @@ namespace BMBHviews
                     }
                 }
                 else
-                {
                     lblError.Visible = true;
-                }
             }
-        }
-
-        private static void ChangeVisibilityGrid(GridViewRow row, bool edit)
-        {
-            ((Label)row.FindControl("lblNameVal")).Visible = !edit;
-            ((TextBox)row.FindControl("txtNameVal")).Visible = edit;
-
-            ((Label)row.FindControl("lblPrenameVal")).Visible = !edit;
-            ((TextBox)row.FindControl("txtPrenameVal")).Visible = edit;
-
-            ((Label)row.FindControl("lblBirthdateVal")).Visible = !edit;
-            ((TextBox)row.FindControl("txtBirthdateVal")).Visible = edit;
-
-            ((Label)row.FindControl("lblISHPIDVal")).Visible = !edit;
-            ((TextBox)row.FindControl("txtISHPIDVal")).Visible = edit;
-
-            ((Label)row.FindControl("lblISHFIDVal")).Visible = !edit;
-            ((TextBox)row.FindControl("txtISHFIDVal")).Visible = edit;
-
-            ((Label)row.FindControl("lblBMBHPIDVal")).Visible = !edit;
-            ((TextBox)row.FindControl("txtBMBHPIDVal")).Visible = edit;
-
-            ((Label)row.FindControl("lblHistoNrVal")).Visible = !edit;
-            ((TextBox)row.FindControl("txtHistoNrVal")).Visible = edit;
         }
 
         protected void ShowSimilarPatients(object sender, EventArgs e)
         {
             if (sender == null)
-            {
                 throw new ArgumentNullException(nameof(sender));
-            }
 
             Button btn = (Button)sender;
 
@@ -291,19 +262,15 @@ namespace BMBHviews
             {
                 if (Session["init"] == null) // first page load
                 {
-                    //Timer1.Enabled = true;
-                    Initialize();
+                    Initialize(4);
                     Session["init"] = true;
                 }
 
                 if (Session["MainTable"] == null)
-                {
                     dgdPatients.DataSource = GetData();
-                }
                 else
-                {
                     dgdPatients.DataSource = Session["MainTable"] as DataTable;
-                }
+
                 dgdPatients.DataBind();
             }
 
@@ -311,7 +278,8 @@ namespace BMBHviews
             string sEventArg = Request["__EVENTARGUMENT"];
             if (sEventArg != null && sEventArg.Length > 0)
             {
-                HandleHeaderButtons(sEventArg);
+                btnSearch.Visible = true;
+                HandleClipboardData(sEventArg);
             }
         }
 
@@ -330,15 +298,9 @@ namespace BMBHviews
             }
         }
 
-        protected void TimerTick(object sender, EventArgs e)
+        protected void HandleClipboardData(string sEventArg)
         {
-            Initialize();
-            Timer1.Enabled = false;
-        }
-
-        protected void HandleHeaderButtons(string sEventArg)
-        {
-            switch (sEventArg)
+            switch (sEventArg) // column name
             {
                 case "Name":
                 case "Vorname":
@@ -357,6 +319,8 @@ namespace BMBHviews
                 case "BMBH_PID":
                     Session["SearchMode"] = 3;
                     break;
+                
+                // SearchMode = 4 -> default mode before searching
 
                 case "Histo_Nr":
                     Session["SearchMode"] = 5;
@@ -370,8 +334,6 @@ namespace BMBHviews
 
             for (int i = 0; i < nLength; ++i)
             {
-
-
                 if (sEventArg == "Geburtsdatum")
                 {
                     string geb = aValues[i];
@@ -392,43 +354,33 @@ namespace BMBHviews
                 {
                     string name = aValues[i];
                     aValues[i] = ReplaceUmlaute(name);
-
                 }
-
-
             }
-
 
             if (Session["InitialInsert"] == null) // first column inserted
             {
                 if (Session["GUID"] == null)
-                {
                     Session["GUID"] = Guid.NewGuid().ToString();
-                }
                 else
-                {
                     SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
-                }
+
+                SQLexecute("insert into PatientSearch (GUID) VALUES ('" + Session["GUID"] + "');");
 
                 for (int i = 0; i < nLength; ++i)
                 {
-
-                    int nID = SQLexecute("insert into PatientSearch (" + sEventArg + ", GUID) VALUES ('" + aValues[i] + "', '" + Session["GUID"] + "');" +
-                                            "select scope_identity();");
+                    int nID = SQLexecute("insert into PatientSearch (" + sEventArg + ", GUID) VALUES ('" + aValues[i] + "', '" + Session["GUID"] + "'); select scope_identity();");
                     aIDs[i] = nID;
                 }
                 Session["IDs"] = aIDs;
                 Session["InitialInsert"] = true;
-
-                //if ((int)Session["SearchMode"] != 0)
-                //Session["EditMode"] = false;
             }
             else // do update on existing columns
             {
                 int[] aID = Session["IDs"] as int[];
                 for (int i = 0; i < nLength; ++i)
                 {
-                    SQLexecute("update PatientSearch set " + sEventArg + "='" + aValues[i] + "' where ID = " + aID[i].ToString());
+                    if(i < aID.Length)
+                        SQLexecute("update PatientSearch set " + sEventArg + "='" + aValues[i] + "' where ID = " + aID[i].ToString());
                 }
             }
 
@@ -436,13 +388,10 @@ namespace BMBHviews
             BindData();
         }
 
-        protected void Initialize()
+        protected void Initialize(int? searchMode)
         {
-
             if (Session["GUID"] == null)
-            {
                 Session["GUID"] = Guid.NewGuid().ToString();
-            }
             else
             {
                 // delete all entries and insert dummy data row
@@ -453,11 +402,25 @@ namespace BMBHviews
             Session["RowIndex"] = 0;
             Session["InitialInsert"] = null;
             Session["EditMode"] = true;
-            Session["SearchMode"] = 4; // show all buttons
+            Session["SearchMode"] = searchMode;
+
+            if (searchMode == 4)
+            {
+                Session["PSDMode"] = false;
+                dgdPatients.Columns[10].Visible = false;
+                btnSearch.Visible = true;
+            }
+            else if (searchMode == 6)
+            {
+                Session["PSDMode"] = true;
+                dgdPatients.Columns[10].Visible = true;
+                btnSearch.Visible = false;
+            }
+
+            btnExcel.Visible = false;
 
             BindData();
 
-            dgdPatients.Columns[10].Visible = false;
             if (Session["OE"].ToString() != "NCT-Gewebebank")
             {
                 dgdPatients.Columns[8].Visible = false;
@@ -467,19 +430,17 @@ namespace BMBHviews
 
         protected void BtnNew_Click(object sender, EventArgs e)
         {
-            Initialize();
-            btnSearch.Visible = true;
-            btnExcel.Visible = false;
-
+            if (rbSearch.Checked == true)
+                Initialize(4);
+            else
+                Initialize(6);
         }
 
         protected void NameChanged(object sender, EventArgs e)
         {
             if (sender == null)
-            {
                 throw new ArgumentNullException(nameof(sender));
-            }
-
+ 
             TextBox btn = (TextBox)sender;
             string id = btn.ID;
             GridViewRow gvr2 = (GridViewRow)btn.NamingContainer;
@@ -489,7 +450,6 @@ namespace BMBHviews
 
         private void SetSessionMode(TextBox tBox, string id, GridViewRow gvr2)
         {
-
             bool show = string.IsNullOrEmpty(tBox.Text);
             switch (id)
             {
@@ -506,21 +466,15 @@ namespace BMBHviews
                     ((TextBox)gvr2.FindControl("txtISHPIDVal")).Visible = show;
                     ((TextBox)gvr2.FindControl("txtISHFIDVal")).Visible = show;
                     ((TextBox)gvr2.FindControl("txtBMBHPIDVal")).Visible = show;
-
-
                     break;
 
                 case "txtISHPIDVal":
-
-
                     Session["SearchMode"] = show ? 4 : 1;
-
                     ((TextBox)gvr2.FindControl("txtNameVal")).Visible = show;
                     ((TextBox)gvr2.FindControl("txtPrenameVal")).Visible = show;
                     ((TextBox)gvr2.FindControl("txtBirthdateVal")).Visible = show;
                     ((TextBox)gvr2.FindControl("txtISHFIDVal")).Visible = show;
                     ((TextBox)gvr2.FindControl("txtBMBHPIDVal")).Visible = show;
-
                     break;
 
                 case "txtISHFIDVal":
@@ -545,7 +499,6 @@ namespace BMBHviews
                     Session["SearchMode"] = show ? 4 : 5;
                     break;
             }
-
         }
 
         private static string ReplaceUmlaute(string inputString)
@@ -562,15 +515,10 @@ namespace BMBHviews
 
         private bool SaveInput()
         {
-
             if (Session["GUID"] == null)
-            {
                 Session["GUID"] = Guid.NewGuid().ToString();
-            }
             else
-            {
                 SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
-            }
 
             GridViewRow gvr = dgdPatients.Rows[0];
 
@@ -582,14 +530,10 @@ namespace BMBHviews
             string BMBHPID = ((TextBox)gvr.FindControl("txtBMBHPIDVal")).Text;
 
             if (!string.IsNullOrEmpty(lName))
-            {
                 lName = ReplaceUmlaute(lName);
-            }
 
             if (!string.IsNullOrEmpty(pName))
-            {
                 pName = ReplaceUmlaute(pName);
-            }
 
             if ((int)Session["SearchMode"] == 0)
             {
@@ -600,7 +544,6 @@ namespace BMBHviews
                 }
             }
 
-
             if (!string.IsNullOrEmpty(geb))
             {
                 if (DateTime.TryParse(geb, out DateTime temp))
@@ -610,30 +553,25 @@ namespace BMBHviews
                     System.Diagnostics.Debug.Write(pName);
                     System.Diagnostics.Debug.Write(geb);
 
-                    SQLexecute("insert into PatientSearch (Name, Vorname, Geburtsdatum,ISH_PID, ISH_FID, BMBH_PID, GUID) VALUES ('" + lName + "', '" + pName + "', '" + newFormat + "', '" + ISHPID + "','" + ISHFID + "','" + BMBHPID + "', '" + Session["GUID"] + "');" +
-                                                 "select scope_identity();");
+                    SQLexecute("insert into PatientSearch (Name, Vorname, Geburtsdatum,ISH_PID, ISH_FID, BMBH_PID, GUID) VALUES ('" + lName + "', '" + pName + "', '" + newFormat + "', '" + ISHPID + "','" + ISHFID + "','" + BMBHPID + "', '" + Session["GUID"] + "'); select scope_identity();");
                     return true;
                 }
                 else
                 {
                     ShowMsg("Bitte das Datum im Format dd.MM.yyyy angeben");
                     return false;
-
                 }
             }
             else
             {
-                SQLexecute("insert into PatientSearch (Name, Vorname, ISH_PID, ISH_FID, BMBH_PID, GUID) VALUES ('" + lName + "', '" + pName + "', '" + ISHPID + "','" + ISHFID + "','" + BMBHPID + "', '" + Session["GUID"] + "');" +
-                                                 "select scope_identity();");
+                SQLexecute("insert into PatientSearch (Name, Vorname, ISH_PID, ISH_FID, BMBH_PID, GUID) VALUES ('" + lName + "', '" + pName + "', '" + ISHPID + "','" + ISHFID + "','" + BMBHPID + "', '" + Session["GUID"] + "'); select scope_identity();");
                 return true;
             }
-
         }
-
 
         protected void BtnSearch_Click(object sender, EventArgs e)
         {
-
+            Session["PSDMode"] = false;
 
             if (Session["InitialInsert"] == null)
             {
@@ -645,7 +583,6 @@ namespace BMBHviews
                     Session["SearchMode"] = int.Parse(HiddenSearchMode.Value);
                     dgdPatients.Columns[10].Visible = true;
                     BindData();
-
                 }
             }
             else
@@ -656,7 +593,6 @@ namespace BMBHviews
                 Session["EditMode"] = false;
                 BindData();
             }
-
         }
 
         private void BindData()
@@ -676,18 +612,13 @@ namespace BMBHviews
             }
         }
 
-
         protected void DgdSimPatients_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (sender == null)
-            {
                 throw new ArgumentNullException(nameof(sender));
-            }
 
             if (e == null)
-            {
                 throw new ArgumentNullException(nameof(e));
-            }
 
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -711,169 +642,72 @@ namespace BMBHviews
                     activeButton.Text = "Generieren";
                 }
                 else
-                {
                     activeButton.Text = "Übernehmen";
-                }
             }
         }
-
-        //private void SetVisibilityOfHeaderButtons(bool show)
-        //{
-        //    for (int i = 0; i <= dgdSimPatients.Rows.Count - 1; i++)
-        //    {
-        //        GridViewRow gvr = dgdSimPatients.Rows[i];
-        //        if (gvr.RowType == DataControlRowType.Header)
-        //        {
-        //            ((Button)gvr.FindControl("btnName")).Visible = show;
-        //            ((Label)gvr.FindControl("lblName")).Visible = !show;
-        //            ((Button)gvr.FindControl("btnPrename")).Visible = show;
-        //            ((Label)gvr.FindControl("lblPrename")).Visible = !show;
-        //            ((Button)gvr.FindControl("btnBirthdate")).Visible = show;
-        //            ((Label)gvr.FindControl("lblBirthdate")).Visible = !show;
-        //            ((Button)gvr.FindControl("btnISHPID")).Visible = show;
-        //            ((Label)gvr.FindControl("lblISHPID")).Visible = !show;
-        //            ((Button)gvr.FindControl("btnISHFID")).Visible = show;
-        //            ((Label)gvr.FindControl("lblISHFID")).Visible = !show;
-        //            ((Button)gvr.FindControl("btnBMBHPID")).Visible = show;
-        //            ((Label)gvr.FindControl("lblBMBHPID")).Visible = !show;
-        //            ((Button)gvr.FindControl("btnHistoNr")).Visible = show;
-        //            ((Label)gvr.FindControl("lblHistoNr")).Visible = !show;
-        //        }
-        //    }
-        //}
 
         protected void DgdPatients_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e == null)
-            {
                 throw new ArgumentNullException(nameof(e));
-            }
 
-            if (e.Row.RowType == DataControlRowType.Header)
+            if (e.Row.RowIndex == 0)
             {
                 if (Session["SearchMode"] != null)
                 {
-                    if ((bool)Session["EditMode"] == false) // view only
-                    {
-                        ((Button)e.Row.FindControl("btnName")).Visible = false;
-                        ((Label)e.Row.FindControl("lblName")).Visible = true;
-                        ((Button)e.Row.FindControl("btnPrename")).Visible = false;
-                        ((Label)e.Row.FindControl("lblPrename")).Visible = true;
-                        ((Button)e.Row.FindControl("btnBirthdate")).Visible = false;
-                        ((Label)e.Row.FindControl("lblBirthdate")).Visible = true;
-                        ((Button)e.Row.FindControl("btnISHPID")).Visible = false;
-                        ((Label)e.Row.FindControl("lblISHPID")).Visible = true;
-                        ((Button)e.Row.FindControl("btnISHFID")).Visible = false;
-                        ((Label)e.Row.FindControl("lblISHFID")).Visible = true;
-                        ((Button)e.Row.FindControl("btnBMBHPID")).Visible = false;
-                        ((Label)e.Row.FindControl("lblBMBHPID")).Visible = true;
-                        ((Button)e.Row.FindControl("btnHistoNr")).Visible = false;
-                        ((Label)e.Row.FindControl("lblHistoNr")).Visible = true;
-                    }
-                    else
+                    ((TextBox)e.Row.FindControl("btnName")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnPrename")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnBirthdate")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnISHPID")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnISHFID")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnBMBHPID")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnHistoNr")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtNameVal")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtPrenameVal")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtBirthdateVal")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtISHPIDVal")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtISHFIDVal")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtBMBHPIDVal")).Visible = false;                    
+                    ((Button)e.Row.FindControl("btnPseudo")).Visible = (bool)Session["PSDMode"];
+
+                    if ((bool)Session["EditMode"] == true) // view only
                     {
                         switch ((int)Session["SearchMode"])
                         {
                             case 0: // Name, Vorname, Geburtsdatum
-                                ((Button)e.Row.FindControl("btnName")).Visible = true;
-                                ((Label)e.Row.FindControl("lblName")).Visible = false;
-                                ((Button)e.Row.FindControl("btnPrename")).Visible = true;
-                                ((Label)e.Row.FindControl("lblPrename")).Visible = false;
-                                ((Button)e.Row.FindControl("btnBirthdate")).Visible = true;
-                                ((Label)e.Row.FindControl("lblBirthdate")).Visible = false;
-                                ((Button)e.Row.FindControl("btnISHPID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblISHPID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnISHFID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblISHFID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnBMBHPID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblBMBHPID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnHistoNr")).Visible = false;
-                                ((Label)e.Row.FindControl("lblHistoNr")).Visible = true;
-                                break;
+                                ((TextBox)e.Row.FindControl("btnName")).Visible = true;
+                                ((TextBox)e.Row.FindControl("btnPrename")).Visible = true;
+                                ((TextBox)e.Row.FindControl("btnBirthdate")).Visible = true;
+                            break;
                             case 1: // ISH_PID
-                                ((Button)e.Row.FindControl("btnISHPID")).Visible = true;
-                                ((Label)e.Row.FindControl("lblISHPID")).Visible = false;
-                                ((Button)e.Row.FindControl("btnName")).Visible = false;
-                                ((Label)e.Row.FindControl("lblName")).Visible = true;
-                                ((Button)e.Row.FindControl("btnPrename")).Visible = false;
-                                ((Label)e.Row.FindControl("lblPrename")).Visible = true;
-                                ((Button)e.Row.FindControl("btnBirthdate")).Visible = false;
-                                ((Label)e.Row.FindControl("lblBirthdate")).Visible = true;
-                                ((Button)e.Row.FindControl("btnISHFID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblISHFID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnBMBHPID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblBMBHPID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnHistoNr")).Visible = false;
-                                ((Label)e.Row.FindControl("lblHistoNr")).Visible = true;
-                                break;
+                                ((TextBox)e.Row.FindControl("btnISHPID")).Visible = true;
+                            break;
                             case 2: // ISH_FID
-                                ((Button)e.Row.FindControl("btnISHFID")).Visible = true;
-                                ((Label)e.Row.FindControl("lblISHFID")).Visible = false;
-                                ((Button)e.Row.FindControl("btnName")).Visible = false;
-                                ((Label)e.Row.FindControl("lblName")).Visible = true;
-                                ((Button)e.Row.FindControl("btnPrename")).Visible = false;
-                                ((Label)e.Row.FindControl("lblPrename")).Visible = true;
-                                ((Button)e.Row.FindControl("btnBirthdate")).Visible = false;
-                                ((Label)e.Row.FindControl("lblBirthdate")).Visible = true;
-                                ((Button)e.Row.FindControl("btnISHPID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblISHPID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnBMBHPID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblBMBHPID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnHistoNr")).Visible = false;
-                                ((Label)e.Row.FindControl("lblHistoNr")).Visible = true;
-                                break;
+                                ((TextBox)e.Row.FindControl("btnISHFID")).Visible = true;
+                            break;
                             case 3: // BMBH_PID
-                                ((Button)e.Row.FindControl("btnBMBHPID")).Visible = true;
-                                ((Label)e.Row.FindControl("lblBMBHPID")).Visible = false;
-                                ((Button)e.Row.FindControl("btnISHPID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblISHPID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnISHFID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblISHFID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnName")).Visible = false;
-                                ((Label)e.Row.FindControl("lblName")).Visible = true;
-                                ((Button)e.Row.FindControl("btnPrename")).Visible = false;
-                                ((Label)e.Row.FindControl("lblPrename")).Visible = true;
-                                ((Button)e.Row.FindControl("btnBirthdate")).Visible = false;
-                                ((Label)e.Row.FindControl("lblBirthdate")).Visible = true;
-                                ((Button)e.Row.FindControl("btnISHFID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblISHFID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnHistoNr")).Visible = false;
-                                ((Label)e.Row.FindControl("lblHistoNr")).Visible = true;
-                                break;
-                            case 4: // before insert - show all buttons
-                                ((Button)e.Row.FindControl("btnName")).Visible = true;
-                                ((Label)e.Row.FindControl("lblName")).Visible = false;
-                                ((Button)e.Row.FindControl("btnPrename")).Visible = true;
-                                ((Label)e.Row.FindControl("lblPrename")).Visible = false;
-                                ((Button)e.Row.FindControl("btnBirthdate")).Visible = true;
-                                ((Label)e.Row.FindControl("lblBirthdate")).Visible = false;
-                                ((Button)e.Row.FindControl("btnISHPID")).Visible = true;
-                                ((Label)e.Row.FindControl("lblISHPID")).Visible = false;
-                                ((Button)e.Row.FindControl("btnISHFID")).Visible = true;
-                                ((Label)e.Row.FindControl("lblISHFID")).Visible = false;
-                                ((Button)e.Row.FindControl("btnBMBHPID")).Visible = true;
-                                ((Label)e.Row.FindControl("lblBMBHPID")).Visible = false;
-                                ((Button)e.Row.FindControl("btnHistoNr")).Visible = true;
-                                ((Label)e.Row.FindControl("lblHistoNr")).Visible = false;
-                                break;
+                                ((TextBox)e.Row.FindControl("btnBMBHPID")).Visible = true;
+                            break;
+                            case 4: // before first insert: show all fields
+                                ((TextBox)e.Row.FindControl("btnName")).Visible = true;
+                                ((TextBox)e.Row.FindControl("btnPrename")).Visible = true;
+                                ((TextBox)e.Row.FindControl("btnBirthdate")).Visible = true;
+                                ((TextBox)e.Row.FindControl("btnISHPID")).Visible = true;
+                                ((TextBox)e.Row.FindControl("btnISHFID")).Visible = true;
+                                ((TextBox)e.Row.FindControl("btnBMBHPID")).Visible = true;
+                                ((TextBox)e.Row.FindControl("btnHistoNr")).Visible = true;
+                            break;
                             case 5: // Histo_Nr
-                                ((Button)e.Row.FindControl("btnBMBHPID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblBMBHPID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnISHPID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblISHPID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnISHFID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblISHFID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnName")).Visible = false;
-                                ((Label)e.Row.FindControl("lblName")).Visible = true;
-                                ((Button)e.Row.FindControl("btnPrename")).Visible = false;
-                                ((Label)e.Row.FindControl("lblPrename")).Visible = true;
-                                ((Button)e.Row.FindControl("btnBirthdate")).Visible = false;
-                                ((Label)e.Row.FindControl("lblBirthdate")).Visible = true;
-                                ((Button)e.Row.FindControl("btnISHFID")).Visible = false;
-                                ((Label)e.Row.FindControl("lblISHFID")).Visible = true;
-                                ((Button)e.Row.FindControl("btnHistoNr")).Visible = true;
-                                ((Label)e.Row.FindControl("lblHistoNr")).Visible = false;
-                                break;
+                                ((TextBox)e.Row.FindControl("btnHistoNr")).Visible = true;
+                            break;
+                            case 6: // pseudonymization
+                                ((TextBox)e.Row.FindControl("txtNameVal")).Visible = true;
+                                ((TextBox)e.Row.FindControl("txtPrenameVal")).Visible = true;
+                                ((TextBox)e.Row.FindControl("txtBirthdateVal")).Visible = true;
+                                ((TextBox)e.Row.FindControl("txtISHPIDVal")).Visible = true;
+                                ((TextBox)e.Row.FindControl("txtISHFIDVal")).Visible = true;
+                                ((TextBox)e.Row.FindControl("txtBMBHPIDVal")).Visible = true;
+                            break;                            
                         }
                     }
                 }
@@ -882,44 +716,21 @@ namespace BMBHviews
             {
                 if (e.Row.RowType == DataControlRowType.DataRow)
                 {
-                    if ((bool)Session["EditMode"] == true) // view only
-                    {
-                        if (Session["InitialInsert"] != null)
-                        {
-                            ChangeVisibilityGrid(e.Row, false);
-                        }
-                        else
-                        {
-                            ChangeVisibilityGrid(e.Row, true);
-                        }
-                    }
-                    else
-                    {
-                        ChangeVisibilityGrid(e.Row, false);
-                        Button activeButton = (Button)e.Row.FindControl("btnPseudo");
-                        Label lbBMBH = (Label)e.Row.FindControl("lblBMBHPIDVal");
-                        string psd = lbBMBH.Text;
-
-                        Label lbBirthday = (Label)e.Row.FindControl("lblBirthdateVal");
-                        string bir = lbBirthday.Text;
-
-                        Label lbName = (Label)e.Row.FindControl("lblNameVal");
-                        string name = lbName.Text;
-
-                        Label lbSurename = (Label)e.Row.FindControl("lblPrenameVal");
-                        string surename = lbSurename.Text;
-
-                        bool show = string.IsNullOrEmpty(psd);
-
-                        if (show && !string.IsNullOrEmpty(bir) && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(surename))
-                        {
-                            activeButton.Visible = true;
-                        }
-                        else
-                        {
-                            activeButton.Visible = false;
-                        }
-                    }
+                    // hide all textboxes
+                    ((TextBox)e.Row.FindControl("btnName")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnPrename")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnBirthdate")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnISHPID")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnISHFID")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnBMBHPID")).Visible = false;
+                    ((TextBox)e.Row.FindControl("btnHistoNr")).Visible = false;
+                    ((Button)e.Row.FindControl("btnPseudo")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtNameVal")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtPrenameVal")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtBirthdateVal")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtISHPIDVal")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtISHFIDVal")).Visible = false;
+                    ((TextBox)e.Row.FindControl("txtBMBHPIDVal")).Visible = false;
                 }
             }
         }
@@ -927,9 +738,7 @@ namespace BMBHviews
         protected void DsPatientSearch_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
         {
             if (e == null)
-            {
                 throw new ArgumentNullException(nameof(e));
-            }
 
             e.Command.CommandTimeout = 900;
         }
@@ -937,6 +746,7 @@ namespace BMBHviews
         protected void BtnExcel_Click(object sender, EventArgs e)
         {
             DataTable dt = ((DataTable)Session["MainTable"]).DefaultView.ToTable();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             ExcelPackage excel = new ExcelPackage();
             ExcelWorksheet workSheet = excel.Workbook.Worksheets.Add("Exportierte Daten");
             int totalCols = dt.Columns.Count;
@@ -949,9 +759,7 @@ namespace BMBHviews
                 string sColName = dt.Columns[col].ColumnName;
 
                 if (Session["OE"].ToString() != "NCT-Gewebebank" && (sColName == "Histo_Nr" || sColName == "Status" || sColName == "Biobank"))
-                {
                     continue;
-                }
 
                 if (sColName != "GUID" && sColName != "ID")
                 {
@@ -969,18 +777,14 @@ namespace BMBHviews
                     string sColName = dt.Columns[col].ColumnName;
 
                     if (Session["OE"].ToString() != "NCT-Gewebebank" && (sColName == "Histo_Nr" || sColName == "Status" || sColName == "Biobank"))
-                    {
                         continue;
-                    }
 
                     if (sColName != "GUID" && sColName != "ID")
                     {
                         workSheet.Cells[row + 2, col_w].Value = dt.Rows[row][col];
 
                         if (sColName == "Geburtsdatum")
-                        {
                             workSheet.Cells[row + 2, col_w].Style.Numberformat.Format = "dd.mm.yyyy";
-                        }
 
                         ++col_w;
                     }
@@ -997,6 +801,20 @@ namespace BMBHviews
                 memoryStream.WriteTo(Response.OutputStream);
                 Response.Flush();
                 Response.End();
+            }
+        }
+
+        protected void rb_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbPseudo.Checked == true)
+            {
+                Session["PSDMode"] = true;
+                Initialize(6);
+            }
+            if (rbSearch.Checked == true)
+            {
+                Session["PSDMode"] = false;
+                Initialize(4);
             }
         }
     }
