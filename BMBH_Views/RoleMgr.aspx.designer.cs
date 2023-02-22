@@ -7,223 +7,225 @@
 // </automatisch generiert>
 //------------------------------------------------------------------------------
 
-namespace BMBHviews {
-    
-    
-    public partial class RoleManager {
-        
+namespace BMBHviews
+{
+
+
+    public partial class RoleManager
+    {
+
         /// <summary>
-        /// HiddenField1-Steuerelement
+        /// HiddenField1-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HiddenField1;
-        
+
         /// <summary>
-        /// pnlTop-Steuerelement
+        /// pnlTop-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlTop;
-        
+
         /// <summary>
-        /// cboRole-Steuerelement
+        /// cboRole-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList cboRole;
-        
+
         /// <summary>
-        /// btnAddRole-Steuerelement
+        /// btnAddRole-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAddRole;
-        
+
         /// <summary>
-        /// MPE_Role-Steuerelement
+        /// MPE_Role-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::AjaxControlToolkit.ModalPopupExtender MPE_Role;
-        
+
         /// <summary>
-        /// btnUpdateViews-Steuerelement
+        /// btnUpdateViews-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnUpdateViews;
-        
+
         /// <summary>
-        /// txtSearch-Steuerelement
+        /// txtSearch-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSearch;
-        
+
         /// <summary>
-        /// updViews-Steuerelement
+        /// updViews-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updViews;
-        
+
         /// <summary>
-        /// dgdViewPermissions-Steuerelement
+        /// dgdViewPermissions-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView dgdViewPermissions;
-        
+
         /// <summary>
-        /// lnkDummy-Steuerelement
+        /// lnkDummy-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkDummy;
-        
+
         /// <summary>
-        /// MPE_EditView-Steuerelement
+        /// MPE_EditView-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::AjaxControlToolkit.ModalPopupExtender MPE_EditView;
-        
+
         /// <summary>
-        /// pnlEditView-Steuerelement
+        /// pnlEditView-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlEditView;
-        
+
         /// <summary>
-        /// pnlEditViewHeader-Steuerelement
+        /// pnlEditViewHeader-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlEditViewHeader;
-        
+
         /// <summary>
-        /// btnCancel-Steuerelement
+        /// btnCancel-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancel;
-        
+
         /// <summary>
-        /// txtViewDefinition-Steuerelement
+        /// txtViewDefinition-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl txtViewDefinition;
-        
+
         /// <summary>
-        /// btnConfirmEditView-Steuerelement
+        /// btnConfirmEditView-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnConfirmEditView;
-        
+
         /// <summary>
-        /// SqlDataSource1-Steuerelement
+        /// SqlDataSource1-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
-        
+
         /// <summary>
-        /// SqlDataSource2-Steuerelement
+        /// SqlDataSource2-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource2;
-        
+
         /// <summary>
-        /// SqlDataSource3-Steuerelement
+        /// SqlDataSource3-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource3;
-        
+
         /// <summary>
-        /// pnlAddRole-Steuerelement
+        /// pnlAddRole-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlAddRole;
-        
+
         /// <summary>
-        /// pnlAddRoleHeader-Steuerelement
+        /// pnlAddRoleHeader-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlAddRoleHeader;
-        
+
         /// <summary>
-        /// btnCancel2-Steuerelement
+        /// btnCancel2-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancel2;
-        
+
         /// <summary>
-        /// txtRoleName-Steuerelement
+        /// txtRoleName-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRoleName;
-        
+
         /// <summary>
-        /// btnAddNewRole-Steuerelement
+        /// btnAddNewRole-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAddNewRole;

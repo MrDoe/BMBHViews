@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -15,9 +16,10 @@ namespace BMBHviews
 {
     public partial class Search : Page
     {
-        //private const string sCurrentPage = "Search.aspx";
         private const string sParentPage = "Results.aspx";
-
+        private Task populateTempTable;
+        private static readonly SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString);
+        private static readonly SqlConnection con2 = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString);
         protected void SetDataSource()
         {
             dsSearch.SelectCommand = "SELECT * FROM [" + Session["FormTable"] + "] WHERE ([UserId] = '" + (string)Session["UserName"] + "') order by Sorter";
@@ -105,6 +107,18 @@ namespace BMBHviews
 
                 Session["UseLookups"] = SQLexecute_SingleResult("select CAST(USE_LOOKUPS as Char(1)) from VIEW_SETTINGS where VIEW_NAME='" + Session["View"] + "'");
                 Session["UseTempTable"] = SQLexecute_SingleResult("select CAST(USE_TEMPTABLE as Char(1)) from VIEW_SETTINGS where VIEW_NAME='" + Session["View"] + "'");
+                string lastUpdate = SQLexecute_SingleResult("select CASE WHEN LAST_UPDATE is null THEN '' else CAST(LAST_UPDATE as nvarchar(20)) END from VIEW_SETTINGS where VIEW_NAME='" + Session["View"] + "'");
+
+                if (Session["UseTempTable"].ToString() == "1" && lastUpdate == "")
+                {
+                    if (lastUpdate.Length > 9 && (Convert.ToDateTime(lastUpdate) - DateTime.Now).TotalDays > 1)
+                        return;
+
+                    string sTempTable = "TT_" + Session["View"].ToString();
+                    SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
+                    SQLexecute("update VIEW_SETTINGS set LAST_UPDATE = GetDate() where VIEW_NAME='" + Session["View"] + "'");
+                    populateTempTable = SQLexecuteAsync("select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
+                }
             }
 
             SetDataSource();
@@ -153,8 +167,9 @@ namespace BMBHviews
 
         private static void SQLexecute(string sSQL)
         {
-            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
-            SqlConnection con = new SqlConnection(sConnString);
+            if (con.State == ConnectionState.Open)
+                con.Close();
+
             SqlCommand cmd = new SqlCommand
             {
                 CommandTimeout = 300,
@@ -174,21 +189,51 @@ namespace BMBHviews
             finally
             {
                 con.Close();
-                con.Dispose();
+                //con.Dispose();
+            }
+        }
+        private static async Task<int> SQLexecuteAsync(string sSQL)
+        {
+            if (con2.State == ConnectionState.Open)
+                con2.Close();
+
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandTimeout = 300,
+                CommandType = CommandType.Text,
+                CommandText = sSQL,
+                Connection = con2
+            };
+            try
+            {
+                await con2.OpenAsync();
+                return await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+            finally
+            {
+                con2.Close();
+                //con2.Dispose();
             }
         }
 
         private static string SQLexecute_SingleResult(string sSQL)
         {
-            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
-            SqlConnection con = new SqlConnection(sConnString);
+            if (con.State == ConnectionState.Open)
+                con.Close();
+
             using (SqlCommand command = new SqlCommand(sSQL, con))
             {
                 con.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     reader.Read();
-                    return reader.GetString(0);
+                    string sResult = reader.GetString(0);
+                    con.Close();
+                    return sResult;
                 }
             }
         }
@@ -527,9 +572,10 @@ namespace BMBHviews
 
                 if (Session["UseTempTable"].ToString() == "1")
                 {
+                    if(populateTempTable != null)
+                        populateTempTable.Wait();
+
                     string sTempTable = "TT_" + Session["View"].ToString();
-                    SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
-                    SQLexecute("select * into " + sTempTable + " " + sFrom);
                     sFrom = sFrom.Replace(Session["View"].ToString(), sTempTable);
                 }
 
@@ -548,24 +594,25 @@ namespace BMBHviews
                         sSelect = "select v.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
                         sSQL2 = Server.HtmlDecode(sInsert + sSelect + sFrom + sWhere);
                         sMode = "Rekursiv";
+                        SQLexecute("insert into V_Recursive_Log (GUID, Iteration, SQL, SEARCHMODE) values ('" + Session["GUID"] + "'," + Session["Iteration"] + ",'" + EscapeSQL(sWhere.Replace("WHERE", "")) + "','" + sMode + "')");
+                        Session["Iteration"] = (int)Session["Iteration"] + 1;
                     }
                     else if (bAdditive)
                     {
                         sSelect = "select u.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
                         sSQL2 = Server.HtmlDecode(sInsert + sSelect + " from (" + sSQL + ") u");
                         sMode = "Additiv";
+                        SQLexecute("insert into V_Recursive_Log (GUID, Iteration, SQL, SEARCHMODE) values ('" + Session["GUID"] + "'," + Session["Iteration"] + ",'" + EscapeSQL(sWhere.Replace("WHERE", "")) + "','" + sMode + "')");
+                        Session["Iteration"] = (int)Session["Iteration"] + 1;
                     }
                     else // standard search
                     {
                         sSelect = "select v.ID, '" + Session["GUID"] + "'," + Session["Iteration"];
                         sSQL2 = Server.HtmlDecode(sInsert + sSelect + sFrom + sWhere);
-                        sMode = "Standard";
+                        //sMode = "Standard";
                     }
 
                     SQLexecute(sSQL2);
-                    SQLexecute("insert into V_Recursive_Log (GUID, Iteration, SQL, SEARCHMODE) values ('" + Session["GUID"] + "'," + Session["Iteration"] + ",'" + EscapeSQL(sWhere.Replace("WHERE", "")) + "','" + sMode + "')");
-
-                    Session["Iteration"] = (int)Session["Iteration"] + 1;
                 }
             }
         }
@@ -575,25 +622,6 @@ namespace BMBHviews
             GenerateSQL(true);
             Response.Redirect(sParentPage, true);
         }
-
-        //private DataSet GetData(string query)
-        //{
-        //    string conString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
-        //    SqlCommand cmd = new SqlCommand(query);
-        //    using (SqlConnection con = new SqlConnection(conString))
-        //    {
-        //        using (SqlDataAdapter sda = new SqlDataAdapter())
-        //        {
-        //            cmd.Connection = con;
-        //            sda.SelectCommand = cmd;
-        //            using (DataSet ds = new DataSet())
-        //            {
-        //                sda.Fill(ds);
-        //                return ds;
-        //            }
-        //        }
-        //    }
-        //}
 
         // executed after hitting the "Edit" button, but before loading controls
         protected void dgdSearch_RowEditing(object sender, GridViewEditEventArgs e)
@@ -633,19 +661,6 @@ namespace BMBHviews
             {
                 txtValue.Text = cboValue.SelectedValue;
             }
-
-
-            //if (cboOperator.SelectedValue == "IN") // handle copied lists from excel
-            //{
-            //    if (sDatatype.Contains("int") || sDatatype == "decimal" || sDatatype == "float" || sDatatype == "numeric" || sDatatype == "real" || sDatatype == "bit")
-            //    {
-            //        txtValue.Text = "(" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", ",") + ")";
-            //    }
-            //    else
-            //    {
-            //        txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
-            //    }
-            //}
 
             switch (sDatatype)
             {
