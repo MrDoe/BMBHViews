@@ -253,10 +253,6 @@ namespace BMBHviews
 
         protected void btnConfirmEditView_Click(object sender, EventArgs e)
         {
-            //HiddenField1.Value = txtViewDefinition.InnerHtml;
-            //ShowMsg(txtViewDefinition.Text);
-            //ShowMsg(GetTextOnly(txtViewDefinition.Text));
-            //SQLexecute(GetTextOnly(txtViewDefinition.Text));
         }
 
         protected void btnAddRole_Click(object sender, EventArgs e)
@@ -273,7 +269,7 @@ namespace BMBHviews
 
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sView = row.Cells[0].Text;
-            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "ShowHourglass", "document.body.style.cursor = 'progress';", true);
+            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "ShowHourglass", "document.body.style.cursor = 'wait';", true);
             SQLexecute("EXEC CreateLookups '" + sView + "'");
             ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "HideHourglass", "document.body.style.cursor = 'default';", true);
         }

@@ -1578,5 +1578,17 @@ namespace BMBHviews
         protected void btnCancel_Click(object sender, EventArgs e)
         {
         }
+
+        protected void btnUpdateValues_Click(object sender, EventArgs e)
+        {
+            if (sender == null)
+            {
+                throw new ArgumentNullException(nameof(sender));
+            }
+
+            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "ShowHourglass", "document.body.style.cursor = 'wait';", true);
+            SQLexecute("EXEC CreateLookups '" + Session["View"] + "'");
+            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "HideHourglass", "document.body.style.cursor = 'default';", true);
+        }
     }
 }

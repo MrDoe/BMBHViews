@@ -8,6 +8,7 @@
 <asp:Panel ID="pnlTop" runat="server" BorderColor="White" BorderStyle="Solid" BorderWidth="5px" Width="99%" style="top:3px; position:relative">
     <asp:Button ID="btnSubmit" runat="server" Text="Absenden" CssClass="btn btn-default btn-small" Width="70px" OnClick="btnSubmit_Click" Font-Bold="False" />
     <asp:Button ID="btnNew" runat="server" CssClass="btn btn-default btn-small" Font-Bold="False" OnClick="btnNew_Click" Text="Neue Suche" Width="80px" />
+    <asp:Button ID="btnUpdateValues" runat="server" Text="Werte aktualisieren" CssClass="btn btn-default btn-small" Width="120px" OnClick="btnUpdateValues_Click" Font-Bold="False" ToolTip="Alle Wertelisten aktualisieren" />
     &nbsp;&nbsp; Gespeicherte Suche:&nbsp;<div style="float:right;position:relative;left:auto">
     </div>
     <div style="float:right;position:relative;left:auto;top:3px;margin-right:30px">
