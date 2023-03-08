@@ -109,22 +109,24 @@ namespace BMBHviews
                 Session["UseTempTable"] = SQLexecute_SingleResult("select CAST(USE_TEMPTABLE as Char(1)) from VIEW_SETTINGS where VIEW_NAME='" + Session["View"] + "'");
                 string lastUpdate = SQLexecute_SingleResult("select CASE WHEN LAST_UPDATE is null THEN '' else CAST(LAST_UPDATE as nvarchar(20)) END from VIEW_SETTINGS where VIEW_NAME='" + Session["View"] + "'");
 
-                if (Session["UseTempTable"].ToString() == "1" && lastUpdate == "")
+                if (Session["UseTempTable"].ToString() == "1")
                 {
-                    if (lastUpdate.Length > 9 && (Convert.ToDateTime(lastUpdate) - DateTime.Now).TotalDays > 1)
-                        return;
-
-                    string sTempTable = "TT_" + Session["View"].ToString();
-                    SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
-                    SQLexecute("update VIEW_SETTINGS set LAST_UPDATE = GetDate() where VIEW_NAME='" + Session["View"] + "'");
-                    populateTempTable = SQLexecuteAsync("select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
+                    if (lastUpdate != "")
+                    {
+                        // don't update if not at least one day has passed
+                        if (lastUpdate.Length > 9 && (DateTime.Now - Convert.ToDateTime(lastUpdate)).TotalDays >= 1)
+                        {
+                            string sTempTable = "TT_" + Session["View"].ToString();
+                            SQLexecute("update VIEW_SETTINGS set LAST_UPDATE = GetDate() where VIEW_NAME='" + Session["View"] + "'");
+                            SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
+                            populateTempTable = SQLexecuteAsync("select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
+                        }
+                    }
                 }
             }
-
             SetDataSource();
 
             string parameter = Request["__EVENTARGUMENT"];
-
             if (parameter == "PostFromSave")
             {
                 if (txtSearchName.Text != "")
@@ -572,9 +574,7 @@ namespace BMBHviews
 
                 if (Session["UseTempTable"].ToString() == "1")
                 {
-                    if(populateTempTable != null)
-                        populateTempTable.Wait();
-
+                    populateTempTable?.Wait();
                     string sTempTable = "TT_" + Session["View"].ToString();
                     sFrom = sFrom.Replace(Session["View"].ToString(), sTempTable);
                 }
@@ -1587,7 +1587,18 @@ namespace BMBHviews
             }
 
             ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "ShowHourglass", "document.body.style.cursor = 'wait';", true);
+
+            // update lookups
             SQLexecute("EXEC CreateLookups '" + Session["View"] + "'");
+            
+            // update temp table
+            if (Session["UseTempTable"].ToString() == "1")
+            {
+                string sTempTable = "TT_" + Session["View"].ToString();
+                SQLexecute("update VIEW_SETTINGS set LAST_UPDATE = GetDate() where VIEW_NAME='" + Session["View"] + "'");
+                SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
+                populateTempTable = SQLexecuteAsync("select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
+            }
             ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "HideHourglass", "document.body.style.cursor = 'default';", true);
         }
     }
