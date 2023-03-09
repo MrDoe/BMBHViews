@@ -113,14 +113,20 @@ namespace BMBHviews
                 {
                     if (lastUpdate != "")
                     {
-                        // don't update if not at least one day has passed
-                        if (lastUpdate.Length > 9 && (DateTime.Now - Convert.ToDateTime(lastUpdate)).TotalDays >= 1)
+                        try
                         {
-                            string sTempTable = "TT_" + Session["View"].ToString();
-                            SQLexecute("update VIEW_SETTINGS set LAST_UPDATE = GetDate() where VIEW_NAME='" + Session["View"] + "'");
-                            SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
-                            populateTempTable = SQLexecuteAsync("select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
+                            DateTime lastUpdateDt = Convert.ToDateTime(lastUpdate);
+
+                            // update only if at least one day has passed
+                            if ((DateTime.Now - lastUpdateDt).TotalDays >= 1)
+                            {
+                                string sTempTable = "TT_" + Session["View"].ToString();
+                                SQLexecute("update VIEW_SETTINGS set LAST_UPDATE = GetDate() where VIEW_NAME='" + Session["View"] + "'");
+                                SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
+                                populateTempTable = SQLexecuteAsync("select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
+                            }
                         }
+                        catch (Exception) {}
                     }
                 }
             }
