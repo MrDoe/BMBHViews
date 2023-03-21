@@ -23,14 +23,7 @@ namespace BMBHviews
                     btnSendList_Click(sender, e);
                 }
 
-                if (Session["MainTable"] == null)
-                {
-                    dgdNCT.DataSource = GetData();
-                }
-                else
-                {
-                    dgdNCT.DataSource = Session["MainTable"] as DataTable;
-                }
+                dgdNCT.DataSource = Session["MainTable"] == null ? GetData() : (object)(Session["MainTable"] as DataTable);
 
                 dgdNCT.DataBind();
 
@@ -48,7 +41,7 @@ namespace BMBHviews
 
         private void ShowMsg(string message)
         {
-            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "alert", "alert('" + message + "');", true);
+            ScriptManager.RegisterClientScriptBlock(Page as Control, GetType(), "alert", "alert('" + message + "');", true);
         }
 
         public DataTable GetData()
@@ -56,17 +49,16 @@ namespace BMBHviews
             string sSQL;
             string sOrderBy = "";
 
-            if (Session["LastQuery"] == null)
-                sSQL = "SELECT * FROM [" + Session["View"] + "] v " + sOrderBy;
-            else
-                sSQL = Session["LastQuery"].ToString() + " " + sOrderBy;
+            sSQL = Session["LastQuery"] == null
+                ? "SELECT * FROM [" + Session["View"] + "] v " + sOrderBy
+                : Session["LastQuery"].ToString() + " " + sOrderBy;
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(sSQL, conn) { CommandTimeout = 300 })
             using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
             {
                 DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                _ = adapter.Fill(dt);
                 Session["MainTable"] = dt;
                 txtTotalRows.Text = dt.Rows.Count.ToString();
                 Session["DataCount"] = txtTotalRows.Text;
@@ -184,16 +176,14 @@ namespace BMBHviews
             string sortDirection = "ASC";
 
             // Retrieve the last column that was sorted.
-            string sortExpression = ViewState["SortExpression"] as string;
 
-            if (sortExpression != null)
+            if (ViewState["SortExpression"] is string sortExpression)
             {
                 // Check if the same column is being sorted.
                 // Otherwise, the default value can be returned.
                 if (sortExpression == column)
                 {
-                    string lastDirection = ViewState["SortDirection"] as string;
-                    if ((lastDirection != null) && (lastDirection == "ASC"))
+                    if ((ViewState["SortDirection"] is string lastDirection) && (lastDirection == "ASC"))
                     {
                         sortDirection = "DESC";
                     }
@@ -215,9 +205,8 @@ namespace BMBHviews
             }
 
             //Retrieve the table from the session object.
-            DataTable dt = Session["MainTable"] as DataTable;
 
-            if (dt != null)
+            if (Session["MainTable"] is DataTable dt)
             {
                 //Sort the data.
                 string sSorting = e.SortExpression + " " + GetSortDirection(e.SortExpression);
@@ -255,7 +244,7 @@ namespace BMBHviews
                 //            parameter.Direction = ParameterDirection.Input;
                 Value = sCartName
             };
-            cmd.Parameters.Add(parameter);
+            _ = cmd.Parameters.Add(parameter);
 
             SqlParameter parameter2 = new SqlParameter
             {
@@ -264,7 +253,7 @@ namespace BMBHviews
                 //            parameter2.Direction = ParameterDirection.Input;
                 Value = sUserName
             };
-            cmd.Parameters.Add(parameter2);
+            _ = cmd.Parameters.Add(parameter2);
 
             SqlParameter parameter3 = new SqlParameter
             {
@@ -273,7 +262,7 @@ namespace BMBHviews
                 //            parameter3.Direction = ParameterDirection.Input;
                 Value = Session["GUID"]
             };
-            cmd.Parameters.Add(parameter3);
+            _ = cmd.Parameters.Add(parameter3);
 
             SqlParameter parameter4 = new SqlParameter
             {
@@ -282,12 +271,12 @@ namespace BMBHviews
                 //            parameter3.Direction = ParameterDirection.Input;
                 Value = Session["Iteration"]
             };
-            cmd.Parameters.Add(parameter4);
+            _ = cmd.Parameters.Add(parameter4);
 
             try
             {
                 con.Open();
-                cmd.ExecuteNonQuery();
+                _ = cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {

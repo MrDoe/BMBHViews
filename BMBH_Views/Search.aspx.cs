@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -126,7 +127,7 @@ namespace BMBHviews
                                 populateTempTable = SQLexecuteAsync("select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
                             }
                         }
-                        catch (Exception) {}
+                        catch (Exception) { }
                     }
                 }
             }
@@ -176,7 +177,9 @@ namespace BMBHviews
         private static void SQLexecute(string sSQL)
         {
             if (con.State == ConnectionState.Open)
+            {
                 con.Close();
+            }
 
             SqlCommand cmd = new SqlCommand
             {
@@ -188,7 +191,7 @@ namespace BMBHviews
             try
             {
                 con.Open();
-                cmd.ExecuteNonQuery();
+                _ = cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {
@@ -203,7 +206,9 @@ namespace BMBHviews
         private static async Task<int> SQLexecuteAsync(string sSQL)
         {
             if (con2.State == ConnectionState.Open)
+            {
                 con2.Close();
+            }
 
             SqlCommand cmd = new SqlCommand
             {
@@ -231,14 +236,16 @@ namespace BMBHviews
         private static string SQLexecute_SingleResult(string sSQL)
         {
             if (con.State == ConnectionState.Open)
+            {
                 con.Close();
+            }
 
             using (SqlCommand command = new SqlCommand(sSQL, con))
             {
                 con.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    reader.Read();
+                    _ = reader.Read();
                     string sResult = reader.GetString(0);
                     con.Close();
                     return sResult;
@@ -299,7 +306,7 @@ namespace BMBHviews
             string sSelect = "select v.* ";
             string sFrom = " from [" + Session["View"] + "] v ";
             string sWhere = "";
-            int nLastIteration = Session["Iteration"] == null ? 0 : (int)(Session["Iteration"]) - 1;
+            int nLastIteration = Session["Iteration"] == null ? 0 : (int)Session["Iteration"] - 1;
             bool bRecursive = false;
             bool bAdditive = false;
             bool bStandard = false;
@@ -308,12 +315,12 @@ namespace BMBHviews
             {
                 if (Session["Recursive"] != null)
                 {
-                    bRecursive = (Session["Recursive"].ToString() == "True");
+                    bRecursive = Session["Recursive"].ToString() == "True";
                 }
 
                 if (Session["Additive"] != null)
                 {
-                    bAdditive = (Session["Additive"].ToString() == "True");
+                    bAdditive = Session["Additive"].ToString() == "True";
                 }
 
                 if (!bRecursive && !bAdditive)
@@ -321,7 +328,7 @@ namespace BMBHviews
                     bStandard = true;
                 }
 
-                if ((bRecursive && nLastIteration > 0 || (bStandard && (bool)Session["JumpedBack"])))
+                if ((bRecursive && nLastIteration > 0) || (bStandard && (bool)Session["JumpedBack"]))
                 {
                     sFrom += " inner join V_Recursive_Temp t on v.ID=t.ID and t.GUID='" + Session["GUID"] + "' and t.ITERATION=" + nLastIteration.ToString();
                 }
@@ -517,17 +524,31 @@ namespace BMBHviews
                                         if (sOperator == "ZWISCHEN")
                                         {
                                             int nSeparator = sValue.IndexOf(',');
-                                            string sDate1 = "'" + sValue.Substring(0, nSeparator) + ":00.00'";
-                                            string sDate2 = "'" + sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 1) + ":00.00'";
-                                            sValue = sDate1 + " AND " + sDate2;
+                                            string sDate1 = sValue.Substring(0, nSeparator);
 
-                                            sWhere += "v.[" + sAttribute + "] BETWEEN " + sValue;
+                                            // append time if missing
+                                            sDate1 = Regex.Match(sDate1, @"^\d{2}\.\d{2}\.\d{4}$").Success
+                                                ? "'" + sDate1 + " 00:00:00.000'"
+                                                : Regex.Match(sDate1, @"^\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}$").Success ? "'" + sDate1 + ":00.000'" : "'" + sDate1 + "'";
+
+                                            string sDate2 = sValue.Substring(nSeparator + 1, sValue.Length - nSeparator - 1);
+
+                                            // append time if missing
+                                            sDate2 = Regex.Match(sDate2, @"^\d{2}\.\d{2}\.\d{4}$").Success
+                                                ? "'" + sDate2 + " 00:00:00.000'"
+                                                : Regex.Match(sDate2, @"^\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}$").Success ? "'" + sDate2 + ":00.000'" : "'" + sDate2 + "'";
+
+                                            sWhere += "v.[" + sAttribute + "] BETWEEN " + sDate1 + " AND " + sDate2;
                                         }
                                         else
                                         {
-                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " CONVERT(datetime, '" + sValue + "', 104)";
-                                        }
+                                            // append time if missing
+                                            sValue = Regex.Match(sValue, @"^\d{2}\.\d{2}\.\d{4}$").Success
+                                                ? "'" + sValue + " 00:00:00.000'"
+                                                : Regex.Match(sValue, @"^\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}$").Success ? "'" + sValue + ":00.000'" : "'" + sValue + "'";
 
+                                            sWhere += "v.[" + sAttribute + "] " + sOperator + " " + sValue;
+                                        }
                                         break;
 
                                     default:
@@ -674,32 +695,11 @@ namespace BMBHviews
                 case "datetime":
                 case "datetime2":
                 case "date":
-                    if (sOperator == "ZWISCHEN")
-                    {
-                        if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
-                        {
-                            txtValue.Text = "'" + txtCalFrom.Text + "', '" + txtCalTo.Text + "'";
-                        }
-                        else
-                        {
-                            txtValue.Text = "";
-                        }
-                    }
-                    else if (sOperator == "IN")
-                    {
-                        txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
-                    }
-                    else // Operator >, <, =
-                    {
-                        if (txtCalFrom.Text.Length > 0)
-                        {
-                            txtValue.Text = "'" + txtCalFrom.Text + "'";
-                        }
-                        else
-                        {
-                            txtValue.Text = "";
-                        }
-                    }
+                    txtValue.Text = sOperator == "ZWISCHEN"
+                        ? txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0 ? "'" + txtCalFrom.Text + "', '" + txtCalTo.Text + "'" : ""
+                        : sOperator == "IN"
+                            ? "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')"
+                            : txtCalFrom.Text.Length > 0 ? "'" + txtCalFrom.Text + "'" : "";
                     break;
 
                 case "int":
@@ -712,14 +712,7 @@ namespace BMBHviews
                 case "real":
                     if (sOperator == "ZWISCHEN")
                     {
-                        if (txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0)
-                        {
-                            txtValue.Text = txtCalFrom.Text + "," + txtCalTo.Text;
-                        }
-                        else
-                        {
-                            txtValue.Text = "";
-                        }
+                        txtValue.Text = txtCalFrom.Text.Length > 0 && txtCalTo.Text.Length > 0 ? txtCalFrom.Text + "," + txtCalTo.Text : "";
                     }
                     else if (sOperator == "IN")
                     {
@@ -733,13 +726,9 @@ namespace BMBHviews
                         string sSelected = string.Join("','", chkValue.Items.OfType<ListItem>().Where(r => r.Selected).Select(r => r.Text));
                         txtValue.Text = "('" + sSelected + "')";
                     }
-                    else if (txtValue.Text != " ")
-                    {
-                        txtValue.Text = chkSingleValue.Checked == true ? "1" : "0";
-                    }
                     else
                     {
-                        txtValue.Text = "";
+                        txtValue.Text = txtValue.Text != " " ? chkSingleValue.Checked == true ? "1" : "0" : "";
                     }
                     break;
 
@@ -747,7 +736,9 @@ namespace BMBHviews
                     if (sOperator == "IN")
                     {
                         if (chkValue.Visible == false)
-                            txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";                        
+                        {
+                            txtValue.Text = "('" + txtValue.Text.Substring(0, txtValue.Text.Length - 1).Replace("\n", "','") + "')";
+                        }
                         else
                         {
                             string sSelected = string.Join("','", chkValue.Items.OfType<ListItem>().Where(r => r.Selected).Select(r => r.Text));
@@ -773,23 +764,15 @@ namespace BMBHviews
 
         public DataTable GetCboData(string sCurrentField)
         {
-            string sSQL;
-
-            if ((string)Session["UseLookups"] == "1")
-            {
-                sSQL = "exec('select null as TEXT union select VALUE as TEXT from LOOKUPS where ViewName=''" + Session["View"] + "'' and Attribute=''" + sCurrentField + "'' ORDER BY TEXT')";
-            }
-            else
-            {
-                sSQL = "exec('select null as TEXT union select distinct [" + sCurrentField + "] as TEXT from " + Session["View"] + " ORDER BY TEXT')";
-            }
-
+            string sSQL = (string)Session["UseLookups"] == "1"
+                ? "exec('select null as TEXT union select VALUE as TEXT from LOOKUPS where ViewName=''" + Session["View"] + "'' and Attribute=''" + sCurrentField + "'' ORDER BY TEXT')"
+                : "exec('select null as TEXT union select distinct [" + sCurrentField + "] as TEXT from " + Session["View"] + " ORDER BY TEXT')";
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(sSQL, conn))
             using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
             {
                 DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                _ = adapter.Fill(dt);
                 conn.Close();
                 return dt;
             }
@@ -815,7 +798,7 @@ namespace BMBHviews
             CheckBox chkSingleValue = (CheckBox)row.FindControl("chkSingleValue");
             DropDownList cboControltype = (DropDownList)row.FindControl("cboControltype");
             ImageButton btnClearValue = (ImageButton)row.FindControl("btnClearValue");
-            DropDownList cboOperator = ((DropDownList)row.FindControl("cboOperator"));
+            DropDownList cboOperator = (DropDownList)row.FindControl("cboOperator");
             DropDownList cboLogic = (DropDownList)row.FindControl("cboLogic");
             if (cboLogic.SelectedValue == "")
             {
@@ -902,17 +885,12 @@ namespace BMBHviews
                         cboOperator.Items.Add(new ListItem("IST LEER"));
                         cboOperator.Items.Add(new ListItem("IST NICHT LEER"));
 
-                        if (cboOperator.SelectedValue == "<" ||
+                        cboOperator.SelectedValue = cboOperator.SelectedValue == "<" ||
                             cboOperator.SelectedValue == ">" ||
                             cboOperator.SelectedValue == "<>" ||
-                            cboOperator.SelectedValue == "ZWISCHEN")
-                        {
-                            cboOperator.SelectedValue = "=";
-                        }
-                        else
-                        {
-                            cboOperator.SelectedValue = sSelectedOperator;
-                        }
+                            cboOperator.SelectedValue == "ZWISCHEN"
+                            ? "="
+                            : sSelectedOperator;
 
                         // user can choose between TextBox and DropDown
                         cboControltype.Items.Add(new ListItem("TextBox"));
@@ -1106,27 +1084,13 @@ namespace BMBHviews
                 if (((Hashtable)Session["htBracket1"]).Count > 0)
                 {
                     Hashtable htBracket1 = (Hashtable)Session["htBracket1"];
-                    if (Convert.ToBoolean(htBracket1[e.Row.RowIndex]) == true)
-                    {
-                        e.Row.Cells[1].BackColor = Color.Aquamarine;
-                    }
-                    else
-                    {
-                        e.Row.Cells[1].BackColor = Color.Transparent;
-                    }
+                    e.Row.Cells[1].BackColor = Convert.ToBoolean(htBracket1[e.Row.RowIndex]) == true ? Color.Aquamarine : Color.Transparent;
                 }
 
                 if (((Hashtable)Session["htBracket2"]).Count > 0)
                 {
                     Hashtable htBracket2 = (Hashtable)Session["htBracket2"];
-                    if (Convert.ToBoolean(htBracket2[e.Row.RowIndex]) == true)
-                    {
-                        e.Row.Cells[12].BackColor = Color.Aquamarine;
-                    }
-                    else
-                    {
-                        e.Row.Cells[12].BackColor = Color.Transparent;
-                    }
+                    e.Row.Cells[12].BackColor = Convert.ToBoolean(htBracket2[e.Row.RowIndex]) == true ? Color.Aquamarine : Color.Transparent;
                 }
             }
             else // save date & datetime column names for correct excel export in results.aspx        
@@ -1142,7 +1106,7 @@ namespace BMBHviews
                     {
                         if (!DateCols.Contains(sColumnName))
                         {
-                            DateCols.Add(sColumnName);
+                            _ = DateCols.Add(sColumnName);
                         }
                     }
 
@@ -1150,7 +1114,7 @@ namespace BMBHviews
                     {
                         if (!DateTimeCols.Contains(sColumnName))
                         {
-                            DateTimeCols.Add(sColumnName);
+                            _ = DateTimeCols.Add(sColumnName);
                         }
                     }
                 }
@@ -1354,14 +1318,7 @@ namespace BMBHviews
             GridViewRow row = (GridViewRow)chkSingleValue.NamingContainer;
             TextBox txtValue = (TextBox)row.FindControl("txtValue");
 
-            if (chkSingleValue.Checked)
-            {
-                txtValue.Text = "1";
-            }
-            else
-            {
-                txtValue.Text = "0";
-            }
+            txtValue.Text = chkSingleValue.Checked ? "1" : "0";
         }
 
         protected void txtValue_TextChanged(object sender, EventArgs e)
@@ -1419,14 +1376,7 @@ namespace BMBHviews
                 throw new ArgumentNullException(nameof(sender));
             }
 
-            if (((CheckBox)sender).Checked)
-            {
-                pnlSQLeditor.Visible = true;
-            }
-            else
-            {
-                pnlSQLeditor.Visible = false;
-            }
+            pnlSQLeditor.Visible = ((CheckBox)sender).Checked;
 
             // column visibility is set in dgdSearch_RowCreated() event
             dgdSearch.DataBind();
@@ -1439,7 +1389,7 @@ namespace BMBHviews
                 throw new ArgumentNullException(nameof(sender));
             }
 
-            GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sID = row.Cells[0].Text;
             int nRow = row.RowIndex;
             string sID2 = dgdSearch.Rows[++nRow].Cells[0].Text;
@@ -1458,7 +1408,7 @@ namespace BMBHviews
                 throw new ArgumentNullException(nameof(sender));
             }
 
-            GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sID = row.Cells[0].Text;
             int nRow = row.RowIndex;
             string sID2 = dgdSearch.Rows[--nRow].Cells[0].Text;
@@ -1517,7 +1467,7 @@ namespace BMBHviews
                 throw new ArgumentNullException(nameof(sender));
             }
 
-            GridViewRow row = (GridViewRow)(((Button)sender).NamingContainer);
+            GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
 
             if (Session["CellColor"] == null)
             {
@@ -1592,11 +1542,11 @@ namespace BMBHviews
                 throw new ArgumentNullException(nameof(sender));
             }
 
-            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "ShowHourglass", "document.body.style.cursor = 'wait';", true);
+            ScriptManager.RegisterClientScriptBlock(Page as Control, GetType(), "ShowHourglass", "document.body.style.cursor = 'wait';", true);
 
             // update lookups
             SQLexecute("EXEC CreateLookups '" + Session["View"] + "'");
-            
+
             // update temp table
             if (Session["UseTempTable"].ToString() == "1")
             {
@@ -1605,7 +1555,7 @@ namespace BMBHviews
                 SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
                 populateTempTable = SQLexecuteAsync("select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
             }
-            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "HideHourglass", "document.body.style.cursor = 'default';", true);
+            ScriptManager.RegisterClientScriptBlock(Page as Control, GetType(), "HideHourglass", "document.body.style.cursor = 'default';", true);
         }
     }
 }

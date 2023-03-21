@@ -24,7 +24,6 @@ namespace BMBHviews
         // GET api/<controller>/5
         public string Get(int id)
         {
-            HttpResponseMessage result = null;
             HttpRequest httpRequest = HttpContext.Current.Request;
 
             if (httpRequest.Files.Count > 0)
@@ -39,21 +38,16 @@ namespace BMBHviews
                     docfiles.Add("ID: " + fileCounter + ", Path = " + sFilePath);
                     AddFileToDB(postedFile.FileName, "~/Documents/" + postedFile.FileName, "1");
                 }
-                result = Request.CreateResponse(HttpStatusCode.Created, docfiles);
+                _ = Request.CreateResponse(HttpStatusCode.Created, docfiles);
             }
             else
             {
-                result = Request.CreateResponse(HttpStatusCode.BadRequest);
+                _ = Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            if (fileCounter < id)
-            {
-                return "ID " + id.ToString() + " ungültig! Filecounter: " + fileCounter.ToString();
-            }
-            else
-            {
-                return "ID: " + files[id - 1].nID.ToString() + ", Path = " + files[id - 1].sFilePath;
-            }
+            return fileCounter < id
+                ? "ID " + id.ToString() + " ungültig! Filecounter: " + fileCounter.ToString()
+                : "ID: " + files[id - 1].nID.ToString() + ", Path = " + files[id - 1].sFilePath;
         }
 
         private static void SQLexecute(string sSQL)
@@ -69,7 +63,7 @@ namespace BMBHviews
             try
             {
                 con.Open();
-                cmd.ExecuteNonQuery();
+                _ = cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {
@@ -90,9 +84,9 @@ namespace BMBHviews
         //// POST api/<controller>
         public HttpResponseMessage Post()
         {
-            HttpResponseMessage result = null;
             HttpRequest httpRequest = HttpContext.Current.Request;
 
+            HttpResponseMessage result;
             if (httpRequest.Files.Count > 0)
             {
                 List<string> docfiles = new List<string>();

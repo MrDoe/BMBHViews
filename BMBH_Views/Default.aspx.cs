@@ -101,21 +101,14 @@ namespace BMBHviews
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.AddWithValue("@User", sUser);
+                _ = cmd.Parameters.AddWithValue("@User", sUser);
                 SqlDataAdapter da = new SqlDataAdapter
                 {
                     SelectCommand = cmd
                 };
-                da.Fill(ds);
+                _ = da.Fill(ds);
 
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    return StringArray3(ds);
-                }
-                else
-                {
-                    return null;
-                }
+                return ds.Tables[0].Rows.Count > 0 ? StringArray3(ds) : null;
             }
         }
 
@@ -130,21 +123,14 @@ namespace BMBHviews
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.AddWithValue("@User", sUser);
+                _ = cmd.Parameters.AddWithValue("@User", sUser);
                 SqlDataAdapter da = new SqlDataAdapter
                 {
                     SelectCommand = cmd
                 };
-                da.Fill(ds);
+                _ = da.Fill(ds);
 
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    return StringArray3(ds);
-                }
-                else
-                {
-                    return null;
-                }
+                return ds.Tables[0].Rows.Count > 0 ? StringArray3(ds) : null;
             }
         }
 
@@ -162,16 +148,9 @@ namespace BMBHviews
                 {
                     SelectCommand = cmd
                 };
-                da.Fill(ds);
+                _ = da.Fill(ds);
 
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    return StringArray10(ds);
-                }
-                else
-                {
-                    return null;
-                }
+                return ds.Tables[0].Rows.Count > 0 ? StringArray10(ds) : null;
             }
         }
 
@@ -378,7 +357,7 @@ namespace BMBHviews
 
             try
             {
-                cmd.ExecuteNonQuery();
+                _ = cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {
@@ -388,10 +367,7 @@ namespace BMBHviews
             {
                 con.Close();
 
-                if (con != null)
-                {
-                    con.Dispose();
-                }
+                con?.Dispose();
             }
         }
 
@@ -406,12 +382,12 @@ namespace BMBHviews
                     con.Open();
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        reader.Read();
+                        _ = reader.Read();
                         return reader.GetString(0);
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ShowMsg("SQL-Fehler: " + ex.Message);
                 return "";
@@ -429,7 +405,9 @@ namespace BMBHviews
             string sRealUserName = Context.User.Identity.Name.ToString();
 
             if (Session["UserName"] == null)
+            {
                 Session["UserName"] = sRealUserName;
+            }
 
             // get user role
             string sRoleId = SQLexecute_SingleResult($"select RoleId from UserRoles where UserId = '{sRealUserName}'");
@@ -438,10 +416,7 @@ namespace BMBHviews
             SQLexecute("update UserRoles set LastLogin = CONVERT(datetime, '" + DateTime.Now.ToString() + "', 104) where UserId = '" + sRealUserName + "'");
             Session["RoleId"] = sRoleId;
 
-            if (sRoleId == "1")
-                Session["IsAdmin"] = true;
-            else
-                Session["IsAdmin"] = false;
+            Session["IsAdmin"] = sRoleId == "1" ? true : (object)false;
         }
 
         protected void Page_Load(object sender, EventArgs e)

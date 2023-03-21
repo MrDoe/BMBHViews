@@ -42,7 +42,7 @@ namespace BMBHviews
             try
             {
                 con.Open();
-                cmd.ExecuteNonQuery();
+                _ = cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {

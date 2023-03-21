@@ -46,7 +46,7 @@ namespace BMBHviews
                 while (rdr.Read())
                 {
                     // Add X and Y values using AddXY() method
-                    series.Points.AddXY(rdr["TIMESTAMP"].ToString(), rdr["USERCOUNT"]);
+                    _ = series.Points.AddXY(rdr["TIMESTAMP"].ToString(), rdr["USERCOUNT"]);
                 }
             }
         }

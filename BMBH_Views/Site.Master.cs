@@ -23,14 +23,7 @@ namespace BMBHviews
                 lblUserName.Text = (string)Session["UserName"];
             }
 
-            if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"] == true)
-            {
-                lnkUserMan.Visible = true;
-            }
-            else
-            {
-                lnkUserMan.Visible = false;
-            }
+            lnkUserMan.Visible = Session["IsAdmin"] != null && (bool)Session["IsAdmin"] == true;
         }
 
         protected void AsyncError(object sender, AsyncPostBackErrorEventArgs e)
@@ -59,16 +52,9 @@ namespace BMBHviews
                 {
                     SelectCommand = cmd
                 };
-                da.Fill(ds);
+                _ = da.Fill(ds);
 
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    return StringArray3(ds);
-                }
-                else
-                {
-                    return null;
-                }
+                return ds.Tables[0].Rows.Count > 0 ? StringArray3(ds) : null;
             }
         }
 
@@ -137,7 +123,7 @@ namespace BMBHviews
                 // specify the search filter
                 Filter = "(&(objectClass=user)(anr=" + sUsername + "))"
             };
-            search.PropertiesToLoad.Add("mail"); // smtp mail address
+            _ = search.PropertiesToLoad.Add("mail"); // smtp mail address
 
             SearchResult result = search.FindOne();
             if (result == null)

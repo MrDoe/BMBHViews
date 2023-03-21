@@ -23,8 +23,10 @@ namespace BMBHviews
         {
             if (!Page.IsPostBack) // on first load
             {
-                if(Session["RoleId"] != null)
+                if (Session["RoleId"] != null)
+                {
                     cboRole.SelectedValue = (string)Session["RoleId"];
+                }
             }
 
             if (Request["__EVENTARGUMENT"] != null)
@@ -74,7 +76,7 @@ namespace BMBHviews
             try
             {
                 con.Open();
-                cmd.ExecuteNonQuery();
+                _ = cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {
@@ -90,7 +92,7 @@ namespace BMBHviews
         private void ShowMsg(string message)
         {
             message = "alert('" + message + "')";
-            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "alert", message, true);
+            ScriptManager.RegisterClientScriptBlock(Page as Control, GetType(), "alert", message, true);
         }
 
         protected void chkPermission_CheckedChanged(object sender, EventArgs e)
@@ -219,7 +221,7 @@ namespace BMBHviews
                 con.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    reader.Read();
+                    _ = reader.Read();
                     return reader.GetString(0);
                 }
             }
@@ -269,9 +271,9 @@ namespace BMBHviews
 
             GridViewRow row = (GridViewRow)((Button)sender).NamingContainer;
             string sView = row.Cells[0].Text;
-            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "ShowHourglass", "document.body.style.cursor = 'wait';", true);
+            ScriptManager.RegisterClientScriptBlock(Page as Control, GetType(), "ShowHourglass", "document.body.style.cursor = 'wait';", true);
             SQLexecute("EXEC CreateLookups '" + sView + "'");
-            ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "HideHourglass", "document.body.style.cursor = 'default';", true);
+            ScriptManager.RegisterClientScriptBlock(Page as Control, GetType(), "HideHourglass", "document.body.style.cursor = 'default';", true);
         }
 
         protected void chkUseLookups_CheckedChanged(object sender, EventArgs e)

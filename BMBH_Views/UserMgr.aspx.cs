@@ -30,14 +30,7 @@ namespace BMBHviews
                 {
                     string value = Request["__EVENTARGUMENT"];
 
-                    if (value.Length > 0)
-                    {
-                        SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles] where UserId LIKE '%" + value + "%'";
-                    }
-                    else
-                    {
-                        SqlDataSource1.SelectCommand = "SELECT * FROM [UserRoles]";
-                    }
+                    SqlDataSource1.SelectCommand = value.Length > 0 ? "SELECT * FROM [UserRoles] where UserId LIKE '%" + value + "%'" : "SELECT * FROM [UserRoles]";
 
                     dgdUsers.DataBind();
                 }
@@ -65,7 +58,7 @@ namespace BMBHviews
 
             try
             {
-                cmd.ExecuteNonQuery();
+                _ = cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {
@@ -84,7 +77,9 @@ namespace BMBHviews
         protected void cboRole_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             DropDownList cboRole = (DropDownList)sender;
             GridViewRow row = (GridViewRow)cboRole.NamingContainer;
@@ -149,7 +144,7 @@ namespace BMBHviews
             {
                 SQLexecute("EXEC DeleteUser '" + sUserName + "'");
             }
-            catch (Exception) {}
+            catch (Exception) { }
 
             Response.Redirect("UserMgr.aspx");
         }

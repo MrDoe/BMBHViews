@@ -24,58 +24,24 @@ namespace BMBHviews
 
                 if ((int)Session["SearchMode"] == 0) // Name, Vorname, Geburtsdatum
                 {
-                    if (sBiobank == "NCT-Gewebebank")
-                    {
-                        return "SELECT * FROM [V_PatientSearch_NVG] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
-                    }
-                    else
-                    {
-                        return "SELECT * FROM [V_PatientSearch_NVG_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'";
-                    }
+                    return sBiobank == "NCT-Gewebebank"
+                        ? "SELECT * FROM [V_PatientSearch_NVG] WHERE [GUID] = '" + (string)Session["GUID"] + "'"
+                        : "SELECT * FROM [V_PatientSearch_NVG_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'";
                     //return "SELECT p.ID, p.Name, p.Vorname, p.Geburtsdatum, m.UKH_PID AS ISH_PID, m.UKH_FID AS ISH_FID, m.BMBH_PID, p.Histo_Nr FROM [PatientSearch] as p LEFT JOIN [V_Patienten_MedV] as m ON p.Vorname = m.Vorname AND p.Geburtsdatum = m.Geburtsdatum AND p.Name = m.Name WHERE [GUID] = '" + (string)Session["GUID"] + "'";
                 }
-                if ((int)Session["SearchMode"] == 1) // ISH_PID
-                {
-                    if (sBiobank == "NCT-Gewebebank")
-                    {
-                        return "SELECT * FROM [V_PatientSearch_IP] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
-                    }
-                    else
-                    {
-                        return "SELECT * FROM [V_PatientSearch_IP_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'";
-                    }
-                    //return "SELECT p.ID, m.Name, m.Vorname, m.Geburtsdatum, m.UKH_PID AS ISH_PID, m.UKH_FID AS ISH_FID, m.BMBH_PID, p.Histo_Nr FROM [PatientSearch] as p INNER JOIN [V_Patienten_MedV] as m ON  p.ISH_PID = m.UKH_PID WHERE [GUID] = '" + (string)Session["GUID"] + "'";
-                }
-                if ((int)Session["SearchMode"] == 2) // ISH_FID
-                {
-                    if (sBiobank == "NCT-Gewebebank")
-                    {
-                        return "SELECT * FROM [V_PatientSearch_IF] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
-                    }
-                    else
-                    {
-                        return "SELECT * FROM [V_PatientSearch_IF_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'";
-                    }
-                    //return "SELECT p.ID, m.Name, m.Vorname, m.Geburtsdatum, m.UKH_PID AS ISH_PID, m.UKH_FID AS ISH_FID, m.BMBH_PID, p.Histo_Nr FROM [PatientSearch] as p INNER JOIN [V_Patienten_MedV] as m ON  p.ISH_FID = m.UKH_FID WHERE [GUID] = '" + (string)Session["GUID"] + "'";
-                }
-                if ((int)Session["SearchMode"] == 3) // BMBH_PID
-                {
-
-                    if (sBiobank == "NCT-Gewebebank")
-                    {
-                        return "SELECT * FROM [V_PatientSearch_BP] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
-                    }
-                    else
-                    {
-                        return "SELECT * FROM [V_PatientSearch_BP_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'";
-                    }
-                    //return "SELECT p.ID, m.Name, m.Vorname, m.Geburtsdatum, m.UKH_PID AS ISH_PID, m.UKH_FID AS ISH_FID, m.BMBH_PID, p.Histo_Nr FROM [PatientSearch] as p INNER JOIN [V_Patienten_MedV] as m ON p.BMBH_PID = m.BMBH_PID WHERE [GUID] = '" + (string)Session["GUID"] + "'";
-                }
-                if ((int)Session["SearchMode"] == 5) // Histo_Nr
-                {
-                    return "SELECT * FROM [V_PatientSearch_HN] WHERE [GUID] = '" + (string)Session["GUID"] + "'";
-                }
-                return null;
+                return (int)Session["SearchMode"] == 1
+                    ? sBiobank == "NCT-Gewebebank"
+                        ? "SELECT * FROM [V_PatientSearch_IP] WHERE [GUID] = '" + (string)Session["GUID"] + "'"
+                        : "SELECT * FROM [V_PatientSearch_IP_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'"
+                    : (int)Session["SearchMode"] == 2
+                    ? sBiobank == "NCT-Gewebebank"
+                        ? "SELECT * FROM [V_PatientSearch_IF] WHERE [GUID] = '" + (string)Session["GUID"] + "'"
+                        : "SELECT * FROM [V_PatientSearch_IF_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'"
+                    : (int)Session["SearchMode"] == 3
+                    ? sBiobank == "NCT-Gewebebank"
+                        ? "SELECT * FROM [V_PatientSearch_BP] WHERE [GUID] = '" + (string)Session["GUID"] + "'"
+                        : "SELECT * FROM [V_PatientSearch_BP_PSD] WHERE [GUID] = '" + (string)Session["GUID"] + "' AND Biobank = '" + sBiobank + "'"
+                    : (int)Session["SearchMode"] == 5 ? "SELECT * FROM [V_PatientSearch_HN] WHERE [GUID] = '" + (string)Session["GUID"] + "'" : null;
             }
         }
 
@@ -118,7 +84,9 @@ namespace BMBHviews
         protected void GeneratePseudonym(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Session["PSDMode"] = false;
 
@@ -183,7 +151,7 @@ namespace BMBHviews
                         cmd.Parameters.Add("@Pseudonym", SqlDbType.VarChar, 8).Direction = ParameterDirection.Output;
 
                         conn.Open();
-                        cmd.ExecuteNonQuery();
+                        _ = cmd.ExecuteNonQuery();
 
                         if (cmd.Parameters["@Pseudonym"].Value != System.DBNull.Value)
                         {
@@ -200,14 +168,18 @@ namespace BMBHviews
                     }
                 }
                 else
+                {
                     lblError.Visible = true;
+                }
             }
         }
 
         protected void ShowSimilarPatients(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             Button btn = (Button)sender;
 
@@ -224,12 +196,12 @@ namespace BMBHviews
             string birVal = bir.Text;
 
             DataTable dt = new DataTable();
-            dt.Columns.Add("name");
-            dt.Columns.Add("vorname");
-            dt.Columns.Add("geb");
-            dt.Columns.Add("geschlecht");
-            dt.Columns.Add("PID");
-            dt.Columns.Add("BMBH_PID");
+            _ = dt.Columns.Add("name");
+            _ = dt.Columns.Add("vorname");
+            _ = dt.Columns.Add("geb");
+            _ = dt.Columns.Add("geschlecht");
+            _ = dt.Columns.Add("PID");
+            _ = dt.Columns.Add("BMBH_PID");
 
             DataRow t = dt.NewRow();
             t["name"] = lNameVal;
@@ -249,7 +221,7 @@ namespace BMBHviews
                 cmd.Parameters.Add("@Vorname", SqlDbType.NVarChar, 255).Value = sNameVal;
                 cmd.Parameters.Add("@GebDatum", SqlDbType.VarChar, 10).Value = birVal;
 
-                adapter.Fill(dt);
+                _ = adapter.Fill(dt);
                 dgdSimPatients.DataSource = dt;
                 dgdSimPatients.DataBind();
             }
@@ -266,10 +238,7 @@ namespace BMBHviews
                     Session["init"] = true;
                 }
 
-                if (Session["MainTable"] == null)
-                    dgdPatients.DataSource = GetData();
-                else
-                    dgdPatients.DataSource = Session["MainTable"] as DataTable;
+                dgdPatients.DataSource = Session["MainTable"] == null ? GetData() : (object)(Session["MainTable"] as DataTable);
 
                 dgdPatients.DataBind();
             }
@@ -292,7 +261,7 @@ namespace BMBHviews
             {
                 cmd.CommandTimeout = 900;
                 DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                _ = adapter.Fill(dt);
                 Session["MainTable"] = dt;
                 return dt;
             }
@@ -319,7 +288,7 @@ namespace BMBHviews
                 case "BMBH_PID":
                     Session["SearchMode"] = 3;
                     break;
-                
+
                 // SearchMode = 4 -> default mode before searching
 
                 case "Histo_Nr":
@@ -360,11 +329,15 @@ namespace BMBHviews
             if (Session["InitialInsert"] == null) // first column inserted
             {
                 if (Session["GUID"] == null)
+                {
                     Session["GUID"] = Guid.NewGuid().ToString();
+                }
                 else
-                    SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
+                {
+                    _ = SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
+                }
 
-                SQLexecute("insert into PatientSearch (GUID) VALUES ('" + Session["GUID"] + "');");
+                _ = SQLexecute("insert into PatientSearch (GUID) VALUES ('" + Session["GUID"] + "');");
 
                 for (int i = 0; i < nLength; ++i)
                 {
@@ -379,8 +352,10 @@ namespace BMBHviews
                 int[] aID = Session["IDs"] as int[];
                 for (int i = 0; i < nLength; ++i)
                 {
-                    if(i < aID.Length)
-                        SQLexecute("update PatientSearch set " + sEventArg + "='" + aValues[i] + "' where ID = " + aID[i].ToString());
+                    if (i < aID.Length)
+                    {
+                        _ = SQLexecute("update PatientSearch set " + sEventArg + "='" + aValues[i] + "' where ID = " + aID[i].ToString());
+                    }
                 }
             }
 
@@ -391,12 +366,14 @@ namespace BMBHviews
         protected void Initialize(int? searchMode)
         {
             if (Session["GUID"] == null)
+            {
                 Session["GUID"] = Guid.NewGuid().ToString();
+            }
             else
             {
                 // delete all entries and insert dummy data row
-                SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
-                SQLexecute("insert into PatientSearch (Name, GUID) VALUES ('','" + Session["GUID"] + "')");
+                _ = SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
+                _ = SQLexecute("insert into PatientSearch (Name, GUID) VALUES ('','" + Session["GUID"] + "')");
             }
 
             Session["RowIndex"] = 0;
@@ -431,16 +408,22 @@ namespace BMBHviews
         protected void BtnNew_Click(object sender, EventArgs e)
         {
             if (rbSearch.Checked == true)
+            {
                 Initialize(4);
+            }
             else
+            {
                 Initialize(6);
+            }
         }
 
         protected void NameChanged(object sender, EventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
- 
+            }
+
             TextBox btn = (TextBox)sender;
             string id = btn.ID;
             GridViewRow gvr2 = (GridViewRow)btn.NamingContainer;
@@ -516,9 +499,13 @@ namespace BMBHviews
         private bool SaveInput()
         {
             if (Session["GUID"] == null)
+            {
                 Session["GUID"] = Guid.NewGuid().ToString();
+            }
             else
-                SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
+            {
+                _ = SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
+            }
 
             GridViewRow gvr = dgdPatients.Rows[0];
 
@@ -530,10 +517,14 @@ namespace BMBHviews
             string BMBHPID = ((TextBox)gvr.FindControl("txtBMBHPIDVal")).Text;
 
             if (!string.IsNullOrEmpty(lName))
+            {
                 lName = ReplaceUmlaute(lName);
+            }
 
             if (!string.IsNullOrEmpty(pName))
+            {
                 pName = ReplaceUmlaute(pName);
+            }
 
             if ((int)Session["SearchMode"] == 0)
             {
@@ -553,7 +544,7 @@ namespace BMBHviews
                     System.Diagnostics.Debug.Write(pName);
                     System.Diagnostics.Debug.Write(geb);
 
-                    SQLexecute("insert into PatientSearch (Name, Vorname, Geburtsdatum,ISH_PID, ISH_FID, BMBH_PID, GUID) VALUES ('" + lName + "', '" + pName + "', '" + newFormat + "', '" + ISHPID + "','" + ISHFID + "','" + BMBHPID + "', '" + Session["GUID"] + "'); select scope_identity();");
+                    _ = SQLexecute("insert into PatientSearch (Name, Vorname, Geburtsdatum,ISH_PID, ISH_FID, BMBH_PID, GUID) VALUES ('" + lName + "', '" + pName + "', '" + newFormat + "', '" + ISHPID + "','" + ISHFID + "','" + BMBHPID + "', '" + Session["GUID"] + "'); select scope_identity();");
                     return true;
                 }
                 else
@@ -564,7 +555,7 @@ namespace BMBHviews
             }
             else
             {
-                SQLexecute("insert into PatientSearch (Name, Vorname, ISH_PID, ISH_FID, BMBH_PID, GUID) VALUES ('" + lName + "', '" + pName + "', '" + ISHPID + "','" + ISHFID + "','" + BMBHPID + "', '" + Session["GUID"] + "'); select scope_identity();");
+                _ = SQLexecute("insert into PatientSearch (Name, Vorname, ISH_PID, ISH_FID, BMBH_PID, GUID) VALUES ('" + lName + "', '" + pName + "', '" + ISHPID + "','" + ISHFID + "','" + BMBHPID + "', '" + Session["GUID"] + "'); select scope_identity();");
                 return true;
             }
         }
@@ -602,7 +593,7 @@ namespace BMBHviews
 
             if ((bool)Session["EditMode"] == false)
             {
-                SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
+                _ = SQLexecute("delete from PatientSearch where GUID = '" + Session["GUID"] + "'");
 
                 if (dgdPatients.Rows.Count == 0)
                 {
@@ -615,10 +606,14 @@ namespace BMBHviews
         protected void DgdSimPatients_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (sender == null)
+            {
                 throw new ArgumentNullException(nameof(sender));
+            }
 
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -642,14 +637,18 @@ namespace BMBHviews
                     activeButton.Text = "Generieren";
                 }
                 else
+                {
                     activeButton.Text = "Übernehmen";
+                }
             }
         }
 
         protected void DgdPatients_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             if (e.Row.RowIndex == 0)
             {
@@ -667,7 +666,7 @@ namespace BMBHviews
                     ((TextBox)e.Row.FindControl("txtBirthdateVal")).Visible = false;
                     ((TextBox)e.Row.FindControl("txtISHPIDVal")).Visible = false;
                     ((TextBox)e.Row.FindControl("txtISHFIDVal")).Visible = false;
-                    ((TextBox)e.Row.FindControl("txtBMBHPIDVal")).Visible = false;                    
+                    ((TextBox)e.Row.FindControl("txtBMBHPIDVal")).Visible = false;
                     ((Button)e.Row.FindControl("btnPseudo")).Visible = (bool)Session["PSDMode"];
 
                     if ((bool)Session["EditMode"] == true) // view only
@@ -678,16 +677,16 @@ namespace BMBHviews
                                 ((TextBox)e.Row.FindControl("btnName")).Visible = true;
                                 ((TextBox)e.Row.FindControl("btnPrename")).Visible = true;
                                 ((TextBox)e.Row.FindControl("btnBirthdate")).Visible = true;
-                            break;
+                                break;
                             case 1: // ISH_PID
                                 ((TextBox)e.Row.FindControl("btnISHPID")).Visible = true;
-                            break;
+                                break;
                             case 2: // ISH_FID
                                 ((TextBox)e.Row.FindControl("btnISHFID")).Visible = true;
-                            break;
+                                break;
                             case 3: // BMBH_PID
                                 ((TextBox)e.Row.FindControl("btnBMBHPID")).Visible = true;
-                            break;
+                                break;
                             case 4: // before first insert: show all fields
                                 ((TextBox)e.Row.FindControl("btnName")).Visible = true;
                                 ((TextBox)e.Row.FindControl("btnPrename")).Visible = true;
@@ -696,10 +695,10 @@ namespace BMBHviews
                                 ((TextBox)e.Row.FindControl("btnISHFID")).Visible = true;
                                 ((TextBox)e.Row.FindControl("btnBMBHPID")).Visible = true;
                                 ((TextBox)e.Row.FindControl("btnHistoNr")).Visible = true;
-                            break;
+                                break;
                             case 5: // Histo_Nr
                                 ((TextBox)e.Row.FindControl("btnHistoNr")).Visible = true;
-                            break;
+                                break;
                             case 6: // pseudonymization
                                 ((TextBox)e.Row.FindControl("txtNameVal")).Visible = true;
                                 ((TextBox)e.Row.FindControl("txtPrenameVal")).Visible = true;
@@ -707,7 +706,7 @@ namespace BMBHviews
                                 ((TextBox)e.Row.FindControl("txtISHPIDVal")).Visible = true;
                                 ((TextBox)e.Row.FindControl("txtISHFIDVal")).Visible = true;
                                 ((TextBox)e.Row.FindControl("txtBMBHPIDVal")).Visible = true;
-                            break;                            
+                                break;
                         }
                     }
                 }
@@ -738,7 +737,9 @@ namespace BMBHviews
         protected void DsPatientSearch_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
         {
             if (e == null)
+            {
                 throw new ArgumentNullException(nameof(e));
+            }
 
             e.Command.CommandTimeout = 900;
         }
@@ -759,7 +760,9 @@ namespace BMBHviews
                 string sColName = dt.Columns[col].ColumnName;
 
                 if (Session["OE"].ToString() != "NCT-Gewebebank" && (sColName == "Histo_Nr" || sColName == "Status" || sColName == "Biobank"))
+                {
                     continue;
+                }
 
                 if (sColName != "GUID" && sColName != "ID")
                 {
@@ -777,14 +780,18 @@ namespace BMBHviews
                     string sColName = dt.Columns[col].ColumnName;
 
                     if (Session["OE"].ToString() != "NCT-Gewebebank" && (sColName == "Histo_Nr" || sColName == "Status" || sColName == "Biobank"))
+                    {
                         continue;
+                    }
 
                     if (sColName != "GUID" && sColName != "ID")
                     {
                         workSheet.Cells[row + 2, col_w].Value = dt.Rows[row][col];
 
                         if (sColName == "Geburtsdatum")
+                        {
                             workSheet.Cells[row + 2, col_w].Style.Numberformat.Format = "dd.mm.yyyy";
+                        }
 
                         ++col_w;
                     }
