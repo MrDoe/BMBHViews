@@ -22,7 +22,7 @@ namespace BMBHviews
                     string sUsername = txtUserName.Text.Trim();
                     SQLexecute("EXEC AddNewUser '" + sUsername + "'");
                     string eMail = (Master as SiteMaster).GetEmailFromUser(sUsername);
-                    SiteMaster.SendEmail(eMail, "Sehr geehrter Nutzer,\n\nIhr Benutzerkonto wurde für das Datawarehouse BMBH_Views freigeschaltet.\nSie können sich im Klinikumsnetz unter http://pat03/views mit Ihrem Windows-Benutzernamen und Passwort anmelden.\n\nMit freundlichen Grüßen\n\nIhr BMBH-IT Team", "BMBH_Views Account-Freischaltung");
+                    SiteMaster.SendEmail(eMail, "Sehr geehrter Nutzer,\n\nIhr Benutzerkonto wurde für das Datawarehouse BMBH_Views freigeschaltet.\nSie können sich im Klinikumsnetz unter https://bmbh02.ads.krz.uni-heidelberg.de/views mit Ihrem Windows-Benutzernamen und Passwort anmelden.\n\nMit freundlichen Grüßen\n\nIhr BMBH-IT Team", "BMBH_Views Account-Freischaltung");
 
                     Response.Redirect("UserMgr.aspx");
                 }
@@ -136,7 +136,6 @@ namespace BMBHviews
             {
                 throw new ArgumentNullException(nameof(sender));
             }
-
             Button btn = (Button)sender;
             GridViewRow row = (GridViewRow)btn.NamingContainer;
             string sUserName = row.Cells[0].Text;
