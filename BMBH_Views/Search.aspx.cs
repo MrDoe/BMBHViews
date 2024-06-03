@@ -19,8 +19,6 @@ namespace BMBHviews
     {
         private const string sParentPage = "Results.aspx";
         private Task populateTempTable;
-        private static readonly SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString);
-        private static readonly SqlConnection con2 = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString);
         protected void SetDataSource()
         {
             dsSearch.SelectCommand = "SELECT * FROM [" + Session["FormTable"] + "] WHERE ([UserId] = '" + (string)Session["UserName"] + "') order by Sorter";
@@ -176,11 +174,7 @@ namespace BMBHviews
 
         private static void SQLexecute(string sSQL)
         {
-            if (con.State == ConnectionState.Open)
-            {
-                con.Close();
-            }
-
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString);
             SqlCommand cmd = new SqlCommand
             {
                 CommandTimeout = 300,
@@ -195,7 +189,6 @@ namespace BMBHviews
             }
             catch (Exception)
             {
-                //throw;
             }
             finally
             {
@@ -205,50 +198,48 @@ namespace BMBHviews
         }
         private static async Task<int> SQLexecuteAsync(string sSQL)
         {
-            if (con2.State == ConnectionState.Open)
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             {
-                con2.Close();
-            }
-
-            SqlCommand cmd = new SqlCommand
-            {
-                CommandTimeout = 300,
-                CommandType = CommandType.Text,
-                CommandText = sSQL,
-                Connection = con2
-            };
-            try
-            {
-                await con2.OpenAsync();
-                return await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-            finally
-            {
-                con2.Close();
-                //con2.Dispose();
+                using (SqlCommand cmd = new SqlCommand
+                {
+                    CommandTimeout = 300,
+                    CommandType = CommandType.Text,
+                    CommandText = sSQL,
+                    Connection = con
+                })
+                {
+                    try
+                    {
+                        await con.OpenAsync();
+                        return await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
+                    }
+                    catch (Exception)
+                    {
+                        return 0;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        //con2.Dispose();
+                    }
+                }
             }
         }
 
         private static string SQLexecute_SingleResult(string sSQL)
         {
-            if (con.State == ConnectionState.Open)
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString))
             {
-                con.Close();
-            }
-
-            using (SqlCommand command = new SqlCommand(sSQL, con))
-            {
-                con.Open();
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlCommand command = new SqlCommand(sSQL, con))
                 {
-                    _ = reader.Read();
-                    string sResult = reader.GetString(0);
-                    con.Close();
-                    return sResult;
+                    con.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        _ = reader.Read();
+                        string sResult = reader.GetString(0);
+                        con.Close();
+                        return sResult;
+                    }
                 }
             }
         }

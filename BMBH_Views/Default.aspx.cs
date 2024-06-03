@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -373,10 +374,15 @@ namespace BMBHviews
 
         private string SQLexecute_SingleResult(string sSQL)
         {
+            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            SqlConnection con = new SqlConnection(sConnString);
+
+            if (con.State == ConnectionState.Open)
+            {
+                con.Close();
+            }
             try
             {
-                string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
-                SqlConnection con = new SqlConnection(sConnString);
                 using (SqlCommand command = new SqlCommand(sSQL, con))
                 {
                     con.Open();
