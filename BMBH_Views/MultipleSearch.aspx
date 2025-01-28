@@ -8,7 +8,7 @@
         <AjaxControlToolkit:ModalPopupExtender ID="MPE" runat="server" TargetControlID="hfTarget" PopupControlID="pnlList" PopupDragHandleControlID="pnlListHeader" BackgroundCssClass="modalBackground" BehaviorID="MPE_ID"></AjaxControlToolkit:ModalPopupExtender>
     </div>
     <asp:Panel ID="Panel1" runat="server">
-        <asp:Label ID="Label1" runat="server" CssClass="mr-2 font-weight-bold" Text="Modus:"></asp:Label>
+        <asp:Label ID="Label1" runat="server" CssClass="me-2 font-weight-bold" Text="Modus:"></asp:Label>
         <asp:RadioButton ID="rbSearch" runat="server" Checked="True" Text="Suchen" CssClass="my-2" GroupName="Mode" OnCheckedChanged="rb_CheckedChanged" AutoPostBack="True"/>
         <asp:RadioButton ID="rbPseudo" runat="server" Text="Pseudonymisieren" CssClass="my-2" GroupName="Mode" OnCheckedChanged="rb_CheckedChanged" AutoPostBack="True"/>
         <asp:Button ID="btnNew" runat="server" CssClass="btn btn-default btn-small" OnClick="BtnNew_Click" Text="Neu" />

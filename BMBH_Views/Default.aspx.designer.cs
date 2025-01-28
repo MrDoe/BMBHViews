@@ -7,34 +7,36 @@
 // </automatisch generiert>
 //------------------------------------------------------------------------------
 
-namespace BMBHviews {
-    
-    
-    public partial class _Default {
-        
+namespace BMBHviews
+{
+
+
+    public partial class _Default
+    {
+
         /// <summary>
-        /// width-Steuerelement
+        /// width-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField width;
-        
+
         /// <summary>
-        /// height-Steuerelement
+        /// height-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField height;
-        
+
         /// <summary>
-        /// pnlContainer-Steuerelement
+        /// pnlContainer-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlContainer;

@@ -122,7 +122,7 @@ namespace BMBHviews
                                 string sTempTable = "TT_" + Session["View"].ToString();
                                 SQLexecute("update VIEW_SETTINGS set LAST_UPDATE = GetDate() where VIEW_NAME='" + Session["View"] + "'");
                                 SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
-                                populateTempTable = SQLexecuteAsync("select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
+                                populateTempTable = SQLexecuteAsync("SET DEADLOCK_PRIORITY LOW; select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
                             }
                         }
                         catch (Exception) { }
@@ -1544,7 +1544,7 @@ namespace BMBHviews
                 string sTempTable = "TT_" + Session["View"].ToString();
                 SQLexecute("update VIEW_SETTINGS set LAST_UPDATE = GetDate() where VIEW_NAME='" + Session["View"] + "'");
                 SQLexecute("IF OBJECT_ID('dbo.[" + sTempTable + "]', 'U') IS NOT NULL DROP TABLE [" + sTempTable + "]");
-                populateTempTable = SQLexecuteAsync("select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
+                populateTempTable = SQLexecuteAsync("SET DEADLOCK_PRIORITY LOW; select * into dbo.[" + sTempTable + "] from " + Session["View"].ToString());
             }
             ScriptManager.RegisterClientScriptBlock(Page as Control, GetType(), "HideHourglass", "document.body.style.cursor = 'default';", true);
         }

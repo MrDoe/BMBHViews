@@ -47,7 +47,7 @@
     <ContentTemplate>
     <asp:Table ID= "Table1" runat="server">
         <asp:TableRow>
-            <asp:TableCell>
+            <asp:TableCell BorderStyle="None">
     <div style="box-shadow: 1px 2px 8px rgba(0,0,0,0.25);"> 
     <asp:GridView ID="dgdSearch" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" DataKeyNames="ID" OnRowEditing="dgdSearch_RowEditing" OnRowDataBound="dgdSearch_RowDataBound" OnRowCommand="dgdSearch_RowCommand" OnRowCreated="dgdSearch_RowCreated" DataSourceID="dsSearch" Font-Names="Arial" Font-Size="Small">
         <AlternatingRowStyle BackColor="White" ForeColor="#284775" Width="50%" Height="10px" />
@@ -182,7 +182,7 @@
     </div>
     </asp:TableCell>
 
-    <asp:TableCell>
+    <asp:TableCell BorderStyle="None">
     <div style="position:absolute; top:125px;">
         <asp:Panel ID="pnlSQLeditor" runat="server" Visible="false">
             SQL-Abfrageeditor:<br />

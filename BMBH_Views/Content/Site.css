@@ -38,20 +38,16 @@ td {
     padding-left: 8px
 }
 
+table > tbody > tr > td {
+    border-color: #aaa;
+    border-style: solid;
+    border-width: 1px;
+    border-collapse: collapse;
+}
+
 input[type="radio"],
 input[type="checkbox"] {
     margin: 5px;
-}
-
-/* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-    .jumbotron {
-        margin-top: 20px;
-    }
-
-    .body-content {
-        padding: 0;
-    }
 }
 
 .container {
@@ -62,6 +58,7 @@ input[type="checkbox"] {
 }
 
 .jumbotron {
+    padding: 1rem 0 0 1rem;
     background-color: aliceblue;
 }
 
@@ -93,42 +90,42 @@ input[type="checkbox"] {
     background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
 }
 
-        #custom-bootstrap-menu.navbar-default .navbar-nav > li > a:hover,
-        #custom-bootstrap-menu.navbar-default .navbar-nav > li > a:focus {
-            color: rgb(77, 130, 144);
-            background-color: rgba(0, 124, 158, 1);
-            background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
-            background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
-        }
+#custom-bootstrap-menu.navbar-default .navbar-nav > li > a:hover,
+#custom-bootstrap-menu.navbar-default .navbar-nav > li > a:focus {
+    color: rgb(77, 130, 144);
+    background-color: rgba(0, 124, 158, 1);
+    background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+    background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgb(165, 211, 224) 100%);
+}
 
-    #custom-bootstrap-menu.navbar-default .navbar-nav > .active > a,
-    #custom-bootstrap-menu.navbar-default .navbar-nav > .active > a:hover,
-    #custom-bootstrap-menu.navbar-default .navbar-nav > .active > a:focus {
-        color: rgb(69, 117, 130);
-        background-color: rgba(255, 255, 255, 1);
-    }
+#custom-bootstrap-menu.navbar-default .navbar-nav > .active > a,
+#custom-bootstrap-menu.navbar-default .navbar-nav > .active > a:hover,
+#custom-bootstrap-menu.navbar-default .navbar-nav > .active > a:focus {
+color: rgb(69, 117, 130);
+background-color: rgba(255, 255, 255, 1);
+}
 
-    #custom-bootstrap-menu.navbar-default .navbar-toggle {
-        border-color: #ffffff;
-    }
+#custom-bootstrap-menu.navbar-default .navbar-toggle {
+border-color: #ffffff;
+}
 
-        #custom-bootstrap-menu.navbar-default .navbar-toggle:hover,
-        #custom-bootstrap-menu.navbar-default .navbar-toggle:focus {
-            background-color: #ffffff;
-        }
+#custom-bootstrap-menu.navbar-default .navbar-toggle:hover,
+#custom-bootstrap-menu.navbar-default .navbar-toggle:focus {
+    background-color: #ffffff;
+}
 
-        #custom-bootstrap-menu.navbar-default .navbar-toggle .icon-bar {
-            background-color: #ffffff;
-        }
+#custom-bootstrap-menu.navbar-default .navbar-toggle .icon-bar {
+    background-color: #ffffff;
+}
 
-        #custom-bootstrap-menu.navbar-default .navbar-toggle:hover .icon-bar,
-        #custom-bootstrap-menu.navbar-default .navbar-toggle:focus .icon-bar {
-            background-color: rgb(129, 156, 163);
-        }
+#custom-bootstrap-menu.navbar-default .navbar-toggle:hover .icon-bar,
+#custom-bootstrap-menu.navbar-default .navbar-toggle:focus .icon-bar {
+    background-color: rgb(129, 156, 163);
+}
 
-    #custom-bootstrap-menu.navbar-default .navbar-text {
-        color: rgb(49, 149, 177);
-    }
+#custom-bootstrap-menu.navbar-default .navbar-text {
+color: rgb(49, 149, 177);
+}
 
 .btn-xs2 {
     position: relative;
@@ -229,6 +226,8 @@ input[type="checkbox"] {
 .navbar-right {
     position: relative;
     right: 9px;
+    top: -8px;
+    left: 10px;
 }
 
 .inlineBlock {
@@ -406,12 +405,6 @@ input[type="checkbox"] {
     position: absolute;
 }     
 
-.navbar-right {
-    position: relative;
-    top: -8px;
-    left: 10px;
-}
-
 .ajax__html_editor_extender_texteditor {
     resize: none;
 }
@@ -523,4 +516,17 @@ pre {
 
 .ajax__fileupload_topFileStatus {
     font-size: 0px !important;
+}
+
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0.4rem;
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
 }

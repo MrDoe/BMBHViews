@@ -1,5 +1,4 @@
-﻿using Humanizer;
-using System;
+﻿using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -342,36 +341,6 @@ namespace BMBHviews
             }
         }
 
-        private static void SQLexecute(string sSQL)
-        {
-            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
-            SqlConnection con = new SqlConnection(sConnString);
-            SqlCommand cmd = new SqlCommand
-            {
-                CommandType = CommandType.Text,
-                CommandText = sSQL,
-                Connection = con
-            };
-
-            // open connection
-            con.Open();
-
-            try
-            {
-                _ = cmd.ExecuteNonQuery();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                con.Close();
-
-                con?.Dispose();
-            }
-        }
-
         private string SQLexecute_SingleResult(string sSQL)
         {
             string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
@@ -400,16 +369,46 @@ namespace BMBHviews
             }
         }
 
-        //private void ShowMsg(string message)
-        //{
-        //    message = "alert('" + message + "')";
-        //    ScriptManager.RegisterClientScriptBlock((Page as Control), GetType(), "alert", message, true);
-        //}
+        private void SQLexecute(string sSQL)
+        {
+            string sConnString = ConfigurationManager.ConnectionStrings["BMBHViewsConnectionString"].ConnectionString;
+            SqlConnection con = new SqlConnection(sConnString);
+            if (con.State == ConnectionState.Open)
+            {
+                con.Close();
+            }
+            
+            SqlCommand cmd = new SqlCommand
+            {
+                CommandType = CommandType.Text,
+                CommandText = sSQL,
+                Connection = con
+            };
+
+            try 
+            {
+                using (cmd)
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMsg("SQL-Fehler: " + ex.Message);
+                return;
+            }
+            finally
+            {
+                con.Close();
+                con?.Dispose();
+            }
+        }
 
         private void SetUser()
         {
             string sRealUserName = Context.User.Identity.Name.ToString();
-
+            
             if (Session["UserName"] == null)
             {
                 Session["UserName"] = sRealUserName;

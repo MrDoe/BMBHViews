@@ -7,61 +7,63 @@
 // </automatisch generiert>
 //------------------------------------------------------------------------------
 
-namespace BMBHviews {
-    
-    
-    public partial class SiteMaster {
-        
+namespace BMBHviews
+{
+
+
+    public partial class SiteMaster
+    {
+
         /// <summary>
-        /// home-Steuerelement
+        /// home-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink home;
-        
+
         /// <summary>
-        /// lnkHelp-Steuerelement
+        /// lnkHelp-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkHelp;
-        
+
         /// <summary>
-        /// lnkUserMan-Steuerelement
+        /// lnkUserMan-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkUserMan;
-        
+
         /// <summary>
-        /// lblUserTxt-Steuerelement
+        /// lblUserTxt-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblUserTxt;
-        
+
         /// <summary>
-        /// lblUserName-Steuerelement
+        /// lblUserName-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblUserName;
-        
+
         /// <summary>
-        /// MainContent-Steuerelement
+        /// MainContent-Steuerelement.
         /// </summary>
         /// <remarks>
-        /// Automatisch generiertes Feld
+        /// Automatisch generiertes Feld.
         /// Zum Ändern Felddeklaration aus der Designerdatei in eine Code-Behind-Datei verschieben.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
